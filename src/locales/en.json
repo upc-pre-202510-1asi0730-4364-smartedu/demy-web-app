@@ -72,5 +72,43 @@
     "password": "Password",
     "terms-me": "Accept the terms and conditions",
     "register": "Register"
+  },
+  "teacher": {
+    "title": "Teachers Management",
+    "table": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "actions": "Actions"
+    },
+    "buttons": {
+      "newTeacher": "New Teacher",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "previous": "Previous",
+      "next": "Next",
+      "itemsPerPage": "Items per page"
+    },
+    "modal": {
+      "addTitle": "Add Teacher",
+      "editTitle": "Edit Teacher",
+      "deleteTitle": "Delete Teacher",
+      "deleteConfirmation": "Are you sure you want to delete {name}?",
+      "deleteWarning": "This action cannot be undone.",
+      "form": {
+        "fullName": "Full Name",
+        "email": "Email",
+        "password": "Password",
+        "validation": {
+          "required": "This field is required",
+          "email": "Must be a valid email"
+        }
+      }
+    },
+    "pagination": {
+      "pageInfo": "Page {current} of {total}"
+    }
   }
+
 }
