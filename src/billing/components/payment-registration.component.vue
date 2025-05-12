@@ -83,7 +83,7 @@ export default {
       <div class="actions">
         <Button
             type="submit"
-            label="Registrar pago"
+            :label="$t('payments.register-button')"
             severity="primary"
         />
       </div>
