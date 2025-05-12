@@ -9,6 +9,7 @@ import MainLayout from "../src/shared/components/main-layout.component.vue";
 //import DashboardPage from '../workspace/pages/dashboard-page.vue'
 import Payment from "../src/billing/pages/payment.component.vue";
 import Login from "../src/iam-user/pages/login.component.vue" ;
+import SignUp from "../src/iam-user/pages/sign-up.component.vue";
 import Organization from "../workspace/pages/organization.component.vue";
 
 //import ExpensesPage from '../finance/pages/expenses-page.vue'
@@ -27,6 +28,10 @@ const routes = [
     {
         path: '/login',
         component: Login
+    },
+    {
+        path: '/signup',
+        component: SignUp
     }
 
 ]

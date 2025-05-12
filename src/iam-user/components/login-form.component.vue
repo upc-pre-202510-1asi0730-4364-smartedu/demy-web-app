@@ -66,10 +66,9 @@ const form = reactive({
 async function handleSubmit() {
   try {
     const user = await userService.login(form)
-    console.log('Usuario autenticado:', user)
-    // Redireccionar a página principal o dashboard
+    console.log('Authenticated user:', user)
   } catch (error) {
-    console.error('Error al iniciar sesión:', error)
+    console.error('Login failed:', error)
   }
 }
 </script>

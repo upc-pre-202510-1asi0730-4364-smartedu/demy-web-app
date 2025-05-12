@@ -13,6 +13,11 @@ export class UserAccountService {
         const res = await httpInstance.get(`${this.resourceEndpoint}/${id}`)
         return new UserAccount(res.data)
     }
+    async createUser({ email, password, name }) {
+        const newUser = { email, password, name, role:'ADMIN' }
+        const res = await httpInstance.post(this.resourceEndpoint, newUser)
+        return new UserAccount(res.data)
+    }
 }
 
 export function useUserAccountService() {
