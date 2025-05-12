@@ -4,6 +4,7 @@ import App from './App.vue'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 import i18n from './i18n.js'
+import router from "../router/index.js";
 
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
@@ -29,4 +30,5 @@ app
     .component('pv-tooltip', Tooltip)
     .component('pv-image', Image)
     .use(i18n)
+    .use(router)
     .mount('#app')
