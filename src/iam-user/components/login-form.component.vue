@@ -72,8 +72,12 @@ async function handleSubmit() {
   }
 }
 </script>
-
 <style scoped>
+:root {
+  --color-primary-1: #1d4ed8;
+  --color-primary-3: #153ec1;
+}
+
 .container {
   display: flex;
   width: 100vw;
@@ -90,6 +94,7 @@ async function handleSubmit() {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: all 0.3s ease;
 }
 
 .right-side {
@@ -98,6 +103,8 @@ async function handleSubmit() {
   justify-content: center;
   align-items: center;
   background-color: #D0E3EE;
+  position: relative;
+  z-index: 1;
 }
 
 .form-box {
@@ -108,10 +115,11 @@ async function handleSubmit() {
   border-radius: 24px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
   text-align: left;
+  z-index: 1;
 }
 
 .logo {
-  width: 160px;
+  width: 400px;
   display: block;
   margin: 0 auto 24px auto;
 }
@@ -122,25 +130,58 @@ async function handleSubmit() {
   font-size: 15px;
 }
 
+.sign-up a {
+  color: #282828;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.sign-up a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
 .title {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 10px;
+  font-family: 'Inter', sans-serif;
+  color: #000000;
 }
 
 .sub-tittle {
   font-size: 16px;
   margin-bottom: 20px;
+  font-family: 'Inter', sans-serif;
+  color: #000000;
+  line-height: 1.5;
+}
+
+.form input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 19px;
+  font-size: 14px;
+  box-sizing: border-box;
+  text-align: left;
+  border: 3px solid #E8E8EA;
+  border-radius: 6px;
 }
 
 .button-color {
-  background-color: #1d4ed8;
+  background-color: var(--color-primary-1);
   color: white;
   padding: 14px;
   width: 100%;
   border-radius: 10px;
   margin-top: 20px;
   font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button-color:hover {
+  background-color: var(--color-primary-3);
 }
 
 .remember-me {
@@ -148,6 +189,22 @@ async function handleSubmit() {
   margin-bottom: 20px;
   font-size: 14px;
   text-align: left;
+  padding-top: 12px;
+}
+
+.remember-me label {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 14px;
+  cursor: pointer;
+  justify-content: flex-start;
+  white-space: nowrap;
+}
+
+.remember-me input[type="checkbox"] {
+  margin: 0;
+  vertical-align: middle;
 }
 
 .register-text {
@@ -156,10 +213,27 @@ async function handleSubmit() {
   font-size: 14px;
 }
 
+.register-text a {
+  color: #282828;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.register-text a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
 .top-bar {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 20px;
+  padding: 8px;
+}
+
+.custom-color {
+  background-color: var(--color-primary-1);
+  border-radius: 50px;
 }
 
 /* Responsive ajustes */
@@ -176,6 +250,7 @@ async function handleSubmit() {
     flex: none;
     width: 100%;
     padding: 20px;
+    background-color: transparent;
   }
 
   .form-box {
@@ -189,4 +264,33 @@ async function handleSubmit() {
   }
 }
 
+@media (max-width: 400px) {
+  .title {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  .sub-tittle {
+    font-size: 11px;
+    padding-bottom: 12px;
+  }
+
+  .form input {
+    font-size: 11px;
+    padding: 10px;
+  }
+
+  .remember-me label {
+    font-size: 10px;
+  }
+
+  .button-color {
+    font-size: 14px;
+    padding: 16px;
+  }
+
+  .register-text {
+    font-size: 10px;
+  }
+}
 </style>

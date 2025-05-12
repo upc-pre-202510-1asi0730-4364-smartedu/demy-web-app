@@ -123,13 +123,13 @@ const onSubmit = async () => {
 .logo {
   display: block;
   width: 400px;
-  margin: 0 auto 40px auto;
+  margin: 0 auto 32px auto;
 }
 
 .login {
   text-align: left;
-  margin-top: 8px;
-  font-size: 16px;
+  margin-top: 6px;
+  font-size: 13px;
 }
 
 .login a {
@@ -146,63 +146,65 @@ const onSubmit = async () => {
 .title {
   color: #000000;
   font-family: 'Inter', sans-serif;
-  font-size: 29px;
+  font-size: 23px;
   font-weight: 700;
   line-height: 13.5%;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .sub-tittle {
   color: #000000;
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 400;
   line-height: 195%;
   margin-top: 0;
-  padding-bottom: 18px;
+  padding-bottom: 14px;
 }
 
 .form-box {
   width: 96%;
-  max-width: 480px;
-  padding: 36px;
+  max-width: 450px;
+  padding: 29px;
   text-align: left;
   background-color: #ffffff;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-radius: 24px;
+  border-radius: 19px;
 }
 
 .form input {
   width: 100%;
-  padding: 14px;
-  margin-bottom: 19px;
-  font-size: 14px;
+  padding: 11px;
+  margin-bottom: 15px;
+  font-size: 11px;
   box-sizing: border-box;
   text-align: left;
-  border: 3px solid #E8E8EA;
-  border-radius: 5px;
+  border: 2px solid #E8E8EA;
+  border-radius: 4px;
 }
 
 .terms-me {
-  margin-bottom: 32px;
+  margin-bottom: 27px;
 }
 
 .terms-me label {
   display: inline-flex;
   align-items: center;
-  gap: 11px;
-  font-size: 16px;
+  gap: 9px;
+  font-size: 13px;
   cursor: pointer;
 }
 
 button {
   width: 100%;
-  padding: 24px;
-  font-size: 19px;
-  margin-bottom: 24px;
+  padding: 19px;
+  font-size: 15px;
+  margin-bottom: 19px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
   color: #ffffff;
+
+
 }
 
 button:hover {
@@ -216,12 +218,12 @@ button:hover {
 .top-bar {
   display: flex;
   justify-content: flex-end;
-  padding: 8px;
+  padding: 7px;
 }
 
 .custom-color {
   background-color: var(--color-primary-1);
-  border-radius: 40px;
+  border-radius: 32px;
 }
 
 @media (max-width: 1200px) {
@@ -241,45 +243,46 @@ button:hover {
 
   .left-side {
     background-color: transparent;
-    padding: 16px;
+    padding: 13px;
   }
 
   .form-box {
     width: 100%;
-    max-width: 72%;
-    padding: 16px;
-    margin-top: 16px;
-    border-radius: 12px;
+    max-width: 58%;
+    padding: 13px;
+    margin-top: 13px;
+    border-radius: 10px;
   }
 
   .logo {
-    width: 200px;
-    margin-bottom: 24px;
+    width: 160px;
+    margin-bottom: 19px;
   }
 }
 
 @media (max-width: 400px) {
   .title {
-    font-size: 16px;
-    margin-bottom: 16px;
+    font-size: 13px;
+    margin-bottom: 13px;
   }
 
   .sub-tittle {
-    font-size: 11px;
+    font-size: 9px;
   }
 
   .form input {
-    font-size: 11px;
-    padding: 10px;
+    font-size: 9px;
+    padding: 8px;
   }
 
   .terms-me label {
-    font-size: 10px;
+    font-size: 8px;
   }
 
   button {
-    font-size: 14px;
-    padding: 16px;
+    font-size: 11px;
+    padding: 12px;
   }
 }
+
 </style>
