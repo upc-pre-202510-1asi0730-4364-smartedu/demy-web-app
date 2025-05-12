@@ -61,7 +61,7 @@ export default {
 
       <Column field="status" :header="$t('payments.status')">
         <template #body="slotProps">
-          {{ $t('payments.status.' + slotProps.data.status) }}
+          {{ $t('payments.payment-status.' + slotProps.data.status) }}
         </template>
       </Column>
 
@@ -75,7 +75,7 @@ export default {
         <template #body="slotProps">
           <Button
               v-if="slotProps.data.status !== 'PAID'"
-              label="Registrar pago"
+              :label="$t('payments.register-action')"
               severity="primary"
               @click="emitRegister(slotProps.data)"
           />

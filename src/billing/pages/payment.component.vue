@@ -112,6 +112,10 @@ export default {
 </template>
 
 <style scoped>
+h3 {
+  color: var(--color-secondary-dark-1);
+}
+
 .subtitle-2 {
   font-size: 1rem;
   color: var(--color-secondary-dark-1);

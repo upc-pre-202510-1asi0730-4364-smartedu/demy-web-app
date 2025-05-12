@@ -46,7 +46,7 @@ export default {
           class="search-button"
           type="submit"
           severity="primary"
-          label="$t('payments.search-button')"
+          :label="$t('payments.search-button')"
       />
     </form>
   </div>
@@ -57,27 +57,32 @@ export default {
   display: flex;
   align-items: flex-end;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 
 .student-form-field {
   min-width: 200px;
 }
 
-.search-button {
-  margin-bottom: 1.7rem;
-}
-
 @media (max-width: 600px) {
-  .student-form-field {
-    min-width: 20%;
+  .student-search-form {
+    flex-wrap: nowrap;
+    align-items: center;
   }
 
-  .student-search-form {
-    align-items: stretch;
+  .student-form-field {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dni-input {
+    width: 75%;
   }
 
   .search-button {
-    margin-top: 0.5rem;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 0.9rem;
   }
 }
 </style>
