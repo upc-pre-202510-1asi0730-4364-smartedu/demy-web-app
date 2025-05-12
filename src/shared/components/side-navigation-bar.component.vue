@@ -77,8 +77,8 @@ export default {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem;
-  color: inherit;
+  padding: 1rem;
+  color: var(--color-secondary-dark-2);
   text-decoration: none;
   border-radius: 4px;
   transition: background-color 0.2s ease;

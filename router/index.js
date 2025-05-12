@@ -7,8 +7,8 @@ import MainLayout from "../src/shared/components/main-layout.component.vue";
 // Pages
 //import LoginPage from '../public/pages/login-page.vue'
 //import DashboardPage from '../workspace/pages/dashboard-page.vue'
-//import PaymentsPage from '../billing/pages/payments-page.vue'
-//import OrganizationPage from '../workspace/pages/organization-page.vue'
+import Payment from "../src/billing/pages/payment.component.vue";
+import Organization from "../workspace/pages/organization.component.vue";
 //import ExpensesPage from '../finance/pages/expenses-page.vue'
 //import ReportsPage from '../finance/pages/reports-page.vue'
 
@@ -17,24 +17,10 @@ const routes = [
         path: '/',
         component: MainLayout,
         children: [
-            { path: 'organization', component: OrganizationPage },
-            { path: 'workspace', component: DashboardPage },
-            { path: 'payments', component: PaymentsPage },
-            {
-                path: 'finance',
-                component: FinanceLayout,
-                children: [
-                    { path: '', redirect: 'expenses' },
-                    { path: 'expenses', component: ExpensesPage },
-                    { path: 'reports', component: ReportsPage }
-                ]
-            },
+            { path: 'organization', component: Organization },
+            { path: 'payments', component: Payment },
             { path: '', redirect: '/workspace' }
         ]
-    },
-    {
-        path: '/login',
-        component: LoginPage
     }
 ]
 

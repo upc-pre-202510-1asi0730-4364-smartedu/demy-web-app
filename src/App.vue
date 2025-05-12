@@ -1,9 +1,9 @@
 <script setup>
-import MainLayout from "./shared/components/main-layout.component.vue";
+
 </script>
 
 <template>
-  <main-layout></main-layout>
+  <router-view />
 </template>
 
 <style scoped>
