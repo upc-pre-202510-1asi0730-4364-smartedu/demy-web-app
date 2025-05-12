@@ -59,14 +59,14 @@ export default {
       try {
         await paymentService.create(payment)
 
-        const updatedInvoice = { ...invoice, status: PaymentStatus.PAID }
+        const updatedInvoice = { status: PaymentStatus.PAID }
 
         await invoiceService.update(invoice.id, updatedInvoice)
 
         studentPaymentStatus.value = {
           ...status,
           invoices: status.invoices.map((inv) =>
-              inv.id === invoice.id ? updatedInvoice : inv
+              inv.id === invoice.id ? { ...inv, status: PaymentStatus.PAID } : inv
           )
         }
 

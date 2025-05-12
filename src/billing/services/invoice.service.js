@@ -54,7 +54,7 @@ export class InvoiceService {
      * @returns {Promise<Invoice>}
      */
     async update(id, invoice) {
-        const res = await httpInstance.put(`${this.resourceEndpoint}/${id}`, invoice)
+        const res = await httpInstance.patch(`${this.resourceEndpoint}/${id}`, invoice)
         return new Invoice(res.data)
     }
 

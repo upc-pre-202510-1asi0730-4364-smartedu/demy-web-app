@@ -20,5 +20,29 @@
       "title": "Profesores",
       "description": "Gestiona el personal docente"
     }
+  },
+  "payments": {
+    "title": "Pagos",
+    "subtitle": "Buscar el estado de pago de un alumno",
+    "dni-input": "Ingresar DNI",
+    "search-button": "Buscar",
+    "table-first-name": "Nombre",
+    "table-last-name": "Apellido",
+    "table-sex": "Sexo",
+    "sex": {
+      "MALE": "Masculino",
+      "FEMALE": "Femenino"
+    },
+    "status": {
+      "PENDING": "Pendiente",
+      "PAID": "Pagado",
+      "OVERDUE": "Atrasado"
+    },
+    "register-title": "Registrar pago",
+    "first-name": "Nombres",
+    "last-name": "Apellidos",
+    "paid-at": "Fecha de pago",
+    "amount": "Monto",
+    "register-button": "Registrar pago"
   }
 }

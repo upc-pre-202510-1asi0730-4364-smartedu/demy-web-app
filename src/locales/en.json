@@ -20,5 +20,29 @@
       "title": "Teachers",
       "description": "Manage your teaching staff"
     }
+  },
+  "payments": {
+    "title": "Payments",
+    "subtitle": "Check a student's payment status",
+    "dni-input": "Enter DNI",
+    "search-button": "Search",
+    "table-first-name": "First Name",
+    "table-last-name": "Last Name",
+    "table-sex": "Sex",
+    "sex": {
+      "MALE": "Male",
+      "FEMALE": "Female"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "PAID": "Paid",
+      "OVERDUE": "Overdue"
+    },
+    "register-title": "Register payment",
+    "first-name": "First name",
+    "last-name": "Last name",
+    "paid-at": "Payment date",
+    "amount": "Amount",
+    "register-button": "Register payment"
   }
 }
