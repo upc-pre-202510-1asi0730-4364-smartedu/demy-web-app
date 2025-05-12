@@ -15,6 +15,9 @@ import {
     InputText, Menu, Menubar, SelectButton,
     Toolbar, Tooltip
 } from 'primevue'
+import Dialog from "primevue/dialog";
+import Textarea from "primevue/textarea";
+import Paginator from "primevue/paginator";
 
 const CustomTheme = definePreset(Aura, {
     semantic: {
@@ -85,6 +88,9 @@ app
     .component('pv-toolbar', Toolbar)
     .component('pv-tooltip', Tooltip)
     .component('pv-image', Image)
+    .component('pv-dialog', Dialog) //Ingresado
+    .component('pv-textarea', Textarea) //Ingresado
+    .component('pv-paginator', Paginator) //Ingresado
     .use(i18n)
     .use(router)
     .mount('#app')
