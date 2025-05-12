@@ -1,0 +1,29 @@
+<script>
+export default {
+  name: "content-wrapper"
+}
+</script>
+
+<template>
+  <div class="content-wrapper">
+    <slot />
+  </div>
+</template>
+
+<style scoped>
+.content-wrapper {
+  margin: 2rem;
+  padding: 1.5rem 2.5rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  min-height: calc(100vh - 100px - 2rem);
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 1.5rem 2rem;
+  }
+}
+</style>
