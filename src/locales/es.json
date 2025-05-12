@@ -50,5 +50,27 @@
     "due-date": "Vencimiento",
     "action": "Acción",
     "register-button": "Guardar pago"
+  },
+  "login": {
+    "sign-up": "Crear Cuenta",
+    "title": "Iniciar sesión",
+    "sub-title": "Ingresa tu información personal",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "remember-me": "Recuérdame",
+    "sign-in": "Ingresar",
+    "forgot-password": "¿Olvidaste tu contraseña?"
+  },
+  "sign-up": {
+    "login": "Inicar Sesion",
+    "title": "Crear Cuenta",
+    "sub-title": "Ingresa tu información personal",
+    "name": "Nombre",
+    "academy-name": "Nombre de academia",
+    "ruc": "RUC",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "terms-me": "Acepta los terminos y condiciones",
+    "register": "Registrarse"
   }
 }
