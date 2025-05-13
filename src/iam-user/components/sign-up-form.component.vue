@@ -82,7 +82,7 @@ const onSubmit = async () => {
     })
     alert('User created successfully')
 
-    router.push('/login')
+    router.push('/plantSelect')
   } catch (error) {
     alert('There was an error registering the academy or user')
   }

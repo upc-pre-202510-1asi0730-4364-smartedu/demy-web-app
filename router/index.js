@@ -12,7 +12,7 @@ import Login from "../src/iam-user/pages/login.component.vue" ;
 import SignUp from "../src/iam-user/pages/sign-up.component.vue";
 import Organization from "../workspace/pages/organization.component.vue";
 import TeacherPage from "../src/iam-user/pages/teacher.component.vue";
-
+import PlantSelect from "../src/iam-user/pages/plan-select.component.vue";
 //import ExpensesPage from '../finance/pages/expenses-page.vue'
 //import ReportsPage from '../finance/pages/reports-page.vue'
 
@@ -40,7 +40,12 @@ const routes = [
     {
         path: '/signup',
         component: SignUp
+    },
+    {
+        path: '/plantSelect',
+        component: PlantSelect
     }
+
 
 ]
 
