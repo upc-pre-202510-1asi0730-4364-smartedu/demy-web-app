@@ -51,6 +51,98 @@
     "action": "Acción",
     "register-button": "Guardar pago"
   },
+  "login": {
+    "sign-up": "Crear Cuenta",
+    "title": "Iniciar sesión",
+    "sub-title": "Ingresa tu información personal",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "remember-me": "Recuérdame",
+    "sign-in": "Ingresar",
+    "forgot-password": "¿Olvidaste tu contraseña?"
+  },
+  "sign-up": {
+    "login": "Inicar Sesion",
+    "title": "Crear Cuenta",
+    "sub-title": "Ingresa tu información personal",
+    "name": "Nombre",
+    "academy-name": "Nombre de academia",
+    "ruc": "RUC",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "terms-me": "Acepta los terminos y condiciones",
+    "register": "Registrarse"
+  },
+  "teacher": {
+    "title": "Gestión de Profesores",
+    "table": {
+      "fullName": "Nombre Completo",
+      "email": "Correo Electrónico",
+      "actions": "Acciones"
+    },
+    "buttons": {
+      "newTeacher": "Nuevo Profesor",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "itemsPerPage": "Elementos por página"
+    },
+    "modal": {
+      "addTitle": "Agregar Profesor",
+      "editTitle": "Editar Profesor",
+      "deleteTitle": "Eliminar Profesor",
+      "deleteConfirmation": "¿Estás seguro de que deseas eliminar a {name}?",
+      "deleteWarning": "Esta acción no se puede deshacer.",
+      "form": {
+        "fullName": "Nombre Completo",
+        "email": "Email",
+        "password": "Contraseña",
+        "validation": {
+          "required": "Este campo es requerido",
+          "email": "Debe ser un email válido"
+        }
+      }
+    },
+    "pagination": {
+      "pageInfo": "Página {current} de {total}"
+    }
+  },
+  "plan-select": {
+    "title": "Selecciona tu Plan",
+    "plans": {
+      "basic": {
+        "subtitle": "Esenciales",
+        "title": "Plan Básico",
+        "price": "S/ 75.00",
+        "benefit1": "1 sede",
+        "benefit2": "100 estudiantes",
+        "benefit3": "10 docentes",
+        "benefit4": "Gestión de matrículas y pagos"
+      },
+      "pro": {
+        "subtitle": "Pro",
+        "title": "Plan Intermedio",
+        "price": "S/ 250.00",
+        "benefit1": "500 estudiantes",
+        "benefit2": "50 docentes",
+        "benefit3": "2 sedes",
+        "benefit4": "Gestión de inventarios y préstamos"
+      },
+      "elite": {
+        "subtitle": "Elite",
+        "title": "Plan Premium",
+        "price": "S/ 640.00",
+        "benefit1": "2000 estudiantes",
+        "benefit2": "200 docentes",
+        "benefit3": "Todo lo anterior",
+        "benefit4": "Soporte prioritario"
+      }
+    },
+    "select-button": "Seleccionar Plan"
+  },
   "finance": {
     "title": "Gastos",
     "subtitle": {

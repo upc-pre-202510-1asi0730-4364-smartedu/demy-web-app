@@ -23,15 +23,15 @@
   ],
   "invoices": [
     {
-      "id": 1,
+      "id": "1",
       "subscriptionId": null,
       "amount": 200,
       "dueDate": "2024-05-30",
-      "status": "PENDING",
+      "status": "PAID",
       "studentId": "1"
     },
     {
-      "id": 2,
+      "id": "2",
       "subscriptionId": null,
       "amount": 250,
       "dueDate": "2024-06-01",
@@ -39,15 +39,30 @@
       "studentId": "2"
     },
     {
-      "id": 3,
+      "id": "3",
       "subscriptionId": null,
       "amount": 250,
       "dueDate": "2024-06-01",
-      "status": "PENDING",
+      "status": "PAID",
       "studentId": "1"
     }
   ],
   "payments": [
-
-  ]
+    {
+      "id": "7acd",
+      "invoiceId": "1",
+      "amount": 200,
+      "paidAt": "2025-05-12T20:09:53.522Z",
+      "method": "CASH"
+    },
+    {
+      "id": "6674",
+      "invoiceId": "3",
+      "amount": 250,
+      "paidAt": "2025-05-21T05:00:00.000Z",
+      "method": "CASH"
+    }
+  ],
+  "user": [],
+  "academy": []
 }
