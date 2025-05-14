@@ -90,16 +90,19 @@ const onSubmit = async () => {
 </template>
 
 <style scoped>
+
 .container {
   display: flex;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
+  position: relative;
 }
 
 .right-side {
   flex: 1;
   background-color: #f0f0f0;
+  position: relative;
 }
 
 .right-side img {
@@ -202,8 +205,6 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
   color: #ffffff;
-
-
 }
 
 button:hover {
@@ -237,10 +238,12 @@ button:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: 0;
   }
 
   .left-side {
+    position: relative;
+    z-index: 1;
     background-color: transparent;
     padding: 13px;
   }
@@ -251,6 +254,9 @@ button:hover {
     padding: 13px;
     margin-top: 13px;
     border-radius: 10px;
+    background-color: white;
+    position: relative;
+    z-index: 2;
   }
 
   .logo {
@@ -282,6 +288,17 @@ button:hover {
     font-size: 11px;
     padding: 12px;
   }
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100dvh;
+}
+
+.container {
+  height: 100dvh;
+  overflow: hidden;
 }
 
 </style>
