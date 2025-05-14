@@ -19,7 +19,7 @@ export class FinancialTransactionService {
 
     /**
      * Retrieves a transaction by ID
-     * @param {number|string} id
+     * @param {string} id
      * @returns {Promise<FinancialTransaction>}
      */
     async getById(id) {
@@ -39,7 +39,7 @@ export class FinancialTransactionService {
 
     /**
      * Updates a financial transaction by ID
-     * @param {number|string} id
+     * @param {string} id
      * @param {FinancialTransaction} transaction
      * @returns {Promise<FinancialTransaction>}
      */
@@ -50,7 +50,7 @@ export class FinancialTransactionService {
 
     /**
      * Deletes a transaction by ID
-     * @param {number|string} id
+     * @param {string} id
      * @returns {Promise<void>}
      */
     async delete(id) {

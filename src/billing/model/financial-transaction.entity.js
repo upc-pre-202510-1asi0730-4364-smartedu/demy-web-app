@@ -4,7 +4,8 @@ export const PartyType = Object.freeze({
     STUDENT: 'STUDENT',
     TEACHER: 'TEACHER',
     ADMIN: 'ADMIN',
-    ACADEMY: 'ACADEMY'
+    ACADEMY: 'ACADEMY',
+    EXTERNAL: 'EXTERNAL'
 })
 
 export class FinancialTransaction {
@@ -16,7 +17,9 @@ export class FinancialTransaction {
                     concept = '',
                     date = new Date(),
                     reference = '',
-                    payment = new Payment()
+                    paymentId = '',
+                    amount = 0,
+                    method = ''
                 } = {}) {
         this.id = id
         this.source = source
@@ -25,6 +28,8 @@ export class FinancialTransaction {
         this.concept = concept
         this.date = date ? new Date(date) : new Date()
         this.reference = reference
-        this.payment = new Payment(payment)
+        this.paymentId = paymentId
+        this.amount = amount
+        this.method = method
     }
 }

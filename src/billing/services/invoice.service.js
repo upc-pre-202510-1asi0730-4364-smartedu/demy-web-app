@@ -19,7 +19,7 @@ export class InvoiceService {
 
     /**
      * Retrieves an invoice by ID
-     * @param {number} id
+     * @param {string} id
      * @returns {Promise<Invoice>}
      */
     async getById(id) {
@@ -49,7 +49,7 @@ export class InvoiceService {
 
     /**
      * Updates an invoice by ID
-     * @param {number} id
+     * @param {string} id
      * @param {Invoice} invoice
      * @returns {Promise<Invoice>}
      */
@@ -60,7 +60,7 @@ export class InvoiceService {
 
     /**
      * Deletes an invoice by ID
-     * @param {number} id
+     * @param {string} id
      * @returns {Promise<void>}
      */
     async delete(id) {

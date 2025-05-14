@@ -31,6 +31,7 @@ export default {
             v-model="value"
             :placeholder="$t('payments.dni-input')"
             class="dni-input"
+            aria-label="DNI"
             required
         />
         <Button
