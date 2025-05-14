@@ -19,7 +19,7 @@ export class InvoiceService {
 
     /**
      * Retrieves an invoice by ID
-     * @param {number} id
+     * @param {string} id
      * @returns {Promise<Invoice>}
      */
     async getById(id) {
@@ -49,18 +49,18 @@ export class InvoiceService {
 
     /**
      * Updates an invoice by ID
-     * @param {number} id
+     * @param {string} id
      * @param {Invoice} invoice
      * @returns {Promise<Invoice>}
      */
     async update(id, invoice) {
-        const res = await httpInstance.patch(`${this.resourceEndpoint}/${id}`, invoice)
+        const res = await httpInstance.put(`${this.resourceEndpoint}/${id}`, invoice)
         return new Invoice(res.data)
     }
 
     /**
      * Deletes an invoice by ID
-     * @param {number} id
+     * @param {string} id
      * @returns {Promise<void>}
      */
     async delete(id) {

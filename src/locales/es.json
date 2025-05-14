@@ -50,5 +50,35 @@
     "due-date": "Vencimiento",
     "action": "Acción",
     "register-button": "Guardar pago"
+  },
+  "finance": {
+    "title": "Gastos",
+    "subtitle": {
+      "register": "Registrar nuevo gasto",
+      "summary": "Resumen mensual"
+    },
+    "summary": {
+      "empty": "No se han registrado gastos este mes"
+    },
+    "form": {
+      "concept": "Concepto",
+      "amount": "Monto",
+      "date": "Fecha",
+      "category": "Categoría",
+      "submit": "Registrar gasto"
+    },
+    "categories": {
+      "SERVICES": "Servicios",
+      "MAINTENANCE": "Mantenimiento",
+      "PURCHASES": "Compras",
+      "OTHERS": "Otros"
+    },
+    "table": {
+      "date": "Fecha",
+      "category": "Categoría",
+      "concept": "Concepto",
+      "amount": "Monto",
+      "total": "Total del mes"
+    }
   }
 }

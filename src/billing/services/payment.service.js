@@ -39,7 +39,7 @@ export class PaymentService {
 
     /**
      * Updates a payment by ID
-     * @param {number|string} id
+         * @param {string} id
      * @param {Payment} payment
      * @returns {Promise<Payment>}
      */
@@ -50,7 +50,7 @@ export class PaymentService {
 
     /**
      * Deletes a payment by ID
-     * @param {number|string} id
+     * @param {string} id
      * @returns {Promise<void>}
      */
     async delete(id) {

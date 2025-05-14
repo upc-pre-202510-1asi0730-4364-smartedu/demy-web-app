@@ -50,5 +50,35 @@
     "due-date": "Due date",
     "action": "Action",
     "register-button": "Save payment"
+  },
+  "finance": {
+    "title": "Expenses",
+    "subtitle": {
+      "register": "Register new expense",
+      "summary": "Monthly summary"
+    },
+    "summary": {
+      "empty": "No expenses have been registered this month"
+    },
+    "form": {
+      "concept": "Concept",
+      "amount": "Amount",
+      "date": "Date",
+      "category": "Category",
+      "submit": "Register expense"
+    },
+    "categories": {
+      "SERVICES": "Services",
+      "MAINTENANCE": "Maintenance",
+      "PURCHASES": "Purchases",
+      "OTHERS": "Others"
+    },
+    "table": {
+      "date": "Date",
+      "category": "Category",
+      "concept": "Concept",
+      "amount": "Amount",
+      "total": "Monthly total"
+    }
   }
 }
