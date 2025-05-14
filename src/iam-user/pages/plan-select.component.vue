@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     selectPlan() {
-      this.$router.push('/login');
+      this.$router.push('/organization');
     }
   }
 }
