@@ -21,7 +21,7 @@ const routes = [
             { path: 'organization', component: Organization },
             { path: 'payments', component: Payment },
             {path: 'attendance', component: AttendancePageComponent },
-            { path: '', redirect: '/workspace' }
+            { path: '', redirect: '/organization', component: Organization },
         ]
     }
 ]
