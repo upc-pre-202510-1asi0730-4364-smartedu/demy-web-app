@@ -1,5 +1,3 @@
-// src/services/CourseService.js
-
 import httpInstance from "../../shared/services/http.instance.js";
 import {Course} from "../model/course.entity.js";
 
