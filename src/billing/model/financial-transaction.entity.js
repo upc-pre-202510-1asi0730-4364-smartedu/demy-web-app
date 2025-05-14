@@ -1,5 +1,3 @@
-import { Payment } from './payment.entity.js'
-
 export const PartyType = Object.freeze({
     STUDENT: 'STUDENT',
     TEACHER: 'TEACHER',
@@ -10,10 +8,11 @@ export const PartyType = Object.freeze({
 
 export class FinancialTransaction {
     constructor({
-                    id = 0,
+                    id = '',
                     source = PartyType.ACADEMY,
                     target = PartyType.ACADEMY,
                     type = '',
+                    category = '',
                     concept = '',
                     date = new Date(),
                     reference = '',
@@ -25,6 +24,7 @@ export class FinancialTransaction {
         this.source = source
         this.target = target
         this.type = type
+        this.category = category
         this.concept = concept
         this.date = date ? new Date(date) : new Date()
         this.reference = reference

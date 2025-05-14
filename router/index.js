@@ -9,7 +9,7 @@ import MainLayout from "../src/shared/components/main-layout.component.vue";
 //import DashboardPage from '../workspace/pages/dashboard-page.vue'
 import Payment from "../src/billing/pages/payment.component.vue";
 import Organization from "../workspace/pages/organization.component.vue";
-//import ExpensesPage from '../finance/pages/expenses-page.vue'
+import ExpensesPage from "../src/billing/pages/expenses-page.component.vue";
 //import ReportsPage from '../finance/pages/reports-page.vue'
 
 const routes = [
@@ -19,7 +19,8 @@ const routes = [
         children: [
             { path: 'organization', component: Organization },
             { path: 'payments', component: Payment },
-            { path: '', redirect: '/workspace' }
+            { path: 'finance', component: ExpensesPage },
+            { path: '', redirect: '/organization' }
         ]
     }
 ]

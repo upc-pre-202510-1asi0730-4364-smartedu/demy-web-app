@@ -9,10 +9,13 @@ import { StudentService } from '../../enrollments/services/student.service.js'
 import { InvoiceService } from '../services/invoice.service.js'
 import { PaymentService } from '../services/payment.service.js'
 import { PaymentStatus } from '../model/invoice.entity.js'
+import { FinancialTransactionService } from '../services/financial-transaction.service.js'
+import { FinancialTransaction, PartyType } from '../model/financial-transaction.entity.js'
 
 const studentService = new StudentService()
 const invoiceService = new InvoiceService()
 const paymentService = new PaymentService()
+const transactionService = new FinancialTransactionService()
 
 export default {
   name: 'payments-page',
@@ -57,9 +60,31 @@ export default {
       }
 
       try {
-        await paymentService.create(payment)
+        const createdPayment = await paymentService.create(payment)
 
-        const updatedInvoice = { status: PaymentStatus.PAID }
+        // 🧾 Registrar transacción financiera
+        const transaction = new FinancialTransaction({
+          source: PartyType.STUDENT,
+          target: PartyType.ACADEMY,
+          type: 'INCOME',
+          category: 'Pago de mensualidad',
+          concept: 'Pago de mensualidad',
+          date: new Date(),
+          reference: `TX-${Date.now()}`,
+          amount: createdPayment.amount,
+          method: createdPayment.method
+        })
+
+        await transactionService.create(transaction)
+
+        const updatedInvoice = {
+          id: invoice.id,
+          subscriptionId: invoice.subscriptionId,
+          amount: invoice.amount,
+          dueDate: invoice.dueDate,
+          studentId: invoice.studentId,
+          status: PaymentStatus.PAID
+        }
 
         await invoiceService.update(invoice.id, updatedInvoice)
 
@@ -72,7 +97,7 @@ export default {
 
         showPaymentForm.value = false
       } catch (err) {
-        console.error('Error al registrar el pago', err)
+        console.error('Error al registrar el pago o la transacción', err)
       }
     }
 
