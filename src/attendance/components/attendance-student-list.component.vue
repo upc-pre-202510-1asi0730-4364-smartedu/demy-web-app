@@ -2,6 +2,7 @@
   <h3>{{$t('attendance-subtitle2')}}</h3>
   <div class="table-container">
     <pv-data-table
+        class="attendance-table"
         :value="records"
         dataKey="studentId"
         :rows="5"
@@ -48,7 +49,7 @@ export default {
       this.records = students.map(student => ({
         studentId: student.dni,
         studentName: `${student.firstName} ${student.lastName}`,
-        status: AttendanceStatus.PRESENT // valor inicial por defecto
+        status: AttendanceStatus.ABSENT // valor inicial por defecto
       }));
     } catch (err) {
       console.error('Error al obtener estudiantes:', err);

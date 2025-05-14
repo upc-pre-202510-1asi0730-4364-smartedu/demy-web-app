@@ -32,7 +32,8 @@ import { AttendanceRecord } from '../model/attendance-record.entity.js'
 import { AttendanceStatus } from '../model/attendance-status.js'
 import { classSessionService } from '../services/class-sessions.service.js'
 import { ClassSession } from '../model/class-session.entity.js'
-
+import { AttendanceRecordService } from '../services/attendance-record.service.js'
+const attendanceRecordService = new AttendanceRecordService()
 export default {
   name: 'AttendancePage',
   components: {
@@ -53,6 +54,7 @@ export default {
       ]
     }
   },
+
   methods: {
     async saveAttendance() {
       try {
@@ -69,8 +71,27 @@ export default {
         alert('Error al guardar la asistencia')
       }
     },
-    onSave() {
+    async onSave() {
+      const seen = new Set()
+      const recordsToSave = []
 
+      for (const record of this.attendanceRecords) {
+        if (!seen.has(record.studentId)) {
+          seen.add(record.studentId)
+          recordsToSave.push({
+            studentId: record.studentId,
+            status: record.status
+          })
+        }
+      }
+
+      try {
+        await attendanceRecordService.saveMany(recordsToSave)
+        console.log('Asistencia guardada con éxito')
+        this.$refs.studentListComponent.resetAttendance()
+      } catch (error) {
+        console.error('Error al guardar asistencia:', error)
+      }
       this.$refs.studentListComponent.resetAttendance()
     }
   },
