@@ -34,7 +34,7 @@ export default {
     },
     logout() {
       console.log('Cerrar sesión')
-      // Aquí iría lógica de logout real
+      this.$router.push('/login');
     }
   }
 }

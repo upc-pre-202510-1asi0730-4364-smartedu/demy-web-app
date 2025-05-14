@@ -82,6 +82,7 @@ export default {
   text-decoration: none;
   border-radius: 4px;
   transition: background-color 0.2s ease;
+  cursor: pointer;
 }
 
 .nav-item:hover {

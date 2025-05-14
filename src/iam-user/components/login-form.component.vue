@@ -88,11 +88,14 @@ async function handleSubmit() {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  position: relative;
+
 }
 
 .left-side {
   flex: 1;
   background-color: #f0f0f0;
+  position: relative;
 }
 
 .left-side img {
@@ -240,34 +243,46 @@ async function handleSubmit() {
   background-color: var(--color-primary-1);
   border-radius: 50px;
 }
-
-/* Responsive ajustes */
-@media (max-width: 960px) {
+@media (max-width: 1200px) {
   .container {
     flex-direction: column;
   }
 
   .left-side {
-    display: none;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
   }
 
   .right-side {
-    flex: none;
-    width: 100%;
-    padding: 20px;
+    position: relative;
+    z-index: 1;
     background-color: transparent;
+    padding: 13px;
   }
 
   .form-box {
-    max-width: 95%;
-    margin: 0 auto;
-    border-radius: 16px;
+    width: 100%;
+    max-width: 58%;
+    padding: 13px;
+    margin-top: 13px;
+    border-radius: 10px;
+    background-color: white;
+    position: relative;
+    z-index: 2;
   }
 
   .logo {
-    width: 140px;
+    width: 160px;
+    margin-bottom: 19px;
   }
 }
+
+
 
 @media (max-width: 400px) {
   .title {
