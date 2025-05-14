@@ -175,14 +175,12 @@ export default defineComponent({
   width: 100%;
 }
 
-.form-row .p-float-label {
+.form-row  {
   width: 100%;
   display: block;
 }
 
-.form-row :deep(.pv-input-text),
-.form-row :deep(.pv-calendar),
-.form-row :deep(.pv-dropdown) {
+.form-field {
   width: 100%;
 }
 
@@ -203,12 +201,6 @@ export default defineComponent({
   font-weight: 500;
 }
 
-.p-error {
-  color: #f44336;
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
-  display: block;
-}
 
 /* Estilos responsive */
 @media (min-width: 768px) {
