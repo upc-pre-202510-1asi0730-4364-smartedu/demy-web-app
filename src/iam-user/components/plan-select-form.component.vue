@@ -1,3 +1,20 @@
+<script>
+export default {
+  name: 'PlanSelectModel',
+  props: {
+    planKey: {
+      type: String,
+      required: true
+    }
+  },
+  methods: {
+    selectPlan() {
+      this.$emit('select-plan');
+    }
+  }
+}
+</script>
+
 <template>
   <div class="plan-box">
     <div class="plan-subtitle">{{ $t('plan-select.plans.' + planKey + '.subtitle') }}</div>
@@ -15,23 +32,6 @@
     </button>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'PlanSelectModel',
-  props: {
-    planKey: {
-      type: String,
-      required: true
-    }
-  },
-  methods: {
-    selectPlan() {
-      this.$emit('select-plan');
-    }
-  }
-}
-</script>
 
 <style scoped>
 .plan-box {

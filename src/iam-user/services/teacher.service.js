@@ -22,7 +22,7 @@ export class TeacherService {
             const payload = {
                 fullName: teacherData.fullName,
                 email: teacherData.email,
-                password: teacherData.passwordHash,
+                passwordHash: teacherData.passwordHash,
                 role: 'TEACHER',
                 status: 'ACTIVE'
             };

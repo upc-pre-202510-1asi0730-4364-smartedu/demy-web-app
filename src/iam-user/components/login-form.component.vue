@@ -1,3 +1,31 @@
+<script setup>
+import { reactive } from 'vue'
+import LoginInput from '../components/login-input.component.vue'
+import LanguageSwitcher from '../../shared/components/language-switcher.component.vue'
+import { useUserAccountService } from '../services/user-account.service.js'
+import { useRouter } from 'vue-router'
+
+const userService = useUserAccountService()
+
+const router = useRouter()
+
+const form = reactive({
+  email: '',
+  password: '',
+  remember: false
+})
+
+async function handleSubmit() {
+  try {
+    const user = await userService.login(form)
+    console.log('Authenticated user:', user)
+    await router.push('/organization')
+  } catch (error) {
+    console.error('Login failed:', error)
+  }
+}
+</script>
+
 <template>
   <div class="container">
     <div class="left-side">
@@ -49,29 +77,6 @@
   </div>
 </template>
 
-<script setup>
-import { reactive } from 'vue'
-import LoginInput from '../components/login-input.component.vue'
-import LanguageSwitcher from '../../shared/components/language-switcher.component.vue'
-import { useUserAccountService } from '../services/user-account.service.js'
-
-const userService = useUserAccountService()
-
-const form = reactive({
-  email: '',
-  password: '',
-  remember: false
-})
-
-async function handleSubmit() {
-  try {
-    const user = await userService.login(form)
-    console.log('Authenticated user:', user)
-  } catch (error) {
-    console.error('Login failed:', error)
-  }
-}
-</script>
 <style scoped>
 :root {
   --color-primary-1: #1d4ed8;
