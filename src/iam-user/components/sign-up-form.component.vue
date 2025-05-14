@@ -1,41 +1,3 @@
-<template>
-  <div class="container">
-    <div class="left-side">
-      <div class="form-box">
-        <div class="top-bar">
-          <app-language-switcher class="custom-color"></app-language-switcher>
-        </div>
-        <img class="logo" src="/assets/logos/demy-blue-logo.png" alt="Imagen de bienvenida" />
-        <p class="login">
-          <router-link to="/login">{{ $t('sign-up.login') }}</router-link>
-        </p>
-        <p class="title">{{ $t('sign-up.title') }}</p>
-        <p class="sub-tittle">{{ $t('sign-up.sub-title') }}</p>
-
-        <form @submit.prevent="onSubmit" class="form">
-          <input type="text" v-model="form.name" :placeholder="$t('sign-up.name')" required />
-          <input type="text" v-model="form.academy_name" :placeholder="$t('sign-up.academy-name')" required />
-          <input type="number" v-model="form.ruc" :placeholder="$t('sign-up.ruc')" required />
-          <input type="email" v-model="form.email" :placeholder="$t('sign-up.email')" required />
-          <input type="password" v-model="form.password" :placeholder="$t('sign-up.password')" required />
-
-          <div class="terms-me">
-            <label class="terms-label">
-              <input type="checkbox" v-model="form.terms" />
-              <span>{{ $t('sign-up.terms-me') }}</span>
-            </label>
-          </div>
-          <button class="button-color" type="submit">{{ $t('sign-up.register') }}</button>
-        </form>
-      </div>
-    </div>
-
-    <div class="right-side">
-      <img src="/assets/img/sign-up-image.jpg" alt="Imagen de bienvenida" />
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -76,19 +38,56 @@ const onSubmit = async () => {
     alert('Successfully created academy')
 
     await userAccountService.createUser({
-      name: form.value.name,
+      fullName: form.value.name,
       email: form.value.email,
-      password: form.value.password
+      passwordHash: form.value.password
     })
     alert('User created successfully')
 
-    router.push('/plantSelect')
+    await router.push('/plantSelect')
   } catch (error) {
     alert('There was an error registering the academy or user')
   }
 }
 </script>
 
+<template>
+  <div class="container">
+    <div class="left-side">
+      <div class="form-box">
+        <div class="top-bar">
+          <app-language-switcher class="custom-color"></app-language-switcher>
+        </div>
+        <img class="logo" src="/assets/logos/demy-blue-logo.png" alt="Imagen de bienvenida" />
+        <p class="login">
+          <router-link to="/login">{{ $t('sign-up.login') }}</router-link>
+        </p>
+        <p class="title">{{ $t('sign-up.title') }}</p>
+        <p class="sub-tittle">{{ $t('sign-up.sub-title') }}</p>
+
+        <form @submit.prevent="onSubmit" class="form">
+          <input type="text" v-model="form.name" :placeholder="$t('sign-up.name')" required />
+          <input type="text" v-model="form.academy_name" :placeholder="$t('sign-up.academy-name')" required />
+          <input type="number" v-model="form.ruc" :placeholder="$t('sign-up.ruc')" required />
+          <input type="email" v-model="form.email" :placeholder="$t('sign-up.email')" required />
+          <input type="password" v-model="form.password" :placeholder="$t('sign-up.password')" required />
+
+          <div class="terms-me">
+            <label class="terms-label">
+              <input type="checkbox" v-model="form.terms" />
+              <span>{{ $t('sign-up.terms-me') }}</span>
+            </label>
+          </div>
+          <button class="button-color" type="submit">{{ $t('sign-up.register') }}</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="right-side">
+      <img src="/assets/img/sign-up-image.jpg" alt="Imagen de bienvenida" />
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .container {
