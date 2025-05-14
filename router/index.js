@@ -7,6 +7,8 @@ import MainLayout from "../src/shared/components/main-layout.component.vue";
 // Pages
 //import LoginPage from '../public/pages/login-page.vue'
 //import DashboardPage from '../workspace/pages/dashboard-page.vue'
+import Enrollment from "../src/enrollments/pages/enrollment-management.component.vue";
+import Student from "../src/enrollments/pages/student-management.component.vue"
 import Payment from "../src/billing/pages/payment.component.vue";
 import Login from "../src/iam-user/pages/login.component.vue" ;
 import SignUp from "../src/iam-user/pages/sign-up.component.vue";
@@ -16,6 +18,8 @@ import TeacherPage from "../src/iam-user/pages/teacher.component.vue";
 import PlantSelect from "../src/iam-user/pages/plan-select.component.vue";
 import AttendancePageComponent from "../src/attendance/components/attendance-page.component.vue";
 import Courses from "../src/scheduling/pages/courses-overview.component.vue";
+import AcademicPeriod from "../src/enrollments/pages/academic-period-management.component.vue";
+//import ExpensesPage from '../finance/pages/expenses-page.vue'
 //import ReportsPage from '../finance/pages/reports-page.vue'
 import Classrooms from "../src/scheduling/pages/classrooms-overview.component.vue";
 import WeeklySchedules from "../src/scheduling/pages/weekly-schedules-overview.component.vue";
@@ -29,6 +33,7 @@ const routes = [
                 path: 'organization',
                 children: [
                     {path: '', name: 'organization', component: Organization},
+                    {path: 'periods', component: AcademicPeriod},
                     {path: 'teachers', component: TeacherPage},
                     {path: 'courses', component: Courses },
                     {path: 'classrooms', component: Classrooms },
@@ -39,6 +44,8 @@ const routes = [
             { path: 'payments', component: Payment },
             { path: 'attendance', component: AttendancePageComponent },
             { path: 'finance', component: ExpensesPage },
+            { path: 'enrollment', component: Enrollment},
+            { path: 'students', component: Student}
         ]
     },
     {

@@ -25,5 +25,3 @@ dist-ssr
 *.sw?
 
 # Archivos de configuración de entorno
-.env
-.env.*
