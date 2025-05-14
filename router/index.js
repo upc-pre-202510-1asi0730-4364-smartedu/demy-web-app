@@ -20,9 +20,14 @@ const routes = [
         path: '/',
         component: MainLayout,
         children: [
-            { path: 'organization', component: Organization, children: [
-                    {path: 'academic-periods', component: AcademicPeriod}
-                ]},
+            {
+                path: 'organization',
+                children: [
+                    {path: '', name: 'organization', component: Organization},
+                    {path: 'periods', component: AcademicPeriod},
+                ]
+
+            },
             { path: 'payments', component: Payment },
             { path: 'enrollment', component: Enrollment},
             { path: 'students', component: Student},
