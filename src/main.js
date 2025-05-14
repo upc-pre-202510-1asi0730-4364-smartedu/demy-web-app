@@ -10,13 +10,15 @@ import router from "../router/index.js";
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 
-
 import {
     Avatar, Button, Card, Drawer, Image,
-    InputText, Menu, Menubar, SelectButton,
-    Toolbar, Tooltip,Dropdown, DataTable,Column,Checkbox
+    InputText, Menu, Menubar, Select, SelectButton,
+    Toolbar, Tooltip, Dropdown, DataTable, Column, Checkbox
 } from 'primevue'
 
+import Dialog from "primevue/dialog";
+import Textarea from "primevue/textarea";
+import Paginator from "primevue/paginator";
 
 const CustomTheme = definePreset(Aura, {
     semantic: {
@@ -91,6 +93,10 @@ app
     .component('pv-data-table', DataTable)
     .component('pv-column', Column)
     .component('pv-checkbox', Checkbox)
+    .component('pv-dialog', Dialog)
+    .component('pv-textarea', Textarea)
+    .component('pv-paginator', Paginator)
+    .component('pv-dropdown', Select)
     .use(i18n)
     .use(router)
     .mount('#app')

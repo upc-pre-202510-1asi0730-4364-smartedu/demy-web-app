@@ -15,7 +15,10 @@ import ExpensesPage from "../src/billing/pages/expenses-page.component.vue";
 import TeacherPage from "../src/iam-user/pages/teacher.component.vue";
 import PlantSelect from "../src/iam-user/pages/plan-select.component.vue";
 import AttendancePageComponent from "../src/attendance/components/attendance-page.component.vue";
+import Courses from "../src/scheduling/pages/courses-overview.component.vue";
 //import ReportsPage from '../finance/pages/reports-page.vue'
+import Classrooms from "../src/scheduling/pages/classrooms-overview.component.vue";
+import WeeklySchedules from "../src/scheduling/pages/weekly-schedules-overview.component.vue";
 
 const routes = [
     {
@@ -27,8 +30,10 @@ const routes = [
                 children: [
                     {path: '', name: 'organization', component: Organization},
                     {path: 'teachers', component: TeacherPage},
+                    {path: 'courses', component: Courses },
+                    {path: 'classrooms', component: Classrooms },
+                    {path: 'weekly-schedules', component: WeeklySchedules },
                 ]
-
             },
             { path: '', redirect: '/organization', component: Organization },
             { path: 'payments', component: Payment },

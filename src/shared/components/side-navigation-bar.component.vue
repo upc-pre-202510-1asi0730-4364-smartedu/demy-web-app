@@ -16,7 +16,7 @@ export default {
         { icon: 'file', label: 'Matrícula', route: '/enrollment' },
         { icon: 'users', label: 'Alumnos', route: '/students' },
         { icon: 'credit-card', label: 'Pagos', route: '/payments' },
-        { icon: 'calendar', label: 'Horarios', route: '/schedules' },
+        //{ icon: 'calendar', label: 'Horarios', route: '/schedules' },
         { icon: 'check-circle', label: 'Asistencia', route: '/attendance' },
         { icon: 'wallet', label: 'Finanzas', route: '/finance' }
       ]

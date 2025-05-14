@@ -1,8 +1,8 @@
 {
   "organization": {
-    "profile": {
-      "title": "Perfil",
-      "description": "Gestiona los miembros de tu organización"
+    "weekly": {
+      "title": "Horario semanal",
+      "description": "Gestiona tus horarios semanales"
     },
     "courses": {
       "title": "Cursos",
@@ -180,6 +180,61 @@
   "attendance-subtitle2": "Lista de alumnos",
   "attendance-student": "Estudiante",
   "attendance-checkbox": "Asistió",
-  "attendance-save": "Guardar asistencia"
-
+  "attendance-save": "Guardar asistencia",
+  "view-courses": {
+    "title": "Cursos",
+    "table": {
+      "name": "Nombre",
+      "code": "Código",
+      "description": "Descripción",
+      "actions": "Acciones"
+    },
+    "button":{
+      "new-course": "Nuevo Curso"
+    }
+  },
+  "view-classrooms": {
+    "title": "Salones",
+    "table": {
+      "code": "Código",
+      "capacity": "Capacidad",
+      "campus": "Sede",
+      "actions": "Acciones"
+    },
+    "button":{
+      "new-classroom": "Nuevo Salón"
+    }
+  },
+  "view-weekly-schedules": {
+    "title": "Horarios Semanales",
+    "table": {
+      "name": "Nombre",
+      "number": "Numero de bloques",
+      "actions": "Acciones"
+    },
+    "button":{
+      "new": "Nuevo Horario Semanal"
+    }
+  },
+  "search-schedules": {
+    "title": "Buscar Horarios Semanales",
+    "select": "Selecciona un horario",
+    "table": {
+      "subtitle": "Horario: ",
+      "hour": "Hora",
+      "course": "Curso",
+      "classroom": "Aula",
+      "teacher": "Profesor",
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    },
+    "button": {
+      "search": "Buscar"
+    }
+  }
 }

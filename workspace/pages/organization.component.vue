@@ -10,12 +10,6 @@ export default {
     return {
       options: [
         {
-          title: 'organization.profile.title',
-          description: 'organization.profile.description',
-          image: 'assets/img/organization-profile.jpg',
-          route: '/organization/profile'
-        },
-        {
           title: 'organization.courses.title',
           description: 'organization.courses.description',
           image: 'assets/img/organization-courses.jpg',
@@ -31,13 +25,19 @@ export default {
           title: 'organization.rooms.title',
           description: 'organization.rooms.description',
           image: 'assets/img/organization-rooms.jpg',
-          route: '/organization/rooms'
+          route: '/organization/classrooms'
         },
         {
           title: 'organization.teachers.title',
           description: 'organization.teachers.description',
           image: 'assets/img/organization-teachers.jpg',
           route: '/organization/teachers'
+        },
+        {
+          title: 'organization.weekly.title',
+          description: 'organization.weekly.description',
+          image: 'assets/img/organization-weekly.jpg',
+          route: '/organization/weekly-schedules'
         }
       ]
     }
