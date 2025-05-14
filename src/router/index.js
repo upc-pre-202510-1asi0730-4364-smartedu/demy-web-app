@@ -1,28 +1,28 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // Layouts
-import MainLayout from "../src/shared/components/main-layout.component.vue";
+import MainLayout from "../shared/components/main-layout.component.vue";
 //import FinanceLayout from '../finance/components/finance-layout.vue'
 
 // Pages
 //import LoginPage from '../public/pages/login-page.vue'
 //import DashboardPage from '../workspace/pages/dashboard-page.vue'
-import Enrollment from "../src/enrollments/pages/enrollment-management.component.vue";
-import Student from "../src/enrollments/pages/student-management.component.vue"
-import Payment from "../src/billing/pages/payment.component.vue";
-import Login from "../src/iam-user/pages/login.component.vue" ;
-import SignUp from "../src/iam-user/pages/sign-up.component.vue";
-import Organization from "../workspace/pages/organization.component.vue";
-import ExpensesPage from "../src/billing/pages/expenses-page.component.vue";
-import TeacherPage from "../src/iam-user/pages/teacher.component.vue";
-import PlantSelect from "../src/iam-user/pages/plan-select.component.vue";
-import AttendancePageComponent from "../src/attendance/components/attendance-page.component.vue";
-import Courses from "../src/scheduling/pages/courses-overview.component.vue";
-import AcademicPeriod from "../src/enrollments/pages/academic-period-management.component.vue";
+import Enrollment from "../enrollments/pages/enrollment-management.component.vue";
+import Student from "../enrollments/pages/student-management.component.vue"
+import Payment from "../billing/pages/payment.component.vue";
+import Login from "../iam-user/pages/login.component.vue" ;
+import SignUp from "../iam-user/pages/sign-up.component.vue";
+import Organization from "../../workspace/pages/organization.component.vue";
+import ExpensesPage from "../billing/pages/expenses-page.component.vue";
+import TeacherPage from "../iam-user/pages/teacher.component.vue";
+import PlantSelect from "../iam-user/pages/plan-select.component.vue";
+import AttendancePageComponent from "../attendance/components/attendance-page.component.vue";
+import Courses from "../scheduling/pages/courses-overview.component.vue";
+import AcademicPeriod from "../enrollments/pages/academic-period-management.component.vue";
 //import ExpensesPage from '../finance/pages/expenses-page.vue'
 //import ReportsPage from '../finance/pages/reports-page.vue'
-import Classrooms from "../src/scheduling/pages/classrooms-overview.component.vue";
-import WeeklySchedules from "../src/scheduling/pages/weekly-schedules-overview.component.vue";
+import Classrooms from "../scheduling/pages/classrooms-overview.component.vue";
+import WeeklySchedules from "../scheduling/pages/weekly-schedules-overview.component.vue";
 
 const routes = [
     {
