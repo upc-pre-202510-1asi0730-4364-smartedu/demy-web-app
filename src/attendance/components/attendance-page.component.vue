@@ -5,7 +5,7 @@
     <div class="form-row">
       <AttendanceClassSelect
           v-model="selectedClass"
-          :classOptions="classOptions"
+
       />
       <AttendanceDate
           v-model="selectedDate"
@@ -47,11 +47,6 @@ export default {
       selectedClass: null,
       selectedDate: new Date(),
       attendanceRecords: [],
-      classOptions: [
-        { name: '1A', id: '1A' },
-        { name: '2B', id: '2B' },
-        { name: '3C', id: '3C' }
-      ]
     }
   },
 
@@ -94,14 +89,6 @@ export default {
       }
       this.$refs.studentListComponent.resetAttendance()
     }
-  },
-  mounted() {
-    // Carga simulada de estudiantes
-    this.attendanceRecords = [
-      { studentId: '001', studentName: 'Ana López', status: AttendanceStatus.PRESENT },
-      { studentId: '002', studentName: 'Luis García', status: AttendanceStatus.PRESENT },
-      { studentId: '003', studentName: 'Valeria Torres', status: AttendanceStatus.PRESENT }
-    ]
   },
 
 }
