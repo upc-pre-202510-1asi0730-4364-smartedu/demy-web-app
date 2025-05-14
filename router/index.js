@@ -14,6 +14,7 @@ import Organization from "../workspace/pages/organization.component.vue";
 import ExpensesPage from "../src/billing/pages/expenses-page.component.vue";
 import TeacherPage from "../src/iam-user/pages/teacher.component.vue";
 import PlantSelect from "../src/iam-user/pages/plan-select.component.vue";
+import AttendancePageComponent from "../src/attendance/components/attendance-page.component.vue";
 //import ReportsPage from '../finance/pages/reports-page.vue'
 
 const routes = [
@@ -29,9 +30,10 @@ const routes = [
                 ]
 
             },
+            { path: '', redirect: '/organization', component: Organization },
             { path: 'payments', component: Payment },
+            { path: 'attendance', component: AttendancePageComponent },
             { path: 'finance', component: ExpensesPage },
-            { path: '', redirect: '/organization' }
         ]
     },
     {

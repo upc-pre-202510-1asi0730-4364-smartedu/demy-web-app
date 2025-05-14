@@ -10,11 +10,13 @@ import router from "../router/index.js";
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 
+
 import {
     Avatar, Button, Card, Drawer, Image,
     InputText, Menu, Menubar, SelectButton,
-    Toolbar, Tooltip
+    Toolbar, Tooltip,Dropdown, DataTable,Column,Checkbox
 } from 'primevue'
+
 
 const CustomTheme = definePreset(Aura, {
     semantic: {
@@ -85,6 +87,10 @@ app
     .component('pv-toolbar', Toolbar)
     .component('pv-tooltip', Tooltip)
     .component('pv-image', Image)
+    .component('pv-dropdown',Dropdown)
+    .component('pv-data-table', DataTable)
+    .component('pv-column', Column)
+    .component('pv-checkbox', Checkbox)
     .use(i18n)
     .use(router)
     .mount('#app')

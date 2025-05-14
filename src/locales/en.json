@@ -175,5 +175,13 @@
       "amount": "Amount",
       "total": "Monthly total"
     }
-  }
+  },
+  "attendance-title": "Attendance Record",
+  "attendance-subtitle1": "My classes",
+  "attendance-class": "Class",
+  "attendance-date": "Date",
+  "attendance-subtitle2": "List of students",
+  "attendance-student": "Student",
+  "attendance-checkbox": "Attended",
+  "attendance-save": "Save attendance"
 }

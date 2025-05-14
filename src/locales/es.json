@@ -172,5 +172,14 @@
       "amount": "Monto",
       "total": "Total del mes"
     }
-  }
+  },
+  "attendance-title": "Registro de asistencia",
+  "attendance-subtitle1": "Mis Clases",
+  "attendance-class": "Clase",
+  "attendance-date": "Fecha",
+  "attendance-subtitle2": "Lista de alumnos",
+  "attendance-student": "Estudiante",
+  "attendance-checkbox": "Asistió",
+  "attendance-save": "Guardar asistencia"
+
 }
