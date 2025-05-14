@@ -114,11 +114,17 @@
     },
     "status": {
       "active": "Activo",
-      "inactive": "Inactivo"
+      "inactive": "Inactivo",
+      "cancelled": "Cancelado",
+      "completed": "Completado",
+      "deleted": "Eliminado"
     },
     "payment": {
       "paid": "Pagado",
-      "unpaid": "No Pagado"
+      "unpaid": "No pagado",
+      "pending": "Pendiente",
+      "refunded": "Reembolsado",
+      "partial": "Parcial"
     },
     "paginator": {
       "label": "Seleccionar página de matrículas"
@@ -135,6 +141,8 @@
       "last-name": "Apellidos",
       "last-name-required": "Apellidos es requerido",
       "sex": "Sexo",
+      "sex-male": "Masculino",
+      "sex-female": "Femenino",
       "sex-required": "Sexo es requerido",
       "birth-date": "Fecha de Nacimiento",
       "birth-date-required": "Fecha de nacimiento es requerida",

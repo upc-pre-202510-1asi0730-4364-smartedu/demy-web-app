@@ -113,12 +113,18 @@
       "delete": "Delete enrollment"
     },
     "status": {
-      "active": "Active",
-      "inactive": "Inactive"
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "cancelled": "Cancelado",
+      "completed": "Completado",
+      "deleted": "Eliminado"
     },
     "payment": {
       "paid": "Paid",
-      "unpaid": "Unpaid"
+      "unpaid": "Unpaid",
+      "pending": "Pending",
+      "refunded": "Refunded",
+      "partial": "Partial"
     },
     "paginator": {
       "label": "Select enrollment page"
@@ -136,6 +142,8 @@
       "last-name-required": "Last name is required",
       "sex": "Sex",
       "sex-required": "Sex is required",
+      "sex-male": "Male",
+      "sex-female": "Female",
       "birth-date": "Birth Date",
       "birth-date-required": "Birth date is required",
       "address": "Address",
