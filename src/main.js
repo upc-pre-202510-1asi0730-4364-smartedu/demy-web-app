@@ -13,7 +13,7 @@ import 'primeflex/primeflex.css'
 import {
     Avatar, Button, Card, Drawer, Image,
     InputText, Menu, Menubar, SelectButton,
-    Toolbar, Tooltip
+    Toolbar, Tooltip, Select, Column, DataTable
 } from 'primevue'
 
 const CustomTheme = definePreset(Aura, {
@@ -85,6 +85,10 @@ app
     .component('pv-toolbar', Toolbar)
     .component('pv-tooltip', Tooltip)
     .component('pv-image', Image)
+    .component('pv-dropdown', Select)
+    .component('DataTable', DataTable)
+    .component('Column', Column)
+    .component('Button', Button)
     .use(i18n)
     .use(router)
     .mount('#app')
