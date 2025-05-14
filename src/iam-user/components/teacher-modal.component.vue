@@ -44,8 +44,8 @@
         </form>
 
         <div v-if="mode === 'delete'" class="delete-confirmation">
-          <p>Are you sure you want to delete "{{ teacher.fullName }}"?</p>
-          <p class="warning-text">This action cannot be undone.</p>
+          <p>{{ $t('teacher.modal.deleteConfirmation', { name: teacher.fullName }) }}</p>
+          <p class="warning-text">{{ $t('teacher.modal.deleteWarning')}}</p>
           <div class="dialog-actions">
             <button class="btn btn-secondary" @click="onCancel">Cancel</button>
             <button class="btn btn-danger" @click="onConfirmDelete">Delete</button>
