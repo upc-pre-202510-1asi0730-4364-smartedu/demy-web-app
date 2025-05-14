@@ -1,28 +1,28 @@
-<template>
-  <div class="save-button">
-    <pv-button
-        :label="$t('attendance-save')"
-        icon="pi pi-save"
-        severity="primary"
-        @click="$emit('saveClicked')"
-    />
-  </div>
-</template>
-
 <script>
 import Button from 'primevue/button'
 import {Button as PvButton} from "primevue";
 
 export default {
   name: 'AttendanceSaveButton',
-  emits: ['click'],
+  emits: ['saveClicked'],
   methods: {
     onClick() {
-      this.$emit('click')
+      this.$emit('saveClicked')
     }
   }
 }
 </script>
+
+<template>
+  <div class="save-button">
+    <pv-button
+        :label="$t('attendance-save')"
+        icon="pi pi-save"
+        severity="primary"
+        @click="onClick"
+    />
+  </div>
+</template>
 
 <style scoped>
 .save-button {
