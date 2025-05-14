@@ -1,176 +1,174 @@
 <script>
-import { ref, onMounted, computed } from 'vue'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
-import Paginator from 'primevue/paginator'
-import Button from 'primevue/button'
+import { defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { Enrollment } from "../model/enrollment.entity.js";
+import { StudentService } from "../services/student.service.js";
+import { AcademicPeriodService } from "../services/academic-period.service.js";
+import { EnrollmentService } from "../services/enrollment.service.js";
+import EnrollmentCreateAndEditComponent from "../components/enrollment-create-and-edit.component.vue";
 
-import EnrollmentsCreateForm from '../components/enrollment-create-and-edit.component.vue'
-import { EnrollmentService } from '../services/enrollment.service.js'
-import { StudentService } from '../services/student.service.js'
-import { AcademicPeriodService } from '../services/academic-period.service.js'
-import { Enrollment } from '../model/enrollment.entity.js'
-
-const enrollmentService = new EnrollmentService()
-const studentService = new StudentService()
-const periodService = new AcademicPeriodService()
-
-export default {
-  name: 'enrollment-management-page',
+export default defineComponent({
+  name: 'EnrollmentManagementComponent',
   components: {
-    DataTable,
-    Column,
-    Paginator,
-    Button,
-    EnrollmentsCreateForm
+    EnrollmentCreateAndEditComponent
   },
   setup() {
-    const enrollments = ref([])
-    const enrollmentData = ref(new Enrollment({}))
-    const editMode = ref(false)
-    const page = ref(0)
-    const rowsPerPage = ref(5)
-
-    const studentMap = ref(new Map())
-    const periodMap = ref(new Map())
-
-    const paginatedEnrollments = computed(() => {
-      const start = page.value * rowsPerPage.value
-      return enrollments.value.slice(start, start + rowsPerPage.value)
-    })
-
-    const getAllEnrollments = async () => {
-      enrollments.value = await enrollmentService.getAll()
-    }
-
-    const loadStudents = async () => {
-      const students = await studentService.getAll()
-      studentMap.value = new Map(students.map(s => [s.id, `${s.firstName} ${s.lastName}`]))
-    }
-
-    const loadPeriods = async () => {
-      const periods = await periodService.getAll()
-      periodMap.value = new Map(periods.map(p => [p.id, p.name]))
-    }
-
-    const onEnrollmentAddRequested = async (enrollment) => {
-      const created = await enrollmentService.create(enrollment)
-      enrollments.value.push(created)
-      resetState()
-    }
-
-    const onEnrollmentUpdateRequested = async (enrollment) => {
-      const updated = await enrollmentService.update(enrollment.id, enrollment)
-      const index = enrollments.value.findIndex(e => e.id === updated.id)
-      if (index !== -1) enrollments.value[index] = updated
-      resetState()
-    }
-
-    const onDeleteItem = async (enrollment) => {
-      await enrollmentService.delete(enrollment.id)
-      enrollments.value = enrollments.value.filter(e => e.id !== enrollment.id)
-    }
-
-    const onEditItem = (enrollment) => {
-      enrollmentData.value = { ...enrollment }
-      editMode.value = true
-    }
-
-    const resetState = () => {
-      enrollmentData.value = new Enrollment({})
-      editMode.value = false
-    }
-
-    onMounted(() => {
-      getAllEnrollments()
-      loadStudents()
-      loadPeriods()
-    })
-
+    const { t } = useI18n();
+    return { t };
+  },
+  data() {
     return {
-      enrollments,
-      enrollmentData,
-      editMode,
-      paginatedEnrollments,
-      studentMap,
-      periodMap,
-      page,
-      rowsPerPage,
-      onEnrollmentAddRequested,
-      onEnrollmentUpdateRequested,
-      onDeleteItem,
-      onEditItem,
-      resetState
+      enrollments: [],
+      enrollmentData: new Enrollment(),
+      editMode: false,
+      loading: false,
+      columnsToDisplay: [
+        { field: 'id', header: 'enrollment.table.id' },
+        { field: 'studentId', header: 'enrollment.table.student' },
+        { field: 'periodId', header: 'enrollment.table.period' },
+        { field: 'createdAt', header: 'enrollment.table.date' },
+        { field: 'amount', header: 'enrollment.table.amount' },
+        { field: 'enrollmentStatus', header: 'enrollment.table.status' },
+        { field: 'paymentStatus', header: 'enrollment.table.payment-status' },
+        { field: 'actions', header: 'enrollment.table.actions' }
+      ],
+      studentMap: new Map(),
+      periodMap: new Map(),
+      enrollmentService: new EnrollmentService(),
+      studentService: new StudentService(),
+      academicPeriodService: new AcademicPeriodService()
+    };
+  },
+  mounted() {
+    this.loadAll();
+  },
+  methods: {
+    async loadAll() {
+      this.loading = true;
+      const [enrollments, students, periods] = await Promise.all([
+        this.enrollmentService.getAll(),
+        this.studentService.getAll(),
+        this.academicPeriodService.getAll()
+      ]);
+      this.enrollments = enrollments;
+      this.studentMap = new Map(students.map(s => [s.id, `${s.firstName} ${s.lastName}`]));
+      this.periodMap = new Map(periods.map(p => [p.id, p.name]));
+      this.loading = false;
+    },
+    async createEnrollment() {
+      const created = await this.enrollmentService.create(this.enrollmentData);
+      this.enrollments.push(created);
+    },
+    async updateEnrollment() {
+      const updated = await this.enrollmentService.update(this.enrollmentData.id, this.enrollmentData);
+      const index = this.enrollments.findIndex(e => e.id === updated.id);
+      if (index !== -1) this.enrollments[index] = updated;
+    },
+    async deleteEnrollment(id) {
+      await this.enrollmentService.delete(id);
+      this.enrollments = this.enrollments.filter(e => e.id !== id);
+    },
+    onEditItem(enrollment) {
+      this.editMode = true;
+      this.enrollmentData = new Enrollment(enrollment);
+    },
+    onCancelRequested() {
+      this.resetEditState();
+      this.loadAll();
+    },
+    async onEnrollmentAddRequested(enrollment) {
+      this.enrollmentData = enrollment;
+      await this.createEnrollment();
+      this.resetEditState();
+    },
+    async onEnrollmentUpdateRequested(enrollment) {
+      this.enrollmentData = enrollment;
+      await this.updateEnrollment();
+      this.resetEditState();
+    },
+    resetEditState() {
+      this.editMode = false;
+      this.enrollmentData = new Enrollment();
     }
   }
-}
+});
 </script>
 
 <template>
   <div class="container">
     <div class="header">
-      <h4>{{ $t('enrollment.management.title') }}</h4>
+      <h4>{{ t('enrollment.management.title') }}</h4>
     </div>
 
     <div class="enrollment-form-container">
-      <enrollments-create-form
-          :enrollment="enrollmentData"
+      <EnrollmentCreateAndEditComponent
+          v-model="enrollmentData"
           :editMode="editMode"
-          @cancelRequested="resetState"
-          @enrollmentAddRequested="onEnrollmentAddRequested"
-          @enrollmentUpdateRequested="onEnrollmentUpdateRequested"
+          @cancel="onCancelRequested"
+          @add-enrollment="onEnrollmentAddRequested"
+          @update-enrollment="onEnrollmentUpdateRequested"
       />
     </div>
 
     <div class="table-container">
       <DataTable
-          :value="paginatedEnrollments"
-          :paginator="false"
-          class="p-datatable-sm"
+          :value="enrollments"
+          :loading="loading"
+          :paginator="true"
+          :rows="10"
+          :rowsPerPageOptions="[5, 10, 25, 50]"
+          sortMode="multiple"
+          dataKey="id"
+          responsiveLayout="scroll"
       >
-        <Column field="id" :header="$t('enrollment.table.id')" />
-        <Column :header="$t('enrollment.table.student')">
-          <template #body="slotProps">
+        <Column
+            v-for="col in columnsToDisplay"
+            :key="col.field"
+            :field="col.field"
+            :header="t(col.header)"
+            :sortable="col.field !== 'actions'"
+        >
+          <!-- Custom cells -->
+          <template v-if="col.field === 'studentId'" #body="slotProps">
             {{ studentMap.get(slotProps.data.studentId) || '—' }}
           </template>
-        </Column>
-        <Column :header="$t('enrollment.table.period')">
-          <template #body="slotProps">
+
+          <template v-else-if="col.field === 'periodId'" #body="slotProps">
             {{ periodMap.get(slotProps.data.periodId) || '—' }}
           </template>
-        </Column>
-        <Column :header="$t('enrollment.table.date')">
-          <template #body="slotProps">
-            {{ new Date(slotProps.data.createdAt).toLocaleDateString('es-PE') }}
+
+          <template v-else-if="col.field === 'createdAt'" #body="slotProps">
+            {{ new Date(slotProps.data.createdAt).toLocaleDateString() }}
           </template>
-        </Column>
-        <Column field="amount" :header="$t('enrollment.table.amount')" />
-        <Column :header="$t('enrollment.table.status')">
-          <template #body="slotProps">
-            {{ $t('enrollment.status.' + slotProps.data.enrollmentStatus) }}
+
+          <template v-else-if="col.field === 'enrollmentStatus'" #body="slotProps">
+            {{ slotProps.data.enrollmentStatus === 'ACTIVE'
+              ? t('enrollment.status.active')
+              : t('enrollment.status.inactive') }}
           </template>
-        </Column>
-        <Column :header="$t('enrollment.table.payment-status')">
-          <template #body="slotProps">
-            {{ $t('enrollment.payment.' + (slotProps.data.paymentStatus || 'unpaid')) }}
+
+          <template v-else-if="col.field === 'paymentStatus'" #body="slotProps">
+            {{ slotProps.data.paymentStatus === 'PAID'
+              ? t('enrollment.payment.paid')
+              : t('enrollment.payment.unpaid') }}
           </template>
-        </Column>
-        <Column :header="$t('enrollment.table.actions')">
-          <template #body="slotProps">
-            <Button icon="pi pi-pencil" severity="info" @click="onEditItem(slotProps.data)" />
-            <Button icon="pi pi-trash" severity="danger" @click="onDeleteItem(slotProps.data)" />
+
+          <template v-else-if="col.field === 'actions'" #body="slotProps">
+            <Button
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-info p-button-sm"
+                @click="onEditItem(slotProps.data)"
+                :aria-label="t('enrollment.table.edit')"
+            />
+            <Button
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-danger p-button-sm ml-2"
+                @click="deleteEnrollment(slotProps.data.id)"
+                :aria-label="t('enrollment.table.delete')"
+            />
           </template>
         </Column>
       </DataTable>
-
-      <Paginator
-          :rows="rowsPerPage"
-          :totalRecords="enrollments.length"
-          :rowsPerPageOptions="[5, 10, 25, 100]"
-          :page="page"
-          @page="e => page = e.page"
-          class="custom-paginator"
-      />
     </div>
   </div>
 </template>

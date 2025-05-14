@@ -1,158 +1,171 @@
-<template>
-  <form @submit.prevent="onSubmit" class="enrollment-form">
-    <h2>{{ editMode ? $t('enrollment.form.title-edit') : $t('enrollment.form.title-new') }}</h2>
-
-    <!-- Estudiante -->
-    <div class="form-row">
-      <pv-select v-model="enrollment.studentId" :options="studentOptions" option-label="fullName"
-                  :placeholder="$t('enrollment.form.student')" filter showClear required
-                  :disabled="!studentOptions.length"></pv-select>
-    </div>
-
-    <!-- Periodo Académico -->
-    <div class="form-row">
-      <pv-select v-model="enrollment.periodId" :options="periodOptions" option-label="name"
-                  :placeholder="$t('enrollment.form.period')" required :disabled="!periodOptions.length"></pv-select>
-    </div>
-
-    <!-- Fecha de matrícula -->
-    <div class="form-row">
-      <pv-date-picker v-model="enrollment.createdAt" :showTime="false" dateFormat="yy-mm-dd"
-                  :placeholder="$t('enrollment.form.date')" required></pv-date-picker>
-    </div>
-
-    <!-- Monto -->
-    <div class="form-row">
-      <pv-input-number v-model="enrollment.amount" :placeholder="$t('enrollment.form.amount')"
-                     required mode="decimal" min="0"></pv-input-number>
-    </div>
-
-    <!-- Estado de Matrícula -->
-    <div class="form-row">
-      <pv-select v-model="enrollment.enrollmentStatus" :options="enrollmentStatusOptions"
-                  option-label="viewValue" :placeholder="$t('enrollment.form.status')" required></pv-select >
-    </div>
-
-    <!-- Estado de Pago -->
-    <div class="form-row">
-      <pv-select  v-model="enrollment.paymentStatus" :options="paymentStatusOptions"
-                  option-label="viewValue" :placeholder="$t('enrollment.form.payment-status')" required></pv-select >
-    </div>
-
-    <div class="form-actions">
-      <pv-button type="submit" :disabled="!isValid" label="Save" :label="$t(editMode ? 'enrollment.form.update' : 'enrollment.form.save')" />
-      <pv-button type="button" class="p-button-secondary" @click="onCancel" label="$t('enrollment.form.cancel')" />
-    </div>
-  </form>
-</template>
-
 <script>
+import { defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { Enrollment, EnrollmentStatus, PaymentStatus } from "../model/enrollment.entity.js";
+import { StudentService } from "../services/student.service.js";
+import { AcademicPeriodService } from "../services/academic-period.service.js";
 
-export default {
-  name: 'EnrollmentsCreateForm',
-  components: {},
+export default defineComponent({
+  name: 'enrollment-create-and-edit',
   props: {
-    enrollment: {
+    modelValue: {
       type: Object,
-      default: () => ({
-        studentId: null,
-        periodId: null,
-        createdAt: '',
-        amount: 0,
-        enrollmentStatus: 'ACTIVE',
-        paymentStatus: 'PENDING'
-      })
+      required: true
     },
     editMode: {
       type: Boolean,
       default: false
     }
   },
+  emits: ['update:modelValue', 'add-enrollment', 'update-enrollment', 'cancel'],
+  setup(_, { emit }) {
+    const { t } = useI18n();
+    return { t };
+  },
   data() {
     return {
+      localEnrollment: new Enrollment(this.modelValue),
       studentOptions: [],
       periodOptions: [],
       enrollmentStatusOptions: [
-        { value: 'ACTIVE', viewValue: 'Activo' },
-        { value: 'CANCELLED', viewValue: 'Cancelado' },
-        { value: 'COMPLETED', viewValue: 'Completado' },
-        { value: 'DELETED', viewValue: 'Eliminado' }
+        { value: EnrollmentStatus.ACTIVE, label: this.$t('enrollment.status.active') },
+        { value: EnrollmentStatus.CANCELLED, label: this.$t('enrollment.status.cancelled') },
+        { value: EnrollmentStatus.COMPLETED, label: this.$t('enrollment.status.completed') },
+        { value: EnrollmentStatus.DELETED, label: this.$t('enrollment.status.deleted') }
       ],
       paymentStatusOptions: [
-        { value: 'PENDING', viewValue: 'Pendiente' },
-        { value: 'PAID', viewValue: 'Pagado' },
-        { value: 'REFUNDED', viewValue: 'Reembolsado' },
-        { value: 'PARTIAL', viewValue: 'Parcial' }
-      ],
-      form: {
-        studentId: null,
-        periodId: null,
-        createdAt: '',
-        amount: 0,
-        enrollmentStatus: 'ACTIVE',
-        paymentStatus: 'PENDING'
-      }
-    }
-  },
-  computed: {
-    isValid() {
-      return this.form.studentId && this.form.periodId && this.form.createdAt && this.form.amount
-    }
+        { value: PaymentStatus.PENDING, label: this.$t('enrollment.payment.pending') },
+        { value: PaymentStatus.PAID, label: this.$t('enrollment.payment.paid') },
+        { value: PaymentStatus.REFUNDED, label: this.$t('enrollment.payment.refunded') },
+        { value: PaymentStatus.PARTIAL, label: this.$t('enrollment.payment.partial') }
+      ]
+    };
   },
   watch: {
-    enrollment: {
+    modelValue: {
       handler(newVal) {
-        this.form = { ...newVal }
+        this.localEnrollment = new Enrollment(newVal);
       },
+      deep: true,
       immediate: true
     }
   },
-  methods: {
-    onSubmit() {
-      if (this.isValid) {
-        const enrollmentToEmit = { ...this.form, createdAt: new Date(this.form.createdAt) }
-        const eventName = this.editMode ? 'enrollmentUpdateRequested' : 'enrollmentAddRequested'
-        this.$emit(eventName, enrollmentToEmit)
-        this.resetForm()
-      } else {
-        console.error('Formulario inválido. Por favor, verifica los campos.')
-      }
-    },
-    onCancel() {
-      this.$emit('cancelRequested')
-      this.resetForm()
-    },
-    resetForm() {
-      this.form = {
-        studentId: null,
-        periodId: null,
-        createdAt: '',
-        amount: 0,
-        enrollmentStatus: 'ACTIVE',
-        paymentStatus: 'PENDING'
-      }
-    },
-    loadStudents() {
-      // Llamada al servicio para cargar los estudiantes
-      this.studentOptions = [
-        { id: 1, fullName: 'Juan Pérez' },
-        { id: 2, fullName: 'Ana Gómez' }
-      ]
-    },
-    loadPeriods() {
-      // Llamada al servicio para cargar los períodos académicos
-      this.periodOptions = [
-        { id: 1, name: '2023-2024' },
-        { id: 2, name: '2024-2025' }
-      ]
-    }
+  async mounted() {
+    const studentService = new StudentService();
+    const periodService = new AcademicPeriodService();
+    this.studentOptions = await studentService.getAll();
+    this.periodOptions = await periodService.getAll();
   },
-  mounted() {
-    this.loadStudents()
-    this.loadPeriods()
+  methods: {
+    isValid() {
+      return this.$refs.form?.checkValidity();
+    },
+    submit() {
+      if (this.isValid()) {
+        const event = this.editMode ? 'update-enrollment' : 'add-enrollment';
+        this.localEnrollment.createdAt = new Date(this.localEnrollment.createdAt);
+        this.$emit(event, new Enrollment(this.localEnrollment));
+        this.reset();
+      }
+    },
+    cancel() {
+      this.$emit('cancel');
+      this.reset();
+    },
+    reset() {
+      this.localEnrollment = new Enrollment();
+      this.$refs.form.reset();
+    }
   }
-}
+});
 </script>
+
+<template>
+  <form ref="form" class="enrollment-form" @submit.prevent="submit">
+    <h2>{{ t(editMode ? 'enrollment.form.title-edit' : 'enrollment.form.title-new') }}</h2>
+
+    <!-- Estudiante -->
+    <div class="form-row">
+      <pv-dropdown
+          v-model="localEnrollment.studentId"
+          :options="studentOptions"
+          optionLabel="firstName"
+          optionValue="id"
+          :placeholder="t('enrollment.form.student')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- Periodo Académico -->
+    <div class="form-row">
+      <pv-dropdown
+          v-model="localEnrollment.periodId"
+          :options="periodOptions"
+          optionLabel="name"
+          optionValue="id"
+          :placeholder="t('enrollment.form.period')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- Fecha -->
+    <div class="form-row">
+      <pv-input-text
+          v-model="localEnrollment.createdAt"
+          type="date"
+          :placeholder="t('enrollment.form.date')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- Monto -->
+    <div class="form-row">
+      <pv-input-text
+          v-model="localEnrollment.amount"
+          type="number"
+          :placeholder="t('enrollment.form.amount')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- Estado de Matrícula -->
+    <div class="form-row">
+      <pv-dropdown
+          v-model="localEnrollment.enrollmentStatus"
+          :options="enrollmentStatusOptions"
+          optionLabel="label"
+          optionValue="value"
+          :placeholder="t('enrollment.form.status')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- Estado de Pago -->
+    <div class="form-row">
+      <pv-dropdown
+          v-model="localEnrollment.paymentStatus"
+          :options="paymentStatusOptions"
+          optionLabel="label"
+          optionValue="value"
+          :placeholder="t('enrollment.form.payment-status')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- Botones -->
+    <div class="form-actions">
+      <pv-button type="submit" :label="t(editMode ? 'enrollment.form.update' : 'enrollment.form.save')" severity="primary" />
+      <pv-button type="button" :label="t('enrollment.form.cancel')" severity="secondary" @click="cancel" />
+    </div>
+  </form>
+</template>
+
 
 <style scoped>
 .enrollment-form {

@@ -57,4 +57,15 @@ export class EnrollmentService {
     async delete(id) {
         await httpInstance.delete(`${this.resourceEndpoint}/${id}`)
     }
+
+    async save(enrollment) {
+        return enrollment.id
+            ? this.update(enrollment.id, enrollment)
+            : this.create(enrollment)
+    }
+
+    async getByStudentId(studentId) {
+        const res = await httpInstance.get(`${this.resourceEndpoint}?studentId=${studentId}`);
+        return res.data.map(e => new Enrollment(e));
+    }
 }
