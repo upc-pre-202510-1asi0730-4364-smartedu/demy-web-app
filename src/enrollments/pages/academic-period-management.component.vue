@@ -1,139 +1,136 @@
 <script>
-import { onMounted, ref, computed } from 'vue'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
-import Button from 'primevue/button'
-import Paginator from 'primevue/paginator'
+import { defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { AcademicPeriod } from "../model/academic-period.entity.js";
+import { AcademicPeriodService } from "../services/academic-period.service.js";
+import AcademicPeriodCreateAndEditComponent from "../components/academic-period-create-and-edit.component.vue";
 
-import AcademicPeriodCreateForm from '../components/academic-period-create-and-edit.component.vue'
-import { AcademicPeriodService } from '../services/academic-period.service.js'
-import { AcademicPeriod } from '../model/academic-period.entity.js'
-
-const academicPeriodService = new AcademicPeriodService()
-
-export default {
-  name: 'academic-period-management-page',
+export default defineComponent({
+  name: 'AcademicPeriodManagementComponent',
   components: {
-    AcademicPeriodCreateForm,
-    DataTable,
-    Column,
-    Button,
-    Paginator
+    AcademicPeriodCreateAndEditComponent
   },
   setup() {
-    const academicPeriods = ref([])
-    const academicPeriodData = ref(new AcademicPeriod({}))
-    const editMode = ref(false)
-
-    const page = ref(0)
-    const rowsPerPage = ref(5)
-
-    const paginatedData = computed(() => {
-      const start = page.value * rowsPerPage.value
-      return academicPeriods.value.slice(start, start + rowsPerPage.value)
-    })
-
-    const loadAll = async () => {
-      academicPeriods.value = await academicPeriodService.getAll()
-    }
-
-    const onEditItem = (period) => {
-      academicPeriodData.value = { ...period }
-      editMode.value = true
-    }
-
-    const onDeleteItem = async (period) => {
-      await academicPeriodService.delete(period.id)
-      academicPeriods.value = academicPeriods.value.filter(p => p.id !== period.id)
-    }
-
-    const onCancelRequested = () => {
-      resetState()
-      loadAll()
-    }
-
-    const onAdd = async (period) => {
-      const created = await academicPeriodService.create(period)
-      academicPeriods.value.push(created)
-      resetState()
-    }
-
-    const onUpdate = async (period) => {
-      const updated = await academicPeriodService.update(period.id, period)
-      const index = academicPeriods.value.findIndex(p => p.id === updated.id)
-      if (index !== -1) academicPeriods.value[index] = updated
-      resetState()
-    }
-
-    const resetState = () => {
-      academicPeriodData.value = new AcademicPeriod({})
-      editMode.value = false
-    }
-
-    onMounted(() => {
-      loadAll()
-    })
-
+    const { t } = useI18n();
+    return { t };
+  },
+  data() {
     return {
-      academicPeriods,
-      academicPeriodData,
-      editMode,
-      page,
-      rowsPerPage,
-      paginatedData,
-      onEditItem,
-      onDeleteItem,
-      onCancelRequested,
-      onAdd,
-      onUpdate
+      academicPeriods: [],
+      academicPeriodData: new AcademicPeriod(),
+      editMode: false,
+      loading: false,
+      columnsToDisplay: [
+        { field: 'name', header: 'academic-period.table.name' },
+        { field: 'startDate', header: 'academic-period.table.start-date' },
+        { field: 'endDate', header: 'academic-period.table.end-date' },
+        { field: 'actions', header: 'academic-period.table.actions' }
+      ],
+      academicPeriodService: new AcademicPeriodService()
+    };
+  },
+  mounted() {
+    this.getAllAcademicPeriods();
+  },
+  methods: {
+    async getAllAcademicPeriods() {
+      this.loading = true;
+      this.academicPeriods = await this.academicPeriodService.getAll();
+      this.loading = false;
+    },
+    async createAcademicPeriod() {
+      const created = await this.academicPeriodService.create(this.academicPeriodData);
+      this.academicPeriods.push(created);
+    },
+    async updateAcademicPeriod() {
+      const updated = await this.academicPeriodService.update(this.academicPeriodData.id, this.academicPeriodData);
+      const index = this.academicPeriods.findIndex(p => p.id === updated.id);
+      if (index !== -1) this.academicPeriods[index] = updated;
+    },
+    async deleteAcademicPeriod(id) {
+      await this.academicPeriodService.delete(id);
+      this.academicPeriods = this.academicPeriods.filter(p => p.id !== id);
+    },
+    onEditItem(period) {
+      this.editMode = true;
+      this.academicPeriodData = new AcademicPeriod(period);
+    },
+    onCancelRequested() {
+      this.resetEditState();
+      this.getAllAcademicPeriods();
+    },
+    async onAcademicPeriodAddRequested(period) {
+      this.academicPeriodData = period;
+      await this.createAcademicPeriod();
+      this.resetEditState();
+    },
+    async onAcademicPeriodUpdateRequested(period) {
+      this.academicPeriodData = period;
+      await this.updateAcademicPeriod();
+      this.resetEditState();
+    },
+    resetEditState() {
+      this.academicPeriodData = new AcademicPeriod();
+      this.editMode = false;
     }
   }
-}
+});
 </script>
 
 <template>
   <div class="container">
     <div class="header">
-      <h4>{{ $t('academic-period.management.title') }}</h4>
+      <h4>{{ t('academic-period.management.title') }}</h4>
     </div>
 
-    <academic-period-create-form
-        :academicPeriod="academicPeriodData"
-        :editMode="editMode"
-        @cancelRequested="onCancelRequested"
-        @academicPeriodAddRequested="onAdd"
-        @academicPeriodUpdateRequested="onUpdate"
-    />
+    <div class="academic-period-form-container">
+      <AcademicPeriodCreateAndEditComponent
+          v-model="academicPeriodData"
+          :editMode="editMode"
+          @cancel="onCancelRequested"
+          @add-academic-period="onAcademicPeriodAddRequested"
+          @update-academic-period="onAcademicPeriodUpdateRequested"
+      />
+    </div>
 
     <div class="table-container">
-      <DataTable :value="paginatedData" :paginator="false">
-        <Column field="name" :header="$t('academic-period.table.name')" />
-        <Column :header="$t('academic-period.table.start-date')">
-          <template #body="slotProps">
-            {{ new Date(slotProps.data.startDate).toLocaleDateString('es-PE') }}
+      <DataTable
+          :value="academicPeriods"
+          :loading="loading"
+          :paginator="true"
+          :rows="10"
+          :rowsPerPageOptions="[5, 10, 25, 50]"
+          sortMode="multiple"
+          dataKey="id"
+          responsiveLayout="scroll"
+      >
+        <Column
+            v-for="col in columnsToDisplay"
+            :key="col.field"
+            :field="col.field"
+            :header="t(col.header)"
+            :sortable="col.field !== 'actions'"
+        >
+          <template v-if="col.field === 'startDate' || col.field === 'endDate'" #body="slotProps">
+            {{ new Date(slotProps.data[col.field]).toLocaleDateString() }}
           </template>
-        </Column>
-        <Column :header="$t('academic-period.table.end-date')">
-          <template #body="slotProps">
-            {{ new Date(slotProps.data.endDate).toLocaleDateString('es-PE') }}
-          </template>
-        </Column>
-        <Column :header="$t('academic-period.table.actions')">
-          <template #body="slotProps">
-            <Button icon="pi pi-pencil" severity="info" @click="onEditItem(slotProps.data)" />
-            <Button icon="pi pi-trash" severity="danger" @click="onDeleteItem(slotProps.data)" />
+
+          <template v-else-if="col.field === 'actions'" #body="slotProps">
+            <Button
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-info p-button-sm"
+                @click="onEditItem(slotProps.data)"
+                :aria-label="t('academic-period.table.edit')"
+            />
+            <Button
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-danger p-button-sm ml-2"
+                @click="deleteAcademicPeriod(slotProps.data.id)"
+                :aria-label="t('academic-period.table.delete')"
+            />
           </template>
         </Column>
       </DataTable>
-
-      <Paginator
-          :rows="rowsPerPage"
-          :totalRecords="academicPeriods.length"
-          :rowsPerPageOptions="[5, 10, 25, 100]"
-          :page="page"
-          @page="e => page = e.page"
-          class="custom-paginator"
-      />
     </div>
   </div>
 </template>

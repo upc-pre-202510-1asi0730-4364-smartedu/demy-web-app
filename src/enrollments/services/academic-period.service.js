@@ -57,4 +57,9 @@ export class AcademicPeriodService {
     async delete(id) {
         await httpInstance.delete(`${this.resourceEndpoint}/${id}`)
     }
+
+    async getActive() {
+        const res = await httpInstance.get(`${this.resourceEndpoint}?isActive=true`);
+        return res.data.map(p => new AcademicPeriod(p));
+    }
 }

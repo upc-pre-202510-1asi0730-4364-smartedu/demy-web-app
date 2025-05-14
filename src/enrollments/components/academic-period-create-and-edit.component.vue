@@ -1,104 +1,112 @@
-<template>
-  <form class="academic-period-form" @submit.prevent="onSubmit">
-    <h4>{{ editMode ? $t('academic-period.regist.title-edit') : $t('academic-period.regist.save') }}</h4>
-
-    <div class="form-row">
-      <div class="form-field">
-        <label for="name">{{ $t('academic-period.regist.period') }}</label>
-        <pv-input-text id="name" v-model="form.name" required class="w-full" />
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-field">
-        <label for="startDate">{{ $t('academic-period.regist.start-date') }}</label>
-        <pv-date-picker id="startDate" v-model="form.startDate" dateFormat="yy-mm-dd" showIcon required class="w-full" />
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-field">
-        <label for="endDate">{{ $t('academic-period.regist.end-date') }}</label>
-        <pv-date-picker id="endDate" v-model="form.endDate" dateFormat="yy-mm-dd" showIcon required class="w-full" />
-      </div>
-    </div>
-
-    <div class="form-actions">
-      <pv-button type="submit" :disabled="!isValid" label="Save" :label="$t(editMode ? 'academic-period.regist.update' : 'academic-period.regist.save')" />
-      <pv-button type="button" class="p-button-secondary" @click="onCancel" :label="$t('academic-period.regist.cancel')" />
-    </div>
-  </form>
-</template>
-
 <script>
+import { defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { AcademicPeriod } from "../model/academic-period.entity.js";
 
-export default {
-  name: 'AcademicPeriodCreateForm',
+export default defineComponent({
+  name: 'academic-period-create',
   props: {
-    academicPeriod: {
+    modelValue: {
       type: Object,
-      default: () => ({ name: '', startDate: '', endDate: '' })
+      required: true
     },
     editMode: {
       type: Boolean,
       default: false
     }
   },
+  emits: ['update:modelValue', 'add-academic-period', 'update-academic-period', 'cancel'],
+  setup(_, { emit }) {
+    const { t } = useI18n();
+    return { t };
+  },
   data() {
     return {
-      form: {
-        name: '',
-        startDate: '',
-        endDate: ''
-      }
-    }
-  },
-  computed: {
-    isValid() {
-      return (
-          this.form.name &&
-          this.form.startDate &&
-          this.form.endDate
-      )
-    }
+      localAcademicPeriod: new AcademicPeriod(this.modelValue)
+    };
   },
   watch: {
-    academicPeriod: {
+    modelValue: {
       handler(newVal) {
-        this.form = { ...newVal }
+        this.localAcademicPeriod = new AcademicPeriod(newVal);
       },
+      deep: true,
       immediate: true
     }
   },
   methods: {
-    onSubmit() {
-      if (this.isValid) {
-        const formToEmit = {
-          ...this.form,
-          startDate: new Date(this.form.startDate),
-          endDate: new Date(this.form.endDate)
-        }
-        const eventName = this.editMode ? 'academicPeriodUpdateRequested' : 'academicPeriodAddRequested'
-        this.$emit(eventName, formToEmit)
-        this.resetEditState()
-      } else {
-        console.error('Formulario inválido.')
+    isValid() {
+      return this.$refs.form?.checkValidity();
+    },
+    submit() {
+      if (this.isValid()) {
+        const emitter = this.editMode ? 'update-academic-period' : 'add-academic-period';
+        this.localAcademicPeriod.startDate = new Date(this.localAcademicPeriod.startDate);
+        this.localAcademicPeriod.endDate = new Date(this.localAcademicPeriod.endDate);
+        this.$emit(emitter, new AcademicPeriod(this.localAcademicPeriod));
+        this.reset();
       }
     },
-    onCancel() {
-      this.$emit('cancelRequested')
-      this.resetEditState()
+    cancel() {
+      this.$emit('cancel');
+      this.reset();
     },
-    resetEditState() {
-      this.form = {
-        name: '',
-        startDate: '',
-        endDate: ''
-      }
+    reset() {
+      this.localAcademicPeriod = new AcademicPeriod();
+      this.$refs.form.reset();
     }
   }
-}
+});
 </script>
+
+<template>
+  <form ref="form" class="academic-period-form" @submit.prevent="submit">
+    <h4>{{ t(editMode ? 'academic-period.regist.title-edit' : 'academic-period.regist.save') }}</h4>
+
+    <div class="form-row">
+      <pv-input-text
+          v-model="localAcademicPeriod.name"
+          :placeholder="t('academic-period.regist.period')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <div class="form-row">
+      <pv-input-text
+          v-model="localAcademicPeriod.startDate"
+          type="date"
+          :placeholder="t('academic-period.regist.start-date')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <div class="form-row">
+      <pv-input-text
+          v-model="localAcademicPeriod.endDate"
+          type="date"
+          :placeholder="t('academic-period.regist.end-date')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <div class="form-actions">
+      <pv-button
+          type="submit"
+          :label="t(editMode ? 'academic-period.regist.update' : 'academic-period.regist.save')"
+          severity="primary"
+      />
+      <pv-button
+          type="button"
+          :label="t('academic-period.regist.cancel')"
+          severity="secondary"
+          @click="cancel"
+      />
+    </div>
+  </form>
+</template>
 
 <style scoped>
 .academic-period-form {
