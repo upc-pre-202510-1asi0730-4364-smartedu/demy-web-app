@@ -1,232 +1,152 @@
-<template>
-  <form class="student-form" @submit.prevent="onSubmit" ref="studentForm">
-    <h2>{{ editMode ? $t('student.form.title-edit') : $t('student.form.title-new') }}</h2>
-
-    <!-- DNI -->
-    <div class="form-row">
-      <span class="p-float-label">
-        <pv-input-text
-            id="dni"
-            v-model="formData.dni"
-            :class="{ 'p-invalid': errors.dni }"
-            maxlength="8"
-            required />
-        <label for="dni">{{ $t('student.form.dni') }}</label>
-      </span>
-      <small v-if="errors.dni" class="p-error">{{ $t('student.form.dni-error') }}</small>
-    </div>
-
-    <!-- First Name -->
-    <div class="form-row">
-      <span class="p-float-label">
-        <pv-input-text
-            id="firstName"
-            v-model="formData.firstName"
-            :class="{ 'p-invalid': errors.firstName }"
-            required />
-        <label for="firstName">{{ $t('student.form.first-name') }}</label>
-      </span>
-      <small v-if="errors.firstName" class="p-error">{{ $t('student.form.first-name-required') }}</small>
-    </div>
-
-    <!-- Last Name -->
-    <div class="form-row">
-      <span class="p-float-label">
-        <pv-input-text
-            id="lastName"
-            v-model="formData.lastName"
-            :class="{ 'p-invalid': errors.lastName }"
-            required />
-        <label for="lastName">{{ $t('student.form.last-name') }}</label>
-      </span>
-      <small v-if="errors.lastName" class="p-error">{{ $t('student.form.last-name-required') }}</small>
-    </div>
-
-    <!-- Sex -->
-    <div class="form-row">
-      <span class="p-float-label">
-        <Dropdown
-            id="sex"
-            v-model="formData.sex"
-            :options="sexOptions"
-            optionLabel="viewValue"
-            optionValue="value"
-            :class="{ 'p-invalid': errors.sex }"
-            required />
-        <label for="sex">{{ $t('student.form.sex') }}</label>
-      </span>
-      <small v-if="errors.sex" class="p-error">{{ $t('student.form.sex-required') }}</small>
-    </div>
-
-    <!-- Birth Date -->
-    <div class="form-row">
-      <span class="p-float-label">
-        <Calendar
-            id="birthDate"
-            v-model="formData.birthDate"
-            dateFormat="yy-mm-dd"
-            :class="{ 'p-invalid': errors.birthDate }"
-            required />
-        <label for="birthDate">{{ $t('student.form.birth-date') }}</label>
-      </span>
-      <small v-if="errors.birthDate" class="p-error">{{ $t('student.form.birth-date-required') }}</small>
-    </div>
-
-    <!-- Address -->
-    <div class="form-row">
-      <span class="p-float-label">
-        <InputText
-            id="address"
-            v-model="formData.address"
-            :class="{ 'p-invalid': errors.address }"
-            required />
-        <label for="address">{{ $t('student.form.address') }}</label>
-      </span>
-      <small v-if="errors.address" class="p-error">{{ $t('student.form.address-required') }}</small>
-    </div>
-
-    <!-- Phone -->
-    <div class="form-row">
-      <span class="p-float-label">
-        <InputText
-            id="phoneNumber"
-            v-model="formData.phoneNumber"
-            :class="{ 'p-invalid': errors.phoneNumber }"
-            maxlength="9"
-            required />
-        <label for="phoneNumber">{{ $t('student.form.phone') }}</label>
-      </span>
-      <small v-if="errors.phoneNumber" class="p-error">{{ $t('student.form.phone-error') }}</small>
-    </div>
-
-    <!-- Actions -->
-    <div class="form-actions">
-      <Button
-          type="submit"
-          :label="editMode ? $t('student.form.update') : $t('student.form.save')"
-          class="p-button-primary" />
-      <Button
-          type="button"
-          :label="$t('student.form.cancel')"
-          class="p-button-outlined p-button-secondary"
-          @click="onCancel" />
-    </div>
-  </form>
-</template>
-
 <script>
-import { InputText as PvInputText } from "primevue";
+import { defineComponent } from 'vue';
+import { Student, Sex } from "../model/student.entity.js";
+import { useI18n } from 'vue-i18n';
 
-export default {
-  name: 'StudentCreateAndEditForm',
-  components: { PvInputText },
+export default defineComponent({
+  name: 'StudentForm',
   props: {
-    studentData: Object,
-    editMode: Boolean
+    modelValue: {
+      type: Object,
+      required: true
+    },
+    editMode: {
+      type: Boolean,
+      default: false
+    }
   },
-  emits: ['student-add-requested', 'student-update-requested', 'cancel-requested'],
+  emits: ['update:modelValue', 'add-student', 'update-student', 'cancel'],
+  setup(_, { emit }) {
+    const { t } = useI18n();
+    return { t };
+  },
   data() {
     return {
-      formData: {
-        dni: '',
-        firstName: '',
-        lastName: '',
-        sex: '',
-        birthDate: null,
-        address: '',
-        phoneNumber: ''
-      },
-      errors: {},
+      localStudent: new Student(this.modelValue),
       sexOptions: [
-        { value: 'MALE', viewValue: 'Masculino' },
-        { value: 'FEMALE', viewValue: 'Femenino' }
+        { value: Sex.MALE, label: this.$t('student.form.sex-male') },
+        { value: Sex.FEMALE, label: this.$t('student.form.sex-female') }
       ]
     };
   },
   watch: {
-    studentData: {
-      handler(newStudent) {
-        if (newStudent) {
-          this.formData = {
-            dni: newStudent.dni || '',
-            firstName: newStudent.firstName || '',
-            lastName: newStudent.lastName || '',
-            sex: newStudent.sex || '',
-            birthDate: newStudent.birthDate ? new Date(newStudent.birthDate) : null,
-            address: newStudent.address || '',
-            phoneNumber: newStudent.phoneNumber || ''
-          };
-        }
+    modelValue: {
+      handler(newVal) {
+        this.localStudent = new Student(newVal);
       },
-      immediate: true,
-      deep: true
+      deep: true,
+      immediate: true
     }
   },
   methods: {
-    validateForm() {
-      this.errors = {};
-
-      if (!/^\d{8}$/.test(this.formData.dni)) {
-        this.errors.dni = true;
-      }
-      if (!this.formData.firstName) {
-        this.errors.firstName = true;
-      }
-      if (!this.formData.lastName) {
-        this.errors.lastName = true;
-      }
-      if (!this.formData.sex) {
-        this.errors.sex = true;
-      }
-      if (!this.formData.birthDate) {
-        this.errors.birthDate = true;
-      }
-      if (!this.formData.address) {
-        this.errors.address = true;
-      }
-      if (!/^\d{9}$/.test(this.formData.phoneNumber)) {
-        this.errors.phoneNumber = true;
-      }
-
-      return Object.keys(this.errors).length === 0;
+    isValid() {
+      return this.$refs.form.checkValidity();
     },
-    async onSubmit() {
-      if (this.validateForm()) {
-        const studentData = { ...this.formData };
-        if (studentData.birthDate instanceof Date) {
-          studentData.birthDate = studentData.birthDate.toISOString().split('T')[0];
-        }
-
-        if (this.editMode) {
-          this.$emit('student-update-requested', studentData);
-        } else {
-          this.$emit('student-add-requested', studentData);
-        }
-
-        this.resetEditState();
-      } else {
-        console.error('Formulario inválido.');
+    submit() {
+      if (this.isValid()) {
+        const event = this.editMode ? 'update-student' : 'add-student';
+        this.$emit(event, new Student(this.localStudent));
+        this.reset();
       }
     },
-    resetEditState() {
-      this.formData = {
-        dni: '',
-        firstName: '',
-        lastName: '',
-        sex: '',
-        birthDate: null,
-        address: '',
-        phoneNumber: ''
-      };
-      this.errors = {};
+    cancel() {
+      this.$emit('cancel');
+      this.reset();
     },
-    onCancel() {
-      this.$emit('cancel-requested');
-      this.resetEditState();
+    reset() {
+      this.localStudent = new Student();
+      this.$refs.form.reset();
     }
   }
-};
+});
 </script>
+
+<template>
+  <form ref="form" class="student-form" @submit.prevent="submit">
+    <h2>{{ t(editMode ? 'student.form.title-edit' : 'student.form.title-new') }}</h2>
+
+    <!-- DNI -->
+    <div class="form-row">
+      <pv-input-text
+          v-model="localStudent.dni"
+          :placeholder="t('student.form.dni')"
+          :maxlength="8"
+          pattern="[0-9]{8}"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- First Name -->
+    <div class="form-row">
+      <pv-input-text
+          v-model="localStudent.firstName"
+          :placeholder="t('student.form.first-name')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- Last Name -->
+    <div class="form-row">
+      <pv-input-text
+          v-model="localStudent.lastName"
+          :placeholder="t('student.form.last-name')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- Sex -->
+    <div class="form-row">
+      <pv-dropdown
+          v-model="localStudent.sex"
+          :options="sexOptions"
+          optionValue="value"
+          optionLabel="label"
+          class="form-field"
+      />
+    </div>
+
+    <!-- Birth Date -->
+    <div class="form-row">
+      <pv-input-text
+          v-model="localStudent.birthDate"
+          type="date"
+          :placeholder="t('student.form.birth-date')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- Address -->
+    <div class="form-row">
+      <pv-input-text
+          v-model="localStudent.address"
+          :placeholder="t('student.form.address')"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- Phone Number -->
+    <div class="form-row">
+      <pv-input-text
+          v-model="localStudent.phoneNumber"
+          :placeholder="t('student.form.phone')"
+          pattern="[0-9]{9}"
+          required
+          class="form-field"
+      />
+    </div>
+
+    <!-- Buttons -->
+    <div class="form-actions">
+      <pv-button type="submit" :label="t(editMode ? 'student.form.update' : 'student.form.save')" severity="primary" />
+      <pv-button type="button" :label="t('student.form.cancel')" severity="secondary" @click="cancel" />
+    </div>
+  </form>
+</template>
 
 <style scoped>
 .student-form {
