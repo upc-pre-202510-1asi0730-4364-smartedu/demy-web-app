@@ -3,7 +3,7 @@
     <h1>{{ $t('view-courses.title') }}</h1>
 
     <!-- Button to create a new course -->
-    <pv-button label="New Course" icon="pi pi-plus" @click="openNewCourseDialog" class="p-button-primary" />
+    <pv-button :label="$t('view-courses.button.new-course')" icon="pi pi-plus" @click="openNewCourseDialog" class="p-button-primary" />
 
     <!-- DataTable -->
     <DataTable
@@ -16,12 +16,12 @@
         ref="dt"
         class="mt-3"
     >
-      <Column field="name" header="Name" sortable="*" />
-      <Column field="code" header="Code" sortable="*" />
-      <Column field="description" header="Description" />
+      <Column field="name" :header="$t('view-courses.table.name')" sortable="*" />
+      <Column field="code" :header="$t('view-courses.table.code')" sortable="*" />
+      <Column field="description" :header="$t('view-courses.table.description')" />
 
       <!-- Actions column -->
-      <Column header="Actions">
+      <Column :header="$t('view-courses.table.actions')">
         <template #body="slotProps">
           <div>
             <pv-button

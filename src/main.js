@@ -12,7 +12,7 @@ import 'primeflex/primeflex.css'
 
 import {
     Avatar, Button, Card, Drawer, Image,
-    InputText, Menu, Menubar, SelectButton,
+    InputText, Menu, Menubar, Select, SelectButton,
     Toolbar, Tooltip
 } from 'primevue'
 import Dialog from "primevue/dialog";
@@ -91,6 +91,7 @@ app
     .component('pv-dialog', Dialog) //Ingresado
     .component('pv-textarea', Textarea) //Ingresado
     .component('pv-paginator', Paginator) //Ingresado
+    .component('pv-dropdown', Select)
     .use(i18n)
     .use(router)
     .mount('#app')

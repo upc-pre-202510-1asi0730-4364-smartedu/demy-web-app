@@ -12,6 +12,8 @@ import Organization from "../workspace/pages/organization.component.vue";
 import Courses from "../src/scheduling/pages/courses-overview.component.vue";
 //import ExpensesPage from '../finance/pages/expenses-page.vue'
 //import ReportsPage from '../finance/pages/reports-page.vue'
+import Classrooms from "../src/scheduling/pages/classrooms-overview.component.vue";
+import WeeklySchedules from "../src/scheduling/pages/weekly-schedules-overview.component.vue";
 
 const routes = [
     {
@@ -20,6 +22,8 @@ const routes = [
         children: [
             { path: 'organization', component: Organization },
             { path: 'organization/courses', component: Courses },
+            { path: 'organization/classrooms', component: Classrooms },
+            { path: 'organization/weekly-schedules', component: WeeklySchedules },
             { path: 'payments', component: Payment },
             { path: '', redirect: '/workspace' }
         ]
