@@ -182,7 +182,6 @@ export default {
 
     <!-- Loading Indicator -->
     <div v-if="isLoading" class="loading-container">
-      <pv-progress-spinner />
       <p>Loading schedules...</p>
     </div>
 
