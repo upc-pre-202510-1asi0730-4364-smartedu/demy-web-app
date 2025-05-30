@@ -152,10 +152,6 @@ export default {
   padding: 10px;
 }
 
-.p-button {
-  margin-right: 10px;
-}
-
 .p-invalid {
   border-color: #f44336;
 }
@@ -165,12 +161,6 @@ export default {
   font-size: 0.75rem;
   margin-top: 4px;
   display: block;
-}
-
-.dialog-title {
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 20px;
 }
 
 .p-button-success {

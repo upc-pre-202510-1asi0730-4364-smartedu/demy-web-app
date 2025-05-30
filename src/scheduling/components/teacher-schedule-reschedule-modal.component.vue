@@ -98,11 +98,9 @@ export default {
       }
       
       // Verificar que la duración sea de al menos 30 minutos
-      if (endTimeInMinutes - startTimeInMinutes < 30) {
-        return false;
-      }
+      return endTimeInMinutes - startTimeInMinutes >= 30;
       
-      return true;
+
     };
 
     const handleConfirm = () => {

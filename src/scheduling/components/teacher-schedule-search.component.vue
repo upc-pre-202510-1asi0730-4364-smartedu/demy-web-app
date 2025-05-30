@@ -425,11 +425,6 @@ export default {
   margin-bottom: 5px;
 }
 
-.course-code {
-  font-size: 0.8em;
-  color: #666;
-}
-
 .classroom-info {
   font-size: 0.9em;
   color: #666;
