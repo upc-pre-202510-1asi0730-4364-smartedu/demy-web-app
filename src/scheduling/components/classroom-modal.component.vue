@@ -4,46 +4,47 @@
       <form @submit.prevent="onSubmit" class="form-row">
         <!-- Field for Code -->
         <div class="p-field p-grid">
-          <label for="code" class="p-col-12 p-md-2">Code</label>
+          <label for="code" class="p-col-12 p-md-2">{{ $t('scheduling.classroom.modal.form.code') }}</label>
           <div class="p-col-12 p-md-10">
-            <pv-input-text v-model="classroom.code" id="code" required :class="{'p-invalid': codeInputInvalid}" placeholder="Enter classroom code" />
-            <small v-if="codeInputInvalid" class="p-error">Code is required</small>
+            <pv-input-text v-model="classroom.code" id="code" required :class="{'p-invalid': codeInputInvalid}" :placeholder="$t('scheduling.classroom.modal.form.codePlaceholder')" />
+            <small v-if="codeInputInvalid" class="p-error">{{ $t('scheduling.classroom.modal.form.codeRequired') }}</small>
           </div>
         </div>
         <!-- Field for Capacity -->
         <div class="p-field p-grid">
-          <label for="capacity" class="p-col-12 p-md-2">Capacity</label>
+          <label for="capacity" class="p-col-12 p-md-2">{{ $t('scheduling.classroom.modal.form.capacity') }}</label>
           <div class="p-col-12 p-md-10">
-            <pv-input-text v-model="classroom.capacity" id="capacity" required :class="{'p-invalid': capacityInputInvalid}" placeholder="Enter classroom capacity" />
-            <small v-if="capacityInputInvalid" class="p-error">Capacity is required and must be a valid number</small>
+            <pv-input-text v-model="classroom.capacity" id="capacity" required :class="{'p-invalid': capacityInputInvalid}" :placeholder="$t('scheduling.classroom.modal.form.capacityPlaceholder')" />
+            <small v-if="capacityInputInvalid" class="p-error">{{ $t('scheduling.classroom.modal.form.capacityRequired') }}</small>
           </div>
         </div>
         <!-- Field for Campus -->
         <div class="p-field p-grid">
-          <label for="campus" class="p-col-12 p-md-2">Campus</label>
+          <label for="campus" class="p-col-12 p-md-2">{{ $t('scheduling.classroom.modal.form.campus') }}</label>
           <div class="p-col-12 p-md-10">
-            <pv-input-text v-model="classroom.campus" id="campus" required :class="{'p-invalid': campusInputInvalid}" placeholder="Enter classroom campus" />
-            <small v-if="campusInputInvalid" class="p-error">Campus is required</small>
+            <pv-input-text v-model="classroom.campus" id="campus" required :class="{'p-invalid': campusInputInvalid}" :placeholder="$t('scheduling.classroom.modal.form.campusPlaceholder')" />
+            <small v-if="campusInputInvalid" class="p-error">{{ $t('scheduling.classroom.modal.form.campusRequired') }}</small>
           </div>
         </div>
       </form>
     </template>
     <template v-if="mode === 'delete'">
       <div class="delete-confirmation">
-        <p>Are you sure you want to delete the classroom with code: "{{ classroom.code }}"?</p>
-        <p>This action cannot be undone.</p>
+        <p>{{ $t('scheduling.classroom.modal.delete.confirm') }}: "{{ classroom.code }}"?</p>
+        <p>{{ $t('scheduling.classroom.modal.delete.warning') }}</p>
       </div>
     </template>
     <template #footer>
-      <pv-button label="Cancel" icon="pi pi-times" @click="onCancel" class="p-button-text" />
-      <pv-button v-if="mode !== 'delete'" label="Save" icon="pi pi-check" @click="onSubmit" class="p-button-success" />
-      <pv-button v-if="mode === 'delete'" label="Delete" icon="pi pi-trash" @click="onConfirmDelete" class="p-button-danger" />
+      <pv-button :label="$t('scheduling.classroom.modal.buttons.cancel')" icon="pi pi-times" @click="onCancel" class="p-button-text" />
+      <pv-button v-if="mode !== 'delete'" :label="$t('scheduling.classroom.modal.buttons.save')" icon="pi pi-check" @click="onSubmit" class="p-button-success" />
+      <pv-button v-if="mode === 'delete'" :label="$t('scheduling.classroom.modal.buttons.delete')" icon="pi pi-trash" @click="onConfirmDelete" class="p-button-danger" />
     </template>
   </pv-dialog>
 </template>
 
 <script>
 import { ref, watch, computed, toRef } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: 'classroom-modal',
@@ -64,6 +65,7 @@ export default {
   },
   emits: ['update:visible', 'submit', 'cancel', 'delete'],
   setup(props, { emit }) {
+    const { t } = useI18n();
     // Use toRef to create a reactive reference to props.visible
     const visible = toRef(props, 'visible');
 
@@ -87,9 +89,9 @@ export default {
 
     // Computed property for dynamic dialog title
     const dialogTitle = computed(() => {
-      if (props.mode === 'add') return 'Add New Classroom';
-      if (props.mode === 'edit') return 'Edit Classroom';
-      if (props.mode === 'delete') return 'Confirm Deletion';
+      if (props.mode === 'add') return t('scheduling.classroom.modal.title.add');
+      if (props.mode === 'edit') return t('scheduling.classroom.modal.title.edit');
+      if (props.mode === 'delete') return t('scheduling.classroom.modal.title.delete');
       return '';
     });
 

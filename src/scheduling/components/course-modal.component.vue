@@ -3,44 +3,45 @@
     <template v-if="mode === 'add' || mode === 'edit'">
       <form @submit.prevent="onSubmit" class="form-row">
         <div class="p-field p-grid">
-          <label for="name" class="p-col-12 p-md-2">Name</label>
+          <label for="name" class="p-col-12 p-md-2">{{ $t('scheduling.course.modal.form.name') }}</label>
           <div class="p-col-12 p-md-10">
-            <pv-input-text v-model="course.name" id="name" required :class="{'p-invalid': nameInputInvalid}" placeholder="Enter course name" />
-            <small v-if="nameInputInvalid" class="p-error">Name is required</small>
+            <pv-input-text v-model="course.name" id="name" required :class="{'p-invalid': nameInputInvalid}" :placeholder="$t('scheduling.course.modal.form.namePlaceholder')" />
+            <small v-if="nameInputInvalid" class="p-error">{{ $t('scheduling.course.modal.form.nameRequired') }}</small>
           </div>
         </div>
         <div class="p-field p-grid">
-          <label for="code" class="p-col-12 p-md-2">Code</label>
+          <label for="code" class="p-col-12 p-md-2">{{ $t('scheduling.course.modal.form.code') }}</label>
           <div class="p-col-12 p-md-10">
-            <pv-input-text v-model="course.code" id="code" required :class="{'p-invalid': codeInputInvalid}" placeholder="Enter course code" />
-            <small v-if="codeInputInvalid" class="p-error">Code is required</small>
+            <pv-input-text v-model="course.code" id="code" required :class="{'p-invalid': codeInputInvalid}" :placeholder="$t('scheduling.course.modal.form.codePlaceholder')" />
+            <small v-if="codeInputInvalid" class="p-error">{{ $t('scheduling.course.modal.form.codeRequired') }}</small>
           </div>
         </div>
         <div class="p-field p-grid">
-          <label for="description" class="p-col-12 p-md-2">Description</label>
+          <label for="description" class="p-col-12 p-md-2">{{ $t('scheduling.course.modal.form.description') }}</label>
           <div class="p-col-12 p-md-10">
-            <pv-textarea v-model="course.description" id="description" required :class="{'p-invalid': descInputInvalid}" rows="3" placeholder="Enter course description"></pv-textarea>
-            <small v-if="descInputInvalid" class="p-error">Description is required</small>
+            <pv-textarea v-model="course.description" id="description" required :class="{'p-invalid': descInputInvalid}" rows="3" :placeholder="$t('scheduling.course.modal.form.descriptionPlaceholder')"></pv-textarea>
+            <small v-if="descInputInvalid" class="p-error">{{ $t('scheduling.course.modal.form.descriptionRequired') }}</small>
           </div>
         </div>
       </form>
     </template>
     <template v-if="mode === 'delete'">
       <div class="delete-confirmation">
-        <p>Are you sure you want to delete the course "{{ course.name }}"?</p>
-        <p>This action cannot be undone.</p>
+        <p>{{ $t('scheduling.course.modal.delete.confirm') }} "{{ course.name }}"?</p>
+        <p>{{ $t('scheduling.course.modal.delete.warning') }}</p>
       </div>
     </template>
     <template #footer>
-      <pv-button label="Cancel" icon="pi pi-times" @click="onCancel" class="p-button-text" />
-      <pv-button v-if="mode !== 'delete'" label="Save" icon="pi pi-check" @click="onSubmit" class="p-button-success" />
-      <pv-button v-if="mode === 'delete'" label="Delete" icon="pi pi-trash" @click="onConfirmDelete" class="p-button-danger" />
+      <pv-button :label="$t('scheduling.course.modal.buttons.cancel')" icon="pi pi-times" @click="onCancel" class="p-button-text" />
+      <pv-button v-if="mode !== 'delete'" :label="$t('scheduling.course.modal.buttons.save')" icon="pi pi-check" @click="onSubmit" class="p-button-success" />
+      <pv-button v-if="mode === 'delete'" :label="$t('scheduling.course.modal.buttons.delete')" icon="pi pi-trash" @click="onConfirmDelete" class="p-button-danger" />
     </template>
   </pv-dialog>
 </template>
 
 <script>
 import { ref, watch, computed, toRef } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: 'course-modal',
@@ -61,6 +62,7 @@ export default {
   },
   emits: ['update:visible', 'submit', 'cancel', 'delete'],
   setup(props, { emit }) {
+    const { t } = useI18n();
     // Use toRef to create a reactive reference to props.visible
     const visible = toRef(props, 'visible');
 
@@ -80,9 +82,9 @@ export default {
 
     // Computed property for dynamic dialog title
     const dialogTitle = computed(() => {
-      if (props.mode === 'add') return 'Add New Course';
-      if (props.mode === 'edit') return 'Edit Course';
-      if (props.mode === 'delete') return 'Confirm Deletion';
+      if (props.mode === 'add') return t('scheduling.course.modal.title.add');
+      if (props.mode === 'edit') return t('scheduling.course.modal.title.edit');
+      if (props.mode === 'delete') return t('scheduling.course.modal.title.delete');
       return '';
     });
 
