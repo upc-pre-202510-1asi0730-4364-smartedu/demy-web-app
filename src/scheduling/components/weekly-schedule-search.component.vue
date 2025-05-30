@@ -187,9 +187,9 @@ export default {
 
     <!-- Error Message -->
     <div v-if="errorMessage" class="error-container">
-      <pv-message severity="error" :closable="false">
+      <p>
         {{ errorMessage }}
-      </pv-message>
+      </p>
     </div>
 
     <!-- Schedule Results -->
@@ -248,9 +248,9 @@ export default {
 
     <!-- No Results Message -->
     <div v-if="!currentWeeklySchedule && !isLoading && !errorMessage && localSelectedScheduleId" class="no-results">
-      <pv-message severity="info" :closable="false">
+      <p>
         No schedule found with the selected criteria.
-      </pv-message>
+      </p>
     </div>
   </div>
 </template>

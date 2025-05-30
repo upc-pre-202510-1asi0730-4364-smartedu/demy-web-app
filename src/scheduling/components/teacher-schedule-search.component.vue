@@ -226,12 +226,12 @@ export default {
       };
 
       const mappedDay = dayMapping[day];
-      
+
       return teacherSchedules.value.find(schedule => {
         const scheduleDayOfWeek = schedule.dayOfWeek;
         const scheduleStartTime = schedule.timeRange?.start;
         const scheduleEndTime = schedule.timeRange?.end;
-        
+
         // Verificar si el día coincide
         if (scheduleDayOfWeek !== mappedDay) {
           return false;
@@ -241,11 +241,11 @@ export default {
         const [startHour, startMinute] = scheduleStartTime.split(':').map(Number);
         const [endHour, endMinute] = scheduleEndTime.split(':').map(Number);
         const [slotHour, slotMinute] = timeSlot.split(':').map(Number);
-        
+
         const startTimeInMinutes = startHour * 60 + startMinute;
         const endTimeInMinutes = endHour * 60 + endMinute;
         const slotTimeInMinutes = slotHour * 60 + slotMinute;
-        
+
         // Verificar si el slot está dentro del rango de la clase
         return slotTimeInMinutes >= startTimeInMinutes && slotTimeInMinutes < endTimeInMinutes;
       }) || null;
@@ -265,10 +265,6 @@ export default {
         const weeklySchedule = allSchedules.value.find(ws =>
             ws.id === updatedSchedule.weeklyScheduleId
         );
-
-        if (!weeklySchedule) {
-          throw new Error('No se encontró el horario semanal');
-        }
 
         // Update the schedule within the weekly schedule
         const scheduleIndex = weeklySchedule.weekSchedule.findIndex(s => s.id === updatedSchedule.id);
