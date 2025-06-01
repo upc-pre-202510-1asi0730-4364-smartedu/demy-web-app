@@ -2,14 +2,14 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import EmailInput from './email-input.component.vue'
-import LanguageSwitcher from '../../shared/components/language-switcher.component.vue' // <-- ajusta la ruta aquí
+import LanguageSwitcher from '../../shared/components/language-switcher.component.vue'
 
 const email = ref('')
 const router = useRouter()
 
 const goToNext = () => {
   if (email.value) {
-    router.push('/reset-password') // reemplaza esta ruta con la que necesites
+    router.push('/reset-password')
   } else {
     alert('Please enter your email.')
   }
@@ -22,7 +22,6 @@ const goToLogin = () => {
 
 <template>
   <div class="recover-box">
-    <!-- Language switcher arriba a la derecha -->
     <div class="language-container">
       <LanguageSwitcher />
     </div>

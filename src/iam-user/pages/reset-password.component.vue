@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import PasswordInput from '../components/password-input.vue'
-import LanguageSwitcher from '../../shared/components/language-switcher.component.vue' // ajusta la ruta si es distinta
+import LanguageSwitcher from '../../shared/components/language-switcher.component.vue'
 
 
 const newPassword = ref('')
