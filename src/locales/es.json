@@ -172,5 +172,19 @@
       "amount": "Monto",
       "total": "Total del mes"
     }
+  },
+  "recover": {
+    "title": "Recuperar Contraseña",
+    "subtitle": "Ingrese su correo",
+    "placeholder": "Correo electrónico",
+    "send": "Enviar",
+    "back": "Volver"
+  },
+  "reset-password": {
+    "title": "Restablecer Contraseña",
+    "newPassword": "Nueva Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "button": "Restablecer",
+    "back": "Volver"
   }
 }

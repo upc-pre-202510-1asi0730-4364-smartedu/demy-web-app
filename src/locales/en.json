@@ -175,5 +175,21 @@
       "amount": "Amount",
       "total": "Monthly total"
     }
+  },
+  "recover": {
+    "title": "Recover Password",
+    "subtitle": "Enter your email",
+    "placeholder": "Email address",
+    "send": "Send",
+    "back": "Back"
+  },
+  "reset-password": {
+    "title": "Reset Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "button": "Reset",
+    "back": "Back"
   }
+
+
 }
