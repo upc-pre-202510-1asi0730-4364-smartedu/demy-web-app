@@ -1,5 +1,8 @@
 <script setup>
 import RecoverBox from '../components/recover-password.component.vue'
+
+
+
 </script>
 
 <template>

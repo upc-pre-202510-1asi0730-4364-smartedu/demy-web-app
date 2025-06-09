@@ -178,13 +178,32 @@
     "subtitle": "Ingrese su correo",
     "placeholder": "Correo electrónico",
     "send": "Enviar",
-    "back": "Volver"
+    "back": "Volver",
+    "emailFound": "Correo encontrado. Puedes continuar.",
+    "emailNotFound": "Correo no registrado.",
+    "errorEmpty": "Por favor, ingresa un correo.",
+    "apiError": "Error al conectar con el servidor.",
+    "modal": {
+      "accept": "Aceptar"
+    }
   },
   "reset-password": {
     "title": "Restablecer Contraseña",
     "newPassword": "Nueva Contraseña",
     "confirmPassword": "Confirmar Contraseña",
     "button": "Restablecer",
-    "back": "Volver"
+    "back": "Volver",
+    "modal": {
+      "resetSuccess": "La contraseña ha sido restablecida con éxito.",
+      "resetFail": "Error al restablecer la contraseña. Por favor, inténtalo de nuevo.",
+      "confirmReset": "¿Estás seguro de que quieres restablecer tu contraseña?",
+      "yes": "Sí",
+      "no": "No",
+      "ok": "Aceptar"
+    },
+    "errors": {
+      "emptyFields": "Por favor, completa ambos campos.",
+      "passwordMismatch": "Las contraseñas no coinciden."
+    }
   }
 }

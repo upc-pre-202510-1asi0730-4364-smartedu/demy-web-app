@@ -1,24 +1,64 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import EmailInput from './email-input.component.vue'
 import LanguageSwitcher from '../../shared/components/language-switcher.component.vue'
-
+import { useUserAccountService } from '../services/user-account.service.js'
+import ConfirmationModal from './confirmation-modal.component.vue'
 const email = ref('')
+const showModal = ref(false)
+const modalMessageKey = ref('')
 const router = useRouter()
+const userService = useUserAccountService()
+const emailFound = ref(false)
 
-const goToNext = () => {
-  if (email.value) {
+const { t } = useI18n()
+
+const goToNext = async () => {
+  if (!email.value) {
+    modalMessageKey.value = t('recover.errorEmpty')
+    showModal.value = true
+    return
+  }
+
+  try {
+    const users = await userService.getAllUsers()
+    const matchedUser = users.find(user => user.email === email.value)
+
+    if (matchedUser) {
+      localStorage.setItem('recoveryEmail', matchedUser.email)
+      localStorage.setItem('recoveryId', matchedUser.id)
+
+      modalMessageKey.value = t('recover.emailFound')
+      emailFound.value = true
+
+    } else {
+      modalMessageKey.value = t('recover.emailNotFound')
+      emailFound.value = false
+    }
+
+    showModal.value = true
+  } catch (e) {
+    modalMessageKey.value = t('recover.apiError')
+    showModal.value = true
+  }
+}
+
+const handleModalClose = () => {
+  showModal.value = false
+  if (emailFound.value) {
     router.push('/reset-password')
-  } else {
-    alert('Please enter your email.')
   }
 }
 
 const goToLogin = () => {
   router.push('/login')
 }
+
+
 </script>
+
 
 <template>
   <div class="recover-box">
@@ -33,6 +73,11 @@ const goToLogin = () => {
 
     <button class="send-btn" @click="goToNext">{{ $t('recover.send') }}</button>
     <button class="back-btn" @click="goToLogin">{{ $t('recover.back') }}</button>
+    <ConfirmationModal
+        :visible="showModal"
+        :message="modalMessageKey"
+        @close="handleModalClose"
+    />
   </div>
 </template>
 
