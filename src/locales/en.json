@@ -363,5 +363,38 @@
     "paginator": {
       "label": "Select student page"
     }
+  },
+  "recover": {
+    "title": "Recover Password",
+    "subtitle": "Enter your email",
+    "placeholder": "Email address",
+    "send": "Send",
+    "back": "Back",
+    "emailFound": "Email found. You may continue.",
+    "emailNotFound": "Email not registered.",
+    "errorEmpty": "Please enter an email.",
+    "apiError": "Error connecting to the server.",
+    "modal": {
+      "accept": "Accept"
+    }
+  },
+  "reset-password": {
+    "title": "Reset Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "button": "Reset",
+    "back": "Back",
+    "modal": {
+      "resetSuccess": "Password has been reset successfully.",
+      "resetFail": "Failed to reset password. Please try again.",
+      "confirmReset": "Are you sure you want to reset your password?",
+      "yes": "Yes",
+      "no": "No",
+      "ok": "OK"
+    },
+    "errors": {
+      "emptyFields": "Please fill in both fields.",
+      "passwordMismatch": "Passwords do not match."
+    }
   }
 }
