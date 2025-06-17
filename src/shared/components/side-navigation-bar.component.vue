@@ -52,7 +52,7 @@ export default {
       <li v-for="option in visibleNavOptions" :key="option.label">
         <RouterLink :to="option.route" class="nav-item">
           <i :class="`pi pi-${option.icon}`" class="nav-icon" />
-          <span class="nav-label">{{ option.label }}</span>
+          <span class="nav-label">{{ $t(option.label) }}</span>
         </RouterLink>
       </li>
     </ul>
