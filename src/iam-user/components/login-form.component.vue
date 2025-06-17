@@ -19,6 +19,8 @@ async function handleSubmit() {
   try {
     const user = await userService.login(form)
     console.log('Authenticated user:', user)
+    // Store user data in localStorage
+    localStorage.setItem('currentUser', JSON.stringify(user))
     await router.push('/organization')
   } catch (error) {
     console.error('Login failed:', error)
