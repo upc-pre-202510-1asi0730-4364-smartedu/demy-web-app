@@ -21,6 +21,18 @@
       "description": "Gestiona el personal docente"
     }
   },
+  "sidebar": {
+    "organization": "Organización",
+    "enrollment": "Matrícula",
+    "students": "Alumnos",
+    "payments": "Pagos",
+    "schedules": "Horarios",
+    "my-schedule": "Mi horario",
+    "attendance": "Asistencia",
+    "finance": "Finanzas",
+    "logout": "Salir",
+    "categories": "Categorías"
+  },
   "payments": {
     "title": "Pagos",
     "subtitle": "Buscar el estado de pago de un alumno",

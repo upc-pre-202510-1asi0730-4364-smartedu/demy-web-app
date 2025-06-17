@@ -18,12 +18,41 @@ const form = reactive({
 async function handleSubmit() {
   try {
     const user = await userService.login(form)
+
+    if (!user || !user.role) {
+      console.error('User is invalid or missing role')
+      alert('Credenciales incorrectas o sin rol asignado.')
+      return
+    }
+
+    // Save Guardar rol/email in localStorage as userData
+    const userData = {
+      email: user.email,
+      role: user.role
+    }
+
     console.log('Authenticated user:', user)
+
     // Store user data in localStorage
+    localStorage.setItem('userData', JSON.stringify(userData))
+    // localStorage.setItem('userRole', user.role)
     localStorage.setItem('currentUser', JSON.stringify(user))
-    await router.push('/organization')
+
+    // Redirect by role
+    switch (user.role) {
+      case 'ADMIN':
+        await router.push('/organization')
+        break
+      case 'TEACHER':
+        await router.push('/attendance')
+        break
+      default:
+        await router.push('/')
+    }
+
   } catch (error) {
     console.error('Login failed:', error)
+    alert('Credenciales incorrectas o sin rol asignado.')
   }
 }
 </script>

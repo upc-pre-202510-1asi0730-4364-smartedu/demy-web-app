@@ -33,8 +33,9 @@ export default {
       this.drawerVisible = !this.drawerVisible
     },
     logout() {
-      console.log('Cerrar sesión')
-      this.$router.push('/login');
+      localStorage.removeItem('userData')
+      localStorage.removeItem('currentUser')
+      this.$router.push('/login')
     }
   }
 }
