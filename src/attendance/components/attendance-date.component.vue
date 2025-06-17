@@ -1,6 +1,6 @@
 <template>
   <div class="field">
-    <label for="date">{{$t('attendance-date')}}</label>
+    <label for="date" style="margin-right: 5px;">{{$t('attendance-date')}}</label>
     <Calendar
         v-model="selectedDate"
         dateFormat="dd/mm/yy"
