@@ -115,4 +115,8 @@ export default {
 .nav-label {
   font-size: 1rem;
 }
+
+::v-deep(.p-divider-horizontal:before) {
+  border-top: 1px solid var(--color-secondary-dark-3);
+}
 </style>
