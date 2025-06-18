@@ -47,7 +47,7 @@ export default {
     try {
       const students = await studentService.getAll();
       this.records = students.map(student => ({
-        studentId: student.dni,
+        studentId: student.id,
         studentName: `${student.firstName} ${student.lastName}`,
         status: AttendanceStatus.ABSENT // valor inicial por defecto
       }));
@@ -57,12 +57,16 @@ export default {
   },
   methods: {
     onStatusChange(index, newStatus) {
-      this.records[index].status = newStatus;
+      const updatedRecord = { ...this.records[index], status: newStatus };
+      this.records.splice(index, 1, updatedRecord); // reemplaza el objeto en su posición
+      this.$emit('update:records', [...this.records]); // comunica al padre
     },
     resetAttendance() {
-      this.records.forEach(record => {
-        record.status = 'ABSENT' // o 'ABSENT'
+      this.records.forEach((record,i) => {
+        const updatedRecord = { ...this.records[i], status:  'ABSENT' };
+        this.records.splice(i, 1, updatedRecord); // reemplaza el objeto en su posición
       })
+      this.$emit('update:records', [...this.records]); // también aquí
     }
   }
 };

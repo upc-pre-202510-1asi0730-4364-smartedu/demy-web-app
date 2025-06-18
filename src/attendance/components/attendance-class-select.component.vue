@@ -21,19 +21,28 @@ export default {
     } catch (error) {
       console.error('Error al cargar cursos:', error)
     }
+  },
+  methods: {
+    onCourseChange() {
+      console.log('Curso seleccionado:', this.selectedCourseId)
+      this.$emit('update:modelValue', this.selectedCourseId) // emite si usas v-model desde el padre
+      this.$emit('courseChanged', this.selectedCourseId) // opcional: evento personalizado
+    }
   }
 }
 </script>
 
 <template>
   <div class="field">
-    <label for="course">{{$t('attendance-class')}}</label>
+    <label for="course" style="margin-right: 5px;">{{$t('attendance-class')}}</label>
     <pv-dropdown
         v-model="selectedCourseId"
         :options="courses"
         optionLabel="label"
         optionValue="value"
         placeholder="Seleccione un curso"
+        @change="onCourseChange()"
+
     />
   </div>
 </template>

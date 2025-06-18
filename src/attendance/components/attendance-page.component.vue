@@ -14,11 +14,11 @@
 
 
     <AttendanceStudentList ref="studentListComponent"
-        :records="attendanceRecords"
-        @update:records="attendanceRecords = $event"/>
+                           :records="attendanceRecords"
+                           @update:records="attendanceRecords = $event"/>
 
     <div class="save-button-container">
-      <AttendanceSaveButton @saveClicked="onSave" />
+      <AttendanceSaveButton @saveClicked="saveAttendance" />
     </div>
   </div>
 </template>
@@ -52,13 +52,17 @@ export default {
 
   methods: {
     async saveAttendance() {
+
+      if (!this.selectedClass) {
+        alert('Por favor, seleccione un curso antes de guardar la asistencia.')
+        return
+      }
       try {
         const session = new ClassSession(
             this.selectedClass,
             this.attendanceRecords.map(r => new AttendanceRecord(r.studentId, r.status)),
             this.selectedDate
         )
-
         const response = await classSessionService.save(session)
         alert('Asistencia guardada con éxito')
       } catch (err) {
@@ -69,7 +73,6 @@ export default {
     async onSave() {
       const seen = new Set()
       const recordsToSave = []
-
       for (const record of this.attendanceRecords) {
         if (!seen.has(record.studentId)) {
           seen.add(record.studentId)

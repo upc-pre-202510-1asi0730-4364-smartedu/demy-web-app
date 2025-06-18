@@ -12,14 +12,33 @@ export default {
   data() {
     return {
       navOptions: [
-        { icon: 'building', label: 'Mi organización', route: '/organization' },
-        { icon: 'file', label: 'Matrícula', route: '/enrollment' },
-        { icon: 'users', label: 'Alumnos', route: '/students' },
-        { icon: 'credit-card', label: 'Pagos', route: '/payments' },
-        //{ icon: 'calendar', label: 'Horarios', route: '/schedules' },
-        { icon: 'check-circle', label: 'Asistencia', route: '/attendance' },
-        { icon: 'wallet', label: 'Finanzas', route: '/finance' }
+        { icon: 'building', label: 'sidebar.organization', route: '/organization', roles: ['ADMIN'] },
+        { icon: 'file', label: 'sidebar.enrollment', route: '/enrollment', roles: ['ADMIN'] },
+        { icon: 'users', label: 'sidebar.students', route: '/students', roles: ['ADMIN'] },
+        { icon: 'credit-card', label: 'sidebar.payments', route: '/payments', roles: ['ADMIN'] },
+        { icon: 'calendar', label: 'sidebar.schedules', route: '/schedules', roles: ['ADMIN'] },
+        { icon: 'calendar', label: 'sidebar.my-schedule', route: '/my-schedule', roles: ['TEACHER'] },
+        { icon: 'check-circle', label: 'sidebar.attendance', route: '/attendance', roles: ['TEACHER'] },
+        { icon: 'wallet', label: 'sidebar.finance', route: '/finance', roles: ['ADMIN'] }
       ]
+    }
+  },
+  computed: {
+    visibleNavOptions() {
+      const stored = localStorage.getItem('userData')
+      let role = null
+
+      try {
+        role = JSON.parse(stored)?.role
+      } catch (e) {
+        console.warn('Invalid userData format')
+      }
+
+      if (['ADMIN', 'TEACHER'].includes(role)) {
+        return this.navOptions.filter(option => option.roles.includes(role))
+      }
+
+      return this.navOptions;
     }
   }
 }
@@ -27,13 +46,13 @@ export default {
 
 <template>
   <div class="side-nav">
-    <h3 class="side-nav-title">Categorías</h3>
+    <h3 class="side-nav-title">{{ $t('sidebar.categories') }}</h3>
 
     <ul class="nav-list">
-      <li v-for="option in navOptions" :key="option.label">
+      <li v-for="option in visibleNavOptions" :key="option.label">
         <RouterLink :to="option.route" class="nav-item">
           <i :class="`pi pi-${option.icon}`" class="nav-icon" />
-          <span class="nav-label">{{ option.label }}</span>
+          <span class="nav-label">{{ $t(option.label) }}</span>
         </RouterLink>
       </li>
     </ul>
@@ -42,7 +61,7 @@ export default {
 
     <a class="nav-item" @click="$emit('logout')">
       <i class="pi pi-sign-out nav-icon"></i>
-      <span class="nav-label">Salir</span>
+      <span class="nav-label">{{ $t('sidebar.logout') }}</span>
     </a>
   </div>
 </template>
@@ -95,5 +114,9 @@ export default {
 
 .nav-label {
   font-size: 1rem;
+}
+
+::v-deep(.p-divider-horizontal:before) {
+  border-top: 1px solid var(--color-secondary-dark-3);
 }
 </style>

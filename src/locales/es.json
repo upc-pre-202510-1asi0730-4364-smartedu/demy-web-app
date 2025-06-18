@@ -21,6 +21,18 @@
       "description": "Gestiona el personal docente"
     }
   },
+  "sidebar": {
+    "organization": "Organización",
+    "enrollment": "Matrícula",
+    "students": "Alumnos",
+    "payments": "Pagos",
+    "schedules": "Horarios",
+    "my-schedule": "Mi horario",
+    "attendance": "Asistencia",
+    "finance": "Finanzas",
+    "logout": "Salir",
+    "categories": "Categorías"
+  },
   "payments": {
     "title": "Pagos",
     "subtitle": "Buscar el estado de pago de un alumno",
@@ -359,6 +371,159 @@
     },
     "paginator": {
       "label": "Seleccionar página de estudiantes"
+    }
+  },
+  "teacher-schedule": {
+    "title": "Mi Horario",
+    "subtitle": "*Presiona un bloque de horario para reprogramar la clase",
+    "error": {
+      "no-teacher": "No hay profesor autenticado actualmente"
+    },
+    "form": {
+      "day": "Día",
+      "start-time": "Hora de inicio",
+      "end-time": "Hora de fin",
+      "classroom": "Aula",
+      "course": "Curso",
+      "teacher": "Profesor",
+      "cancel": "Cancelar",
+      "save": "Guardar"
+    },
+    "loading": "Cargando...",
+    "days": {
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    },
+    "modal": {
+      "title": "Reprogramar Clase"
+    }
+  },
+  "weekly-schedule": {
+    "modal": {
+      "title": "Crear/Editar Horario Semanal",
+      "name": "Nombre del Horario",
+      "namePlaceholder": "Ingrese el nombre del horario",
+      "nameRequired": "El nombre es requerido",
+      "addSchedule": "Agregar Horario",
+      "loadingData": "Cargando datos...",
+      "day": "Día de la Semana",
+      "startTime": "Hora de Inicio",
+      "endTime": "Hora de Fin",
+      "course": "Curso",
+      "teacher": "Profesor",
+      "classroom": "Salón",
+      "addClass": "Agregar Clase",
+      "scheduleList": "Horarios Actuales",
+      "deleteClass": "Eliminar Clase",
+      "confirmDelete": "¿Está seguro que desea eliminar este horario semanal",
+      "confirmDeleteWarning": "Esta acción no se puede deshacer",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "delete": "Eliminar",
+      "selectDay": "Seleccione un día",
+      "selectStartTime": "Seleccione hora de inicio",
+      "selectEndTime": "Seleccione hora de fin",
+      "selectCourse": "Seleccione un curso",
+      "selectTeacher": "Seleccione un profesor",
+      "selectClassroom": "Seleccione un salón"
+    }
+  },
+  "scheduling": {
+    "course": {
+      "modal": {
+        "title": {
+          "add": "Agregar Nuevo Curso",
+          "edit": "Editar Curso",
+          "delete": "Confirmar Eliminación"
+        },
+        "form": {
+          "name": "Nombre",
+          "namePlaceholder": "Ingrese el nombre del curso",
+          "nameRequired": "El nombre es requerido",
+          "code": "Código",
+          "codePlaceholder": "Ingrese el código del curso",
+          "codeRequired": "El código es requerido",
+          "description": "Descripción",
+          "descriptionPlaceholder": "Ingrese la descripción del curso",
+          "descriptionRequired": "La descripción es requerida"
+        },
+        "delete": {
+          "confirm": "¿Está seguro que desea eliminar el curso",
+          "warning": "Esta acción no se puede deshacer"
+        },
+        "buttons": {
+          "cancel": "Cancelar",
+          "save": "Guardar",
+          "delete": "Eliminar"
+        }
+      }
+    },
+    "classroom": {
+      "modal": {
+        "title": {
+          "add": "Agregar Nueva Aula",
+          "edit": "Editar Aula",
+          "delete": "Confirmar Eliminación"
+        },
+        "form": {
+          "code": "Código",
+          "codePlaceholder": "Ingrese el código del aula",
+          "codeRequired": "El código es requerido",
+          "capacity": "Capacidad",
+          "capacityPlaceholder": "Ingrese la capacidad del aula",
+          "capacityRequired": "La capacidad es requerida y debe ser un número válido",
+          "campus": "Campus",
+          "campusPlaceholder": "Ingrese el campus del aula",
+          "campusRequired": "El campus es requerido"
+        },
+        "delete": {
+          "confirm": "¿Está seguro que desea eliminar el aula con código",
+          "warning": "Esta acción no se puede deshacer"
+        },
+        "buttons": {
+          "cancel": "Cancelar",
+          "save": "Guardar",
+          "delete": "Eliminar"
+        }
+      }
+    }
+  },
+  "recover": {
+    "title": "Recuperar Contraseña",
+    "subtitle": "Ingrese su correo",
+    "placeholder": "Correo electrónico",
+    "send": "Enviar",
+    "back": "Volver",
+    "emailFound": "Correo encontrado. Puedes continuar.",
+    "emailNotFound": "Correo no registrado.",
+    "errorEmpty": "Por favor, ingresa un correo.",
+    "apiError": "Error al conectar con el servidor.",
+    "modal": {
+      "accept": "Aceptar"
+    }
+  },
+  "reset-password": {
+    "title": "Restablecer Contraseña",
+    "newPassword": "Nueva Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "button": "Restablecer",
+    "back": "Volver",
+    "modal": {
+      "resetSuccess": "La contraseña ha sido restablecida con éxito.",
+      "resetFail": "Error al restablecer la contraseña. Por favor, inténtalo de nuevo.",
+      "confirmReset": "¿Estás seguro de que quieres restablecer tu contraseña?",
+      "yes": "Sí",
+      "no": "No",
+      "ok": "Aceptar"
+    },
+    "errors": {
+      "emptyFields": "Por favor, completa ambos campos.",
+      "passwordMismatch": "Las contraseñas no coinciden."
     }
   }
 }
