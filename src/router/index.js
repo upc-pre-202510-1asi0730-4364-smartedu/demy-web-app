@@ -16,6 +16,8 @@ import Organization from "../../workspace/pages/organization.component.vue";
 import ExpensesPage from "../billing/pages/expenses-page.component.vue";
 import TeacherPage from "../iam-user/pages/teacher.component.vue";
 import PlantSelect from "../iam-user/pages/plan-select.component.vue";
+import RecoverPassword from "../iam-user/pages/recover-password.component.vue";
+import ResetPassword from "../iam-user/pages/reset-password.component.vue";
 import AttendancePageComponent from "../attendance/components/attendance-page.component.vue";
 import Courses from "../scheduling/pages/courses-overview.component.vue";
 import AcademicPeriod from "../enrollments/pages/academic-period-management.component.vue";
@@ -63,6 +65,14 @@ const routes = [
     {
         path: '/plantSelect',
         component: PlantSelect
+    },
+    {
+        path: '/forgot-password',
+        component: RecoverPassword
+    },
+    {
+        path: '/reset-password',
+        component: ResetPassword
     }
 ]
 
