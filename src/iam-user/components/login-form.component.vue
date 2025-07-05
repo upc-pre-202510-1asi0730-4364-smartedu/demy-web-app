@@ -17,6 +17,7 @@ const form = reactive({
 
 async function handleSubmit() {
   try {
+    console.log('🚀 handleSubmit called')
     const user = await userService.login(form)
     console.log('Authenticated user:', user)
     await router.push('/organization')
