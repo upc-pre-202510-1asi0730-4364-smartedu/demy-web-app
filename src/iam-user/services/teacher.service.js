@@ -3,30 +3,24 @@ import { UserAccount } from '../model/user-account.js';
 let isCreating = false;
 
 export class TeacherService {
-    resourceEndpoint = import.meta.env.VITE_USER_ACCOUNT_ENDPOINT_PATH;
+    baseEndpoint = import.meta.env.VITE_API_BASE_URL;
+    resourceEndpoint = this.baseEndpoint + '/users/teachers';
 
     async getTeachers() {
-        const res = await httpInstance.get(this.resourceEndpoint);
-        return res.data
-            .filter(user => user.role === 'TEACHER' || user.role === 1)
-            .map(teacherData => new UserAccount(teacherData));
+        const res = await httpInstance.get(`${this.baseEndpoint}/users/teachers`);
+        return res.data.teachers.map(teacherData => new UserAccount(teacherData));
     }
 
     async createTeacher(teacherData) {
-        if (isCreating) {
-            throw new Error('La creación de profesor ya está en proceso');
-        }
+        if (isCreating) throw new Error('La creación de profesor ya está en proceso');
 
         isCreating = true;
         try {
             const payload = {
                 fullName: teacherData.fullName,
                 email: teacherData.email,
-                passwordHash: teacherData.passwordHash,
-                role: 'TEACHER',
-                status: 'ACTIVE'
+                password: teacherData.passwordHash // usa password real
             };
-
             const response = await httpInstance.post(this.resourceEndpoint, payload);
             return new UserAccount(response.data);
         } finally {
@@ -38,10 +32,10 @@ export class TeacherService {
         const updateData = {
             fullName: teacherData.fullName,
             email: teacherData.email,
-            ...(teacherData.passwordHash && { password: teacherData.passwordHash })
+            ...(teacherData.passwordHash && { newPassword: teacherData.passwordHash }) // ✅ CAMBIADO
         };
-        const res = await httpInstance.patch(`${this.resourceEndpoint}/${id}`, updateData);
-        return new UserAccount(res.data);
+        const res = await httpInstance.put(`${this.baseEndpoint}/users/teachers/${id}`, updateData);
+        return new UserAccount(res.data.user);
     }
 
     async deleteTeacher(id) {

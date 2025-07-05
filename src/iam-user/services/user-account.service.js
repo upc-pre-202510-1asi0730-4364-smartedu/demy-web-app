@@ -4,35 +4,49 @@ import { UserAccount } from '../model/user-account.js'
 export class UserAccountService {
     resourceEndpoint = import.meta.env.VITE_USER_ACCOUNT_ENDPOINT_PATH
 
+
     async login({ email, password }) {
-        const res = await httpInstance.get(this.resourceEndpoint);
-        const users = res.data;
+        const response = await httpInstance.post('/users/sign-in', { email, password });
+        const { token, user } = response.data;
 
-        const matchedUser = users.find(user =>
-            user.email === email && user.passwordHash === password
-        );
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
 
-        if (!matchedUser) {
-            throw new Error('Invalid credentials');
-        }
 
-        return new UserAccount(matchedUser);
+        return new UserAccount(user);
+    }
+
+    logout() {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+    }
+
+    getCurrentUser() {
+        const user = localStorage.getItem('user');
+        return user ? new UserAccount(JSON.parse(user)) : null;
+    }
+
+    isAuthenticated() {
+        return !!localStorage.getItem('access_token');
     }
 
     async getAllUsers() {
-        const res = await httpInstance.get(this.resourceEndpoint)
-        return res.data
+        const res = await httpInstance.get(this.resourceEndpoint);
+        return res.data;
     }
 
     async getById(id) {
-        const res = await httpInstance.get(`${this.resourceEndpoint}/${id}`)
-        return new UserAccount(res.data)
+        const res = await httpInstance.get(`${this.resourceEndpoint}/${id}`);
+        return new UserAccount(res.data);
     }
-    async createUser({ email, passwordHash, name }) {
-        const newUser = { email, passwordHash, name, role:'ADMIN' }
-        const res = await httpInstance.post(this.resourceEndpoint, newUser)
-        return new UserAccount(res.data)
+
+    async createUser({ fullName, email, password }) {
+        const payload = { fullName, email, password };
+        const res = await httpInstance.post('/users/admins/sign-up', payload);
+
+        return res.data.user;
     }
+
 }
 
 export function useUserAccountService() {
