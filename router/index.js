@@ -16,6 +16,7 @@ import TeacherPage from "../src/iam-user/pages/teacher.component.vue";
 import PlantSelect from "../src/iam-user/pages/plan-select.component.vue";
 import RecoverPassword from "../src/iam-user/pages/recover-password.component.vue";
 import ResetPassword from "../src/iam-user/pages/reset-password.component.vue";
+import {authenticationGuard} from "../src/iam-user/services/authentication.guard.js";
 
 //import ReportsPage from '../finance/pages/reports-page.vue'
 
@@ -39,6 +40,7 @@ const routes = [
     },
     {
         path: '/login',
+        name: 'sign-in',
         component: Login
     },
     {
@@ -63,5 +65,9 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 })
+
+router.beforeEach((to, from, next) => {
+    authenticationGuard(to, from, next);
+});
 
 export default router

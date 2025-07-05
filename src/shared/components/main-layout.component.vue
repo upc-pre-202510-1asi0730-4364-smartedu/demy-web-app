@@ -33,6 +33,7 @@ export default {
       this.drawerVisible = !this.drawerVisible
     },
     logout() {
+      localStorage.removeItem('token');
       console.log('Cerrar sesión')
       this.$router.push('/login');
     }
