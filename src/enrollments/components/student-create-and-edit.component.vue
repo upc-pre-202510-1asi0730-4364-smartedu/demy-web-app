@@ -2,9 +2,11 @@
 import { defineComponent } from 'vue';
 import { Student, Sex } from "../model/student.entity.js";
 import { useI18n } from 'vue-i18n';
+import InputText from "primevue/inputtext";
 
 export default defineComponent({
   name: 'StudentForm',
+  components: {InputText},
   props: {
     modelValue: {
       type: Object,
@@ -44,6 +46,9 @@ export default defineComponent({
     },
     submit() {
       if (this.isValid()) {
+        this.localStudent.firstName = this.localStudent.firstName.trim();
+        this.localStudent.lastName = this.localStudent.lastName.trim();
+
         const event = this.editMode ? 'update-student' : 'add-student';
         this.$emit(event, new Student(this.localStudent));
         this.reset();
@@ -63,7 +68,7 @@ export default defineComponent({
 
 <template>
   <form ref="form" class="student-form" @submit.prevent="submit">
-    <h2>{{ t(editMode ? 'student.form.title-edit' : 'student.form.title-new') }}</h2>
+    <h3>{{ t(editMode ? 'student.form.title-edit' : 'student.form.title-new') }}</h3>
 
     <!-- DNI -->
     <div class="form-row">
@@ -134,6 +139,7 @@ export default defineComponent({
       <pv-input-text
           v-model="localStudent.phoneNumber"
           :placeholder="t('student.form.phone')"
+          :maxlength="9"
           pattern="[0-9]{9}"
           required
           class="form-field"
@@ -160,6 +166,13 @@ export default defineComponent({
   background-color: #fff;
   border-radius: 0.75rem;
 }
+h3 {
+  color: var(--color-secondary-dark-1);
+  text-align: center;
+  grid-column: 1 / -1;
+  margin-bottom: 1rem;
+}
+
 
 .student-form h2 {
   grid-column: 1 / -1;
