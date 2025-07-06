@@ -6,10 +6,12 @@ import { StudentService } from "../services/student.service.js";
 import { AcademicPeriodService } from "../services/academic-period.service.js";
 import { EnrollmentService } from "../services/enrollment.service.js";
 import EnrollmentCreateAndEditComponent from "../components/enrollment-create-and-edit.component.vue";
+import EnrollmentSearch from "../components/enrollment-search.component.vue";
 
 export default defineComponent({
   name: 'EnrollmentManagementComponent',
   components: {
+    EnrollmentSearch,
     EnrollmentCreateAndEditComponent
   },
   setup() {
@@ -23,9 +25,8 @@ export default defineComponent({
       editMode: false,
       loading: false,
       columnsToDisplay: [
-        { field: 'id', header: 'enrollment.table.id' },
         { field: 'studentId', header: 'enrollment.table.student' },
-        { field: 'periodId', header: 'enrollment.table.period' },
+        { field: 'academicPeriodId', header: 'enrollment.table.period' },
         { field: 'createdAt', header: 'enrollment.table.date' },
         { field: 'amount', header: 'enrollment.table.amount' },
         { field: 'enrollmentStatus', header: 'enrollment.table.status' },
@@ -52,7 +53,7 @@ export default defineComponent({
       ]);
       this.enrollments = enrollments;
       this.studentMap = new Map(students.map(s => [s.id, `${s.firstName} ${s.lastName}`]));
-      this.periodMap = new Map(periods.map(p => [p.id, p.name]));
+      this.periodMap = new Map(periods.map(p => [p.id, p.periodName]));
       this.loading = false;
     },
     async createEnrollment() {
@@ -89,6 +90,31 @@ export default defineComponent({
     resetEditState() {
       this.editMode = false;
       this.enrollmentData = new Enrollment();
+    },
+    getPaymentStatusLabel(status) {
+      switch (status) {
+        case 'PAID':
+          return this.t('enrollment.payment.paid');
+        case 'PENDING':
+          return this.t('enrollment.payment.pending');
+        case 'REFUNDED':
+          return this.t('enrollment.payment.refunded');
+        default:
+          return status;
+      }
+    },
+
+    getEnrollmentStatusLabel(status) {
+      switch (status) {
+        case 'ACTIVE':
+          return this.t('enrollment.status.active');
+        case 'CANCELLED':
+          return this.t('enrollment.status.cancelled');
+        case 'COMPLETED':
+          return this.t('enrollment.status.completed');
+        default:
+          return status;
+      }
     }
   }
 });
@@ -97,7 +123,6 @@ export default defineComponent({
 <template>
   <div class="container">
     <div class="header">
-      <h4>{{ t('enrollment.management.title') }}</h4>
     </div>
 
     <div class="enrollment-form-container">
@@ -133,8 +158,8 @@ export default defineComponent({
             {{ studentMap.get(slotProps.data.studentId) || '—' }}
           </template>
 
-          <template v-else-if="col.field === 'periodId'" #body="slotProps">
-            {{ periodMap.get(slotProps.data.periodId) || '—' }}
+          <template v-else-if="col.field === 'academicPeriodId'" #body="slotProps">
+            {{ periodMap.get(slotProps.data.academicPeriodId) || '—' }}
           </template>
 
           <template v-else-if="col.field === 'createdAt'" #body="slotProps">
@@ -142,15 +167,11 @@ export default defineComponent({
           </template>
 
           <template v-else-if="col.field === 'enrollmentStatus'" #body="slotProps">
-            {{ slotProps.data.enrollmentStatus === 'ACTIVE'
-              ? t('enrollment.status.active')
-              : t('enrollment.status.inactive') }}
+            {{ getEnrollmentStatusLabel(slotProps.data.enrollmentStatus) }}
           </template>
 
           <template v-else-if="col.field === 'paymentStatus'" #body="slotProps">
-            {{ slotProps.data.paymentStatus === 'PAID'
-              ? t('enrollment.payment.paid')
-              : t('enrollment.payment.unpaid') }}
+            {{ getPaymentStatusLabel(slotProps.data.paymentStatus) }}
           </template>
 
           <template v-else-if="col.field === 'actions'" #body="slotProps">
