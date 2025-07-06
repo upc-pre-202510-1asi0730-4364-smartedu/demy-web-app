@@ -3,11 +3,8 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 
 export default {
-  name: 'student-search',
-  components: {
-    InputText,
-    Button
-  },
+  name: 'StudentSearch',
+  components: { InputText, Button },
   data() {
     return {
       value: ''
@@ -16,7 +13,7 @@ export default {
   emits: ['search'],
   methods: {
     onSearchClick() {
-      console.log('Búsqueda ejecutada desde Enter o botón')
+      console.log('🔍 Búsqueda ejecutada desde Enter o botón')
       this.$emit('search', this.value.trim())
     }
   }
@@ -40,6 +37,7 @@ export default {
             severity="secondary"
             @click="value = ''"
             type="button"
+            aria-label="Clear"
         />
       </div>
 
@@ -52,6 +50,7 @@ export default {
     </form>
   </div>
 </template>
+
 
 <style scoped>
 .student-search-form {
