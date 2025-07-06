@@ -283,6 +283,8 @@
       "student-required": "Estudiante es requerido",
       "period": "Periodo Académico",
       "period-required": "Periodo académico es requerido",
+      "weekly-schedule": "Horario Semanal",
+      "weekly-schedule-required": "Horario Semanal es requerido",
       "date": "Fecha de Matrícula",
       "date-required": "Fecha de matrícula es requerida",
       "amount": "Monto",
@@ -319,13 +321,18 @@
     },
     "payment": {
       "paid": "Pagado",
-      "unpaid": "No pagado",
       "pending": "Pendiente",
-      "refunded": "Reembolsado",
-      "partial": "Parcial"
+      "refunded": "Reembolsado"
     },
     "paginator": {
       "label": "Seleccionar página de matrículas"
+    },
+    "search": {
+      "title": "Buscar Matricula",
+      "input": "Ingresa DNI",
+      "button": "Buscar",
+      "no-results": "No se encontraron matrículas para el DNI ingresado",
+      "loading": "Cargando..."
     }
   },
   "student": {
