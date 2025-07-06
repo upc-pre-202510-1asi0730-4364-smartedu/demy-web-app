@@ -1,4 +1,5 @@
 export const AttendanceStatus = {
-    PRESENT: 'PRESENT',
-    ABSENT: 'ABSENT',
+    PRESENT: 'Present',
+    ABSENT: 'Absent',
 }
+
