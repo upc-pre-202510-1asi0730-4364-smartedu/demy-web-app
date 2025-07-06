@@ -20,9 +20,6 @@ export class WeeklyScheduleService {
             // Verifica si response.data es un array antes de usar .map()
             if (Array.isArray(response.data)) {
                 return response.data.map(data => new ScheduleWeekly(data));
-            } else {
-                console.error('La respuesta no es un array:', response.data);
-                throw new Error('La respuesta no es un array');
             }
         } catch (error) {
             console.error('Error fetching weekly schedules:', error);
@@ -147,8 +144,6 @@ export class WeeklyScheduleService {
             const response = await httpInstance.get(`${this.resourceEndpoint}/by-teacher/${teacherId}`);
             if (Array.isArray(response.data)) {
                 return response.data;
-            } else {
-                throw new Error('The response is not a array');
             }
         } catch (error) {
             throw error;

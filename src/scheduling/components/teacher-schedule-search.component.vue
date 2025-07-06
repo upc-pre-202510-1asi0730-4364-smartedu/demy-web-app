@@ -106,8 +106,6 @@ export default {
           const response = await httpInstance.get(`${this.resourceEndpoint}/by-teacher/${teacherId}`);
           if (Array.isArray(response.data)) {
             return response.data;
-          } else {
-            throw new Error('The response is not a array');
           }
         } catch (error) {
           console.error(`Error fetching schedules by teacher ID ${teacherId}:`, error);

@@ -174,30 +174,12 @@ export default {
 </script>
 
 <style scoped>
-.table-wrapper {
-  width: 100%;
-  margin: 50px auto;
-  padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  overflow-x: auto;
-}
 
 h1 {
   font-size: 2rem;
   margin-bottom: 20px;
 }
 
-.p-button {
-  margin-right: 8px;
-  background-color: var(--color-primary);
-  color: white;
-}
-
-.p-button:hover {
-  background-color: var(--color-primary-1);
-  color: white;
-}
 
 .mt-3 {
   margin-top: 1rem;
