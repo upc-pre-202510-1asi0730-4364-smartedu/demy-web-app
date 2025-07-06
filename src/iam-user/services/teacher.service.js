@@ -7,7 +7,21 @@ export class TeacherService {
 
     async getTeachers() {
         const res = await httpInstance.get(`${this.resourceEndpoint}/teachers`);
-        return res.data
+        
+        // Handle different response formats
+        let teachersData;
+        if (Array.isArray(res.data)) {
+            teachersData = res.data;
+        } else if (res.data && Array.isArray(res.data.teachers)) {
+            teachersData = res.data.teachers;
+        } else if (res.data && Array.isArray(res.data.data)) {
+            teachersData = res.data.data;
+        } else {
+            console.warn('Unexpected teachers response structure:', res.data);
+            return [];
+        }
+        
+        return teachersData
             .filter(user => user.role === 'TEACHER' || user.role === 1)
             .map(teacherData => new UserAccount(teacherData));
     }

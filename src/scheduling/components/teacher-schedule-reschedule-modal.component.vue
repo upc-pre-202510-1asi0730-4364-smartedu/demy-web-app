@@ -1,7 +1,6 @@
 <script>
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { ClassroomService } from '../services/classroom.service';
 
 export default {
   name: 'teacher-schedule-reschedule-modal',
@@ -15,8 +14,26 @@ export default {
   setup(props, { emit }) {
     const { t } = useI18n();
     // State variables
-    const editedSchedule = ref({ ...props.scheduleData });
+    const editedSchedule = ref({
+      id: props.scheduleData.id,
+      dayOfWeek: props.scheduleData.dayOfWeek,
+      timeRange: {
+        start: props.scheduleData.startTime,
+        end: props.scheduleData.endTime
+      },
+      classroom: {
+        id: props.scheduleData.classroomId
+      },
+      course: {
+        id: props.scheduleData.courseId
+      },
+      teacher: {
+        id: props.scheduleData.teacherId
+      }
+    });
     const availableClassrooms = ref([]);
+    const availableCourses = ref([]);
+    const availableTeachers = ref([]);
     const loadingData = ref(false);
     const error = ref(null);
 
@@ -52,32 +69,73 @@ export default {
 
     // Computed properties
     const isFormValid = computed(() => {
-      return editedSchedule.value.dayOfWeek &&
-          editedSchedule.value.timeRange.start &&
-          editedSchedule.value.timeRange.end &&
-          editedSchedule.value.classroom.id;
+      const isEditMode = props.scheduleData.id !== null;
+      
+      if (isEditMode) {
+        // For editing existing schedule, only require basic fields
+        return editedSchedule.value.dayOfWeek &&
+            editedSchedule.value.timeRange.start &&
+            editedSchedule.value.timeRange.end &&
+            editedSchedule.value.classroom.id;
+      } else {
+        // For creating new schedule, require all fields
+        return editedSchedule.value.dayOfWeek &&
+            editedSchedule.value.timeRange.start &&
+            editedSchedule.value.timeRange.end &&
+            editedSchedule.value.classroom.id &&
+            editedSchedule.value.course.id &&
+            editedSchedule.value.teacher.id;
+      }
     });
 
     // Lifecycle hooks
     onMounted(() => {
-      loadAvailableClassrooms();
+      loadAvailableData();
     });
 
     // Methods
-    const loadAvailableClassrooms = async () => {
+    const loadAvailableData = async () => {
       loadingData.value = true;
       error.value = null;
 
       try {
-        const classroomService = new ClassroomService();
-        const response = await classroomService.getAll();
-        availableClassrooms.value = Array.isArray(response) ? response : response.data;
+        // Import services dynamically to avoid circular dependencies
+        const classroomServiceModule = await import('../services/classroom.service.js');
+        const courseServiceModule = await import('../services/course.service.js');
+        const teacherServiceModule = await import('../../iam-user/services/teacher.service.js');
+
+        // Create instances of the services
+        const classroomService = new classroomServiceModule.ClassroomService();
+        const courseService = new courseServiceModule.CourseService();
+        const teacherService = new teacherServiceModule.TeacherService();
+
+        // Load all data in parallel
+        const [classrooms, courses, teachers] = await Promise.all([
+          classroomService.getAll().then(res => res.data || res),
+          courseService.getAll().then(res => res.data || res),
+          teacherService.getTeachers()
+        ]);
+
+        availableClassrooms.value = Array.isArray(classrooms) ? classrooms : [];
+        availableCourses.value = Array.isArray(courses) ? courses : [];
+        availableTeachers.value = Array.isArray(teachers) ? teachers : [];
       } catch (err) {
-        console.error('Error loading classrooms:', err);
-        error.value = 'Error al cargar las aulas disponibles';
+        console.error('Error loading data:', err);
+        error.value = 'Error al cargar los datos disponibles';
       } finally {
         loadingData.value = false;
       }
+    };
+
+    // Helper functions to get entity names
+    const getCourseName = (courseId) => {
+      const course = availableCourses.value.find(c => c.id === courseId);
+      return course ? (course.name || course.courseName || course.title || `Course ${courseId}`) : `Course ${courseId}`;
+    };
+
+    const getTeacherName = (teacherId) => {
+      const teacher = availableTeachers.value.find(t => t.id === teacherId);
+      return teacher ? (teacher.fullName || teacher.name || `${teacher.firstName || ''} ${teacher.lastName || ''}`.trim() || `Teacher ${teacherId}`) : `Teacher ${teacherId}`;
     };
 
     const validateTimeRange = (start, end) => {
@@ -109,7 +167,18 @@ export default {
         return;
       }
       
-      emit('confirm', editedSchedule.value);
+      // Convert back to backend format
+      const updatedSchedule = {
+        id: editedSchedule.value.id,
+        dayOfWeek: editedSchedule.value.dayOfWeek,
+        startTime: editedSchedule.value.timeRange.start,
+        endTime: editedSchedule.value.timeRange.end,
+        classroomId: editedSchedule.value.classroom.id,
+        courseId: editedSchedule.value.course.id,
+        teacherId: editedSchedule.value.teacher.id
+      };
+      
+      emit('confirm', updatedSchedule);
     };
 
     const handleCancel = () => {
@@ -119,11 +188,15 @@ export default {
     return {
       editedSchedule,
       availableClassrooms,
+      availableCourses,
+      availableTeachers,
       loadingData,
       error,
       dayOptions,
       timeSlots,
       isFormValid,
+      getCourseName,
+      getTeacherName,
       handleConfirm,
       handleCancel
     };
@@ -133,7 +206,9 @@ export default {
 
 <template>
   <div class="reschedule-modal">
-    <h2 class="modal-title">{{ $t('teacher-schedule.modal.title') }}</h2>
+    <h2 class="modal-title">
+      {{ scheduleData.id ? $t('teacher-schedule.modal.title') : 'Crear Nuevo Horario' }}
+    </h2>
     
     <div v-if="loadingData" class="loading-indicator">
       {{ $t('teacher-schedule.loading') }}
@@ -197,19 +272,47 @@ export default {
         />
       </div>
 
-      <!-- Course Info (Read-only) -->
-      <div class="form-group">
+      <!-- Course Selection (only for new schedules) -->
+      <div v-if="!scheduleData.id" class="form-group">
+        <label for="course">{{ $t('teacher-schedule.form.course') }}</label>
+        <pv-dropdown
+            v-model="editedSchedule.course.id"
+            id="course"
+            :options="availableCourses"
+            option-label="name"
+            option-value="id"
+            placeholder="Seleccionar curso"
+            class="w-full"
+        />
+      </div>
+
+      <!-- Teacher Selection (only for new schedules) -->
+      <div v-if="!scheduleData.id" class="form-group">
+        <label for="teacher">{{ $t('teacher-schedule.form.teacher') }}</label>
+        <pv-dropdown
+            v-model="editedSchedule.teacher.id"
+            id="teacher"
+            :options="availableTeachers"
+            option-label="fullName"
+            option-value="id"
+            placeholder="Seleccionar profesor"
+            class="w-full"
+        />
+      </div>
+
+      <!-- Course Info (Read-only for existing schedules) -->
+      <div v-if="scheduleData.id" class="form-group">
         <label>{{ $t('teacher-schedule.form.course') }}</label>
         <div class="read-only-field">
-          {{ editedSchedule.course.name }} ({{ editedSchedule.course.code }})
+          {{ getCourseName(scheduleData.courseId) }}
         </div>
       </div>
 
-      <!-- Teacher Info (Read-only) -->
-      <div class="form-group">
+      <!-- Teacher Info (Read-only for existing schedules) -->
+      <div v-if="scheduleData.id" class="form-group">
         <label>{{ $t('teacher-schedule.form.teacher') }}</label>
         <div class="read-only-field">
-          {{ editedSchedule.teacher.fullName }}
+          {{ getTeacherName(scheduleData.teacherId) }}
         </div>
       </div>
 
@@ -224,7 +327,7 @@ export default {
         />
         <pv-button
             type="submit"
-            :label="$t('teacher-schedule.form.save')"
+            :label="scheduleData.id ? $t('teacher-schedule.form.save') : 'Crear Horario'"
             icon="pi pi-check"
             :disabled="!isFormValid"
         />

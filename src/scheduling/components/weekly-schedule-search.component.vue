@@ -12,14 +12,60 @@ export default {
   },
   emits: ['schedule-selected'],
   setup(props, { emit }) {
-    // State variables
     const availableSchedules = ref([]);
     const isLoading = ref(false);
     const errorMessage = ref(null);
     const currentWeeklySchedule = ref(null);
     const localSelectedScheduleId = ref(props.selectedScheduleId);
 
-    // Days of the week for table headers
+    const availableCourses = ref([]);
+    const availableClassrooms = ref([]);
+    const availableTeachers = ref([]);
+
+    const getCourseName = (courseId) => {
+      const course = availableCourses.value.find(c => c.id === courseId || c.id === parseInt(courseId));
+      if (!course) {
+        console.log(`Course not found for ID: ${courseId}, available courses:`, availableCourses.value.map(c => ({ id: c.id, name: c.name })));
+        return `Course ${courseId}`;
+      }
+
+      const courseName = course.name || course.courseName || course.title || course.description || `Course ${courseId}`;
+      console.log(`Found course for ID ${courseId}:`, courseName);
+      return courseName;
+    };
+
+    const getClassroomName = (classroomId) => {
+      const classroom = availableClassrooms.value.find(c => c.id === classroomId || c.id === parseInt(classroomId));
+      if (!classroom) {
+        console.log(`Classroom not found for ID: ${classroomId}, available classrooms:`, availableClassrooms.value.map(c => ({ id: c.id, code: c.code, name: c.name })));
+        return `Room ${classroomId}`;
+      }
+
+      const classroomName = classroom.code || classroom.name || classroom.roomCode || classroom.number || classroom.location || `Room ${classroomId}`;
+      console.log(`Found classroom for ID ${classroomId}:`, classroomName);
+      return classroomName;
+    };
+
+    const getTeacherName = (teacherId) => {
+      const teacher = availableTeachers.value.find(t => t.id === teacherId || t.id === parseInt(teacherId));
+      if (!teacher) {
+        console.log(`Teacher not found for ID: ${teacherId}, available teachers:`, availableTeachers.value.map(t => ({ id: t.id, fullName: t.fullName, name: t.name })));
+        return `Teacher ${teacherId}`;
+      }
+
+      let teacherName;
+      if (teacher.fullName) teacherName = teacher.fullName;
+      else if (teacher.name) teacherName = teacher.name;
+      else if (teacher.firstName || teacher.lastName) {
+        teacherName = `${teacher.firstName || ''} ${teacher.lastName || ''}`.trim();
+      } else {
+        teacherName = `Teacher ${teacherId}`;
+      }
+      
+      console.log(`Found teacher for ID ${teacherId}:`, teacherName);
+      return teacherName;
+    };
+
     const weekDays = [
       'monday',
       'tuesday',
@@ -30,7 +76,6 @@ export default {
       'sunday'
     ];
 
-    // Time slots (from 7:00 AM to 9:00 PM in 30-minute intervals)
     const timeSlots = ref([
       '07:00', '07:30',
       '08:00', '08:30',
@@ -52,6 +97,7 @@ export default {
     // Lifecycle hooks
     onMounted(() => {
       loadAvailableSchedules();
+      loadEntityData();
     });
 
     // Methods
@@ -102,9 +148,46 @@ export default {
       searchWeeklySchedule();
     };
 
+    // Load entity data for display names
+    const loadEntityData = async () => {
+      try {
+        // Import services dynamically to avoid circular dependencies
+        const { CourseService } = await import('../services/course.service.js');
+        const { ClassroomService } = await import('../services/classroom.service.js');
+        const { TeacherService } = await import('../../iam-user/services/teacher.service.js');
+
+        // Create service instances
+        const courseService = new CourseService();
+        const classroomService = new ClassroomService();
+        const teacherService = new TeacherService();
+
+        // Load all entity data in parallel
+        const [coursesResponse, classroomsResponse, teachersResponse] = await Promise.all([
+          courseService.getAll(),
+          classroomService.getAll(),
+          teacherService.getTeachers()
+        ]);
+
+        // Extract data from responses
+        availableCourses.value = Array.isArray(coursesResponse.data) ? coursesResponse.data : [];
+        availableClassrooms.value = Array.isArray(classroomsResponse.data) ? classroomsResponse.data : [];
+        availableTeachers.value = Array.isArray(teachersResponse) ? teachersResponse : [];
+        
+        // Debug logs
+        console.log('Loaded courses:', availableCourses.value);
+        console.log('Loaded classrooms:', availableClassrooms.value);
+        console.log('Loaded teachers:', availableTeachers.value);
+      } catch (error) {
+        console.error('Error loading entity data:', error);
+        // Keep empty arrays as fallback
+        availableCourses.value = [];
+        availableClassrooms.value = [];
+        availableTeachers.value = [];
+      }
+    };
+
     // Computed properties
     const uniqueTimeSlots = computed(() => {
-      // Siempre retornar todos los slots de 30 minutos
       return timeSlots.value;
     });
 
@@ -140,6 +223,12 @@ export default {
       weekDays,
       timeSlots,
       uniqueTimeSlots,
+      availableCourses,
+      availableClassrooms,
+      availableTeachers,
+      getCourseName,
+      getClassroomName,
+      getTeacherName,
       searchWeeklySchedule,
       getSchedulesForDayAndTime,
       isSearchDisabled,
@@ -226,15 +315,15 @@ export default {
                   class="schedule-block"
               >
                 <div class="course-info">
-                  <strong>Course ID: {{ schedule.courseId }}</strong>
+                  <strong>{{ getCourseName(schedule.courseId) }}</strong>
                 </div>
                 <div class="classroom-info">
                   <i class="pi pi-map-marker"></i>
-                  Classroom ID: {{ schedule.classroomId }}
+                  {{ getClassroomName(schedule.classroomId) }}
                 </div>
                 <div class="teacher-info">
                   <i class="pi pi-user"></i>
-                  Teacher ID: {{ schedule.teacherId }}
+                  {{ getTeacherName(schedule.teacherId) }}
                 </div>
                 <div class="time-info">
                   {{ schedule.startTime }} - {{ schedule.endTime }}

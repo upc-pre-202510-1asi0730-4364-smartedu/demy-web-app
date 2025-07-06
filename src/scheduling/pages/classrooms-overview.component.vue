@@ -76,7 +76,6 @@ export default {
     const totalClassrooms = ref(0);
     const first = ref(0);
 
-    // Inicializar el servicio de aulas
     const classroomService = new ClassroomService();
 
     // Load classrooms from API

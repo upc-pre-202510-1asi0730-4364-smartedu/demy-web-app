@@ -140,19 +140,17 @@ export class WeeklyScheduleService {
     /**
      * Gets schedules by teacher ID
      * @param {number} teacherId - The teacher's ID
-     * @returns {Promise<Array<ScheduleWeekly>>} Promise resolving to array of weekly schedules
+     * @returns {Promise<Array>} Promise resolving to array of schedules
      */
-    async getByTeacherId(teacherId) {
+    async getSchedulesByTeacherId(teacherId) {
         try {
             const response = await httpInstance.get(`${this.resourceEndpoint}/by-teacher/${teacherId}`);
             if (Array.isArray(response.data)) {
-                return response.data.map(data => new ScheduleWeekly(data));
+                return response.data;
             } else {
-                console.error('La respuesta no es un array:', response.data);
-                throw new Error('La respuesta no es un array');
+                throw new Error('The response is not a array');
             }
         } catch (error) {
-            console.error(`Error fetching schedules by teacher ID ${teacherId}:`, error);
             throw error;
         }
     }
@@ -163,7 +161,7 @@ export class WeeklyScheduleService {
      * @param {Object} scheduleData - The updated schedule data
      * @returns {Promise<any>} Promise resolving to the updated schedule
      */
-    async updateSchedule(scheduleId, scheduleData) {
+    async updateScheduleById(scheduleId, scheduleData) {
         try {
             const response = await httpInstance.put(`${this.resourceEndpoint}/schedules/${scheduleId}`, scheduleData);
             return response.data;
@@ -174,6 +172,5 @@ export class WeeklyScheduleService {
     }
 }
 
-// Create a singleton instance of the service
 const weeklyScheduleService = new WeeklyScheduleService();
 export default weeklyScheduleService;

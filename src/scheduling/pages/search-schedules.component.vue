@@ -8,10 +8,8 @@ export default {
     WeeklyScheduleSearch
   },
   setup() {
-    // State variables
     const selectedSchedule = ref(null);
 
-    // Computed properties
     const getUniqueTimesCount = computed(() => {
       if (!selectedSchedule.value) return 0;
       const times = new Set();

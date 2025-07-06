@@ -10,7 +10,6 @@ export default {
     WeeklyScheduleModal
   },
   setup() {
-    // State variables
     const weeklySchedules = ref([]);
     const isLoading = ref(false);
     const error = ref(null);
@@ -18,12 +17,10 @@ export default {
     const modalMode = ref('add');
     const selectedWeeklySchedule = ref(new ScheduleWeekly({}));
 
-    // Pagination
     const currentPage = ref(1);
     const rowsPerPage = ref(10);
     const totalRecords = computed(() => weeklySchedules.value.length);
 
-    // Computed properties
     const totalPages = computed(() =>
         Math.ceil(weeklySchedules.value.length / rowsPerPage.value) || 1
     );
@@ -75,18 +72,64 @@ export default {
       showModal.value = true;
     };
 
-    const handleModalConfirm = async (weeklySchedule) => {
+    const handleModalConfirm = async (weeklySchedule, deletedSchedules = []) => {
       try {
+        let createdWeeklySchedule;
+        
         if (modalMode.value === 'add') {
-          await weeklyScheduleService.create(weeklySchedule);
+          // Create the weekly schedule first (without schedules)
+          const weeklyScheduleData = {
+            name: weeklySchedule.name
+          };
+          createdWeeklySchedule = await weeklyScheduleService.create(weeklyScheduleData);
+          
+          // Add each schedule individually using the correct endpoint
+          for (const schedule of weeklySchedule.schedules) {
+            const scheduleData = {
+              dayOfWeek: schedule.dayOfWeek,
+              startTime: schedule.startTime,
+              endTime: schedule.endTime,
+              courseId: schedule.courseId,
+              classroomId: schedule.classroomId,
+              teacherId: schedule.teacherId
+            };
+            await weeklyScheduleService.addScheduleToWeekly(createdWeeklySchedule.id, scheduleData);
+          }
         } else if (modalMode.value === 'edit') {
-          await weeklyScheduleService.update(weeklySchedule.id, weeklySchedule);
+          console.log('Edit mode - Weekly Schedule:', weeklySchedule);
+          console.log('Edit mode - Deleted Schedules:', deletedSchedules);
+          
+          // Update the weekly schedule name
+          await weeklyScheduleService.updateWeeklyScheduleName(weeklySchedule.id, weeklySchedule.name);
+          
+          // Handle new schedules in edit mode
+          for (const schedule of weeklySchedule.schedules) {
+            if (schedule.isNew) {
+              console.log('Adding new schedule:', schedule);
+              // Add new schedules
+              const scheduleData = {
+                dayOfWeek: schedule.dayOfWeek,
+                startTime: schedule.startTime,
+                endTime: schedule.endTime,
+                courseId: schedule.courseId,
+                classroomId: schedule.classroomId,
+                teacherId: schedule.teacherId
+              };
+              await weeklyScheduleService.addScheduleToWeekly(weeklySchedule.id, scheduleData);
+            }
+          }
+          
+          // Handle deleted schedules
+          for (const scheduleId of deletedSchedules) {
+            console.log('Removing schedule with ID:', scheduleId);
+            await weeklyScheduleService.removeScheduleFromWeekly(weeklySchedule.id, scheduleId);
+          }
         }
+        
         await fetchWeeklySchedules();
         showModal.value = false;
       } catch (err) {
         console.error('Failed to save weekly schedule:', err);
-        // You could add error handling/notification here
       }
     };
 
@@ -99,7 +142,6 @@ export default {
         showModal.value = false;
       } catch (err) {
         console.error('Failed to delete weekly schedule:', err);
-        // You could add error handling/notification here
       }
     };
 
