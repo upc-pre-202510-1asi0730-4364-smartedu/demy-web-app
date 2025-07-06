@@ -58,7 +58,7 @@
 <script>
 import axios from 'axios'
 import AttendanceClassSelect from '../components/attendance-class-select.component.vue'
-import AttendanceStudentSelect from '../components/attendance-student-select.component.vue'
+import AttendanceStudentSelect from '../../attendance/components/attendance-student-select.component.vue'
 import AttendanceDateRangePicker from '../components/attendance-date-range-picker.component.vue'
 import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
@@ -66,6 +66,7 @@ import Column from 'primevue/column'
 
 const SESSIONS_API = `${import.meta.env.VITE_API_BASE_URL}/class-sessions`
 const STUDENTS_API = `${import.meta.env.VITE_API_BASE_URL}/students2`
+const COURSES_API = `${import.meta.env.VITE_API_BASE_URL}/courses`
 
 export default {
   name: 'AttendanceViewReportPage',
@@ -86,11 +87,14 @@ export default {
       reportResults: [],
       pageSize: 5,
       studentNameMap: {},
-      studentOptions: []
+      studentOptions: [],
+      courseNameMap: {},
+      courseOptions: []
     }
   },
   created() {
     this.loadStudents()
+    this.loadCourses()
   },
   methods: {
     async loadStudents() {
@@ -99,20 +103,38 @@ export default {
         this.studentNameMap = {}
         this.studentOptions = res.data.map(s => {
           const fullName = `${s.firstName} ${s.lastName}`.trim()
-          this.studentNameMap[s.dni] = fullName
+          this.studentNameMap[s.id] = fullName
           return { label: fullName, value: s.dni }
         })
       } catch (e) {
         console.error('Error cargando alumnos:', e)
       }
     },
+
+     async loadCourses() {
+      try {
+        const res = await axios.get(COURSES_API)
+        this.courseNameMap = {}
+        this.courseOptions = res.data.map(s => {
+          this.courseNameMap[s.id] = s.name
+          return { label: s.name, value: s.id }
+        })
+      } catch (e) {
+        console.error('Error cargando alumnos:', e)
+      }
+    },
    
-  async searchReport() {
+
+async searchReport() {
   try {
     const res = await axios.get(SESSIONS_API)
     const sessions = res.data
 
-    if (!this.selectedDateRange || this.selectedDateRange.length === 0) {
+    if (
+      !this.selectedDateRange ||
+      this.selectedDateRange.length === 0 ||
+      !this.selectedClass
+    ) {
       this.dateHeaders = []
       this.reportResults = []
       return
@@ -124,11 +146,8 @@ export default {
         ? this.selectedDateRange[1]
         : this.selectedDateRange[0]
     )
-
-    // Asegurar que start y end estén limpios
     start.setHours(0, 0, 0, 0)
     end.setHours(23, 59, 59, 999)
-
 
     const dateHeaders = []
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
@@ -137,12 +156,16 @@ export default {
     }
     this.dateHeaders = dateHeaders
 
+    // Filtrar sesiones por fecha y clase (ahora obligatoria)
     const filteredSessions = sessions.filter(session => {
       const sessionDate = new Date(session.createdAt)
-      return sessionDate >= start && sessionDate <= end
+      const matchDate = sessionDate >= start && sessionDate <= end
+      const matchClass = session.classId === this.selectedClass
+      return matchDate && matchClass
     })
 
     const map = {}
+
     filteredSessions.forEach(session => {
       const key = new Date(session.createdAt).toLocaleDateString('es-PE', {
         day: 'numeric',
@@ -151,11 +174,16 @@ export default {
 
       session.attendance.forEach(att => {
         const id = att.studentId?.trim()
-        const name = this.studentNameMap[id] || id
+        const name = this.studentNameMap[id]
+
+        // Ignorar si el alumno no está en el listado activo
+        if (!name) return
+
         const status = att.status === 'PRESENT' ? 'P' : 'A'
 
         if (!map[id]) {
-          map[id] = { student: name, class: '—' }
+          const courseName = this.courseNameMap?.[this.selectedClass] || '—'
+          map[id] = { student: name, class: courseName }
           dateHeaders.forEach(d => (map[id][d] = ''))
         }
 
@@ -163,7 +191,7 @@ export default {
       })
     })
 
-    let results = Object.entries(map)
+    const results = Object.entries(map)
       .filter(([id]) => !this.selectedStudent || id === this.selectedStudent)
       .map(([_, value]) => value)
 
@@ -171,9 +199,9 @@ export default {
   } catch (e) {
     console.error('Error en reporte:', e)
   }
-},
-
-    countPresence(row) {
+}
+,
+countPresence(row) {
       return this.dateHeaders.filter(d => row[d] === 'P').length
     }
   },
@@ -181,8 +209,13 @@ export default {
     selectedStudent(newVal, oldVal) {
       console.log(`Estudiante cambió de ${oldVal} a ${newVal}`)
       this.searchReport()
-    }
+    },
+    selectedClass(newVal, oldVal) {
+    console.log(`Clase cambió de ${oldVal} a ${newVal}`)
+    this.searchReport()
   }
+  }
+
 }
 </script>
 
