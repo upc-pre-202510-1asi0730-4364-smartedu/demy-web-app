@@ -34,8 +34,10 @@ export class StudentService {
      * @returns {Promise<Student[]>}
      */
     async getByDni(dni) {
-        const res = await httpInstance.get(`${this.resourceEndpoint}?dni=${dni}`)
-        return res.data.map(student => new Student(student))
+        const res = await httpInstance.get(`${this.resourceEndpoint}/dni/${dni}`)
+        if (res.data && !Array.isArray(res.data)) {
+            return [new Student(res.data)]
+        }
     }
 
     /**
