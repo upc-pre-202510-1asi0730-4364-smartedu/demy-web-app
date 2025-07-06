@@ -1,3 +1,139 @@
+<script>
+export default {
+  props: {
+    /**
+     * Controls the visibility of the modal.
+     * @type {boolean}
+     */
+    visible: Boolean,
+
+    /**
+     * Mode in which the modal operates: 'add', 'edit', or 'delete'.
+     * @type {'add' | 'edit' | 'delete'}
+     */
+    mode: {
+      type: String,
+      validator: value => ['add', 'edit', 'delete'].includes(value)
+    },
+
+    /**
+     * Initial data for the teacher being created or edited.
+     * @type {Object}
+     */
+    teacherData: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  data() {
+    return {
+      /**
+       * Form data for the teacher being managed.
+       */
+      teacher: {
+        fullName: '',
+        email: '',
+        passwordHash: '',
+        role: 'TEACHER',
+        status: 'INACTIVE'
+      },
+      /**
+       * Validation error messages per field.
+       */
+      errors: {}
+    };
+  },
+  /**
+   * Returns the title for the dialog depending on the mode.
+   * @returns {string}
+   */
+  computed: {
+    dialogTitle() {
+      return this.mode === 'add' ? 'Add Teacher' :
+          this.mode === 'edit' ? 'Edit Teacher' :
+              'Delete Teacher';
+    }
+  },
+  watch: {
+    /**
+     * Watches changes to the teacherData prop and updates local state.
+     */
+    teacherData: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal) {
+          this.teacher = { ...this.teacher, ...newVal };
+        }
+      }
+    }
+  },
+  methods: {
+    /**
+     * Validates the form fields before submission.
+     * @returns {boolean} True if valid, false otherwise.
+     */
+    validateForm() {
+      this.errors = {};
+      let isValid = true;
+
+      if (!this.teacher.fullName) {
+        this.errors.fullName = 'Name is required';
+        isValid = false;
+      }
+
+      if (!this.teacher.email) {
+        this.errors.email = 'Email is required';
+        isValid = false;
+      } else if (!/^\S+@\S+\.\S+$/.test(this.teacher.email)) {
+        this.errors.email = 'Valid email is required';
+        isValid = false;
+      }
+
+      if ((this.mode === 'add' || this.teacher.passwordHash) && !this.teacher.passwordHash) {
+        this.errors.passwordHash = 'Password is required';
+        isValid = false;
+      }
+
+      return isValid;
+    },
+    /**
+     * Emits the form submission event if the form is valid.
+     * @param {Event} e - The submit event.
+     */
+    onSubmit(e) {
+      e.preventDefault();
+
+      if (this.submitting) return;
+      this.submitting = true;
+
+      if (!this.teacher.email || !this.teacher.passwordHash) {
+        alert('Email y contraseña son requeridos');
+        this.submitting = false;
+        return;
+      }
+
+      this.$emit('submit', this.teacher);
+      this.submitting = false;
+    },
+    /**
+     * Cancels the modal and emits events to close it.
+     */
+    onCancel() {
+      this.$emit('cancel');
+      this.$emit('update:visible', false);
+    },
+
+    /**
+     * Confirms deletion and emits the confirm-delete event.
+     */
+    onConfirmDelete() {
+      this.$emit('confirm-delete');
+      this.$emit('update:visible', false);
+    }
+  }
+};
+</script>
+
 <template>
   <div class="modal-overlay" v-if="visible" @click.self="onCancel">
     <div class="modal-content">
@@ -56,99 +192,7 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    visible: Boolean,
-    mode: {
-      type: String,
-      validator: value => ['add', 'edit', 'delete'].includes(value)
-    },
-    teacherData: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  data() {
-    return {
-      teacher: {
-        fullName: '',
-        email: '',
-        passwordHash: '',
-        role: 'TEACHER',
-        status: 'INACTIVE'
-      },
-      errors: {}
-    };
-  },
-  computed: {
-    dialogTitle() {
-      return this.mode === 'add' ? 'Add Teacher' :
-          this.mode === 'edit' ? 'Edit Teacher' :
-              'Delete Teacher';
-    }
-  },
-  watch: {
-    teacherData: {
-      immediate: true,
-      handler(newVal) {
-        if (newVal) {
-          this.teacher = { ...this.teacher, ...newVal };
-        }
-      }
-    }
-  },
-  methods: {
-    validateForm() {
-      this.errors = {};
-      let isValid = true;
 
-      if (!this.teacher.fullName) {
-        this.errors.fullName = 'Name is required';
-        isValid = false;
-      }
-
-      if (!this.teacher.email) {
-        this.errors.email = 'Email is required';
-        isValid = false;
-      } else if (!/^\S+@\S+\.\S+$/.test(this.teacher.email)) {
-        this.errors.email = 'Valid email is required';
-        isValid = false;
-      }
-
-      if ((this.mode === 'add' || this.teacher.passwordHash) && !this.teacher.passwordHash) {
-        this.errors.passwordHash = 'Password is required';
-        isValid = false;
-      }
-
-      return isValid;
-    },
-    onSubmit(e) {
-      e.preventDefault();
-
-      if (this.submitting) return;
-      this.submitting = true;
-
-      if (!this.teacher.email || !this.teacher.passwordHash) {
-        alert('Email y contraseña son requeridos');
-        this.submitting = false;
-        return;
-      }
-
-      this.$emit('submit', this.teacher);
-      this.submitting = false;
-    },
-    onCancel() {
-      this.$emit('cancel');
-      this.$emit('update:visible', false);
-    },
-    onConfirmDelete() {
-      this.$emit('confirm-delete');
-      this.$emit('update:visible', false);
-    }
-  }
-};
-</script>
 
 <style scoped>
 .modal-overlay {

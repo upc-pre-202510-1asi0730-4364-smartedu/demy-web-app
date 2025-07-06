@@ -2,15 +2,34 @@ import httpInstance from '../../shared/services/http.instance.js';
 import { UserAccount } from '../model/user-account.js';
 let isCreating = false;
 
+
+/**
+ * Service to manage teacher accounts via the users/teachers backend endpoints.
+ */
 export class TeacherService {
     baseEndpoint = import.meta.env.VITE_API_BASE_URL;
     resourceEndpoint = this.baseEndpoint + '/users/teachers';
-
+    /**
+     * Retrieves all teacher accounts from the backend.
+     *
+     * @returns {Promise<UserAccount[]>} A list of teacher users.
+     */
     async getTeachers() {
         const res = await httpInstance.get(`${this.baseEndpoint}/users/teachers`);
         return res.data.teachers.map(teacherData => new UserAccount(teacherData));
     }
 
+    /**
+     * Creates a new teacher account.
+     * Prevents multiple simultaneous creation requests.
+     *
+     * @param {Object} teacherData - The teacher data.
+     * @param {string} teacherData.fullName - Full name of the teacher.
+     * @param {string} teacherData.email - Email address of the teacher.
+     * @param {string} teacherData.passwordHash - Plain password to create the teacher.
+     * @returns {Promise<UserAccount>} The created teacher user.
+     * @throws {Error} If a creation is already in process.
+     */
     async createTeacher(teacherData) {
         if (isCreating) throw new Error('La creación de profesor ya está en proceso');
 
@@ -28,6 +47,18 @@ export class TeacherService {
         }
     }
 
+
+    /**
+     * Updates a teacher's information by ID.
+     * If a new password is provided, it is included as 'newPassword'.
+     *
+     * @param {string|number} id - The ID of the teacher.
+     * @param {Object} teacherData - The updated data.
+     * @param {string} teacherData.fullName - Updated full name.
+     * @param {string} teacherData.email - Updated email.
+     * @param {string} [teacherData.passwordHash] - Optional new password.
+     * @returns {Promise<UserAccount>} The updated teacher user.
+     */
     async updateTeacher(id, teacherData) {
         const updateData = {
             fullName: teacherData.fullName,
@@ -38,12 +69,23 @@ export class TeacherService {
         return new UserAccount(res.data.user);
     }
 
+    /**
+     * Deletes a teacher by ID.
+     *
+     * @param {string|number} id - The ID of the teacher to delete.
+     * @returns {Promise<boolean>} True if deletion succeeded.
+     */
     async deleteTeacher(id) {
         await httpInstance.delete(`${this.resourceEndpoint}/${id}`);
         return true;
     }
 }
 
+/**
+ * Factory hook to get a TeacherService instance.
+ *
+ * @returns {TeacherService} A new TeacherService instance.
+ */
 export function useTeacherService() {
     return new TeacherService();
 }

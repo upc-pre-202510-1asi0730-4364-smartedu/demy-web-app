@@ -51,10 +51,7 @@ const routes = [
         path: '/plantSelect',
         component: PlantSelect
     },
-    {
-        path: '/forgot-password',
-        component: RecoverPassword
-    },
+
     {
         path: '/reset-password',
         component: ResetPassword

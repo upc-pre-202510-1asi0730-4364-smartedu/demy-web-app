@@ -1,3 +1,200 @@
+
+<script>
+import TeacherModal from '../components/teacher-modal.component.vue';
+import { useTeacherService } from '../services/teacher.service.js';
+
+export default {
+  components: {
+    TeacherModal
+  },
+  data() {
+    return {
+      isSubmitting: false,
+      teachers: [],
+      filteredTeachers: [],
+      currentPage: 1,
+      pageSize: 5,
+      sortField: 'fullName',
+      sortDirection: 'asc',
+      modalVisible: false,
+      modalMode: 'add',
+      selectedTeacher: null,
+      teacherService: useTeacherService()
+    };
+  },
+  computed: {
+    /**
+     * Calculates total pages based on filtered teachers and page size.
+     * @returns {number}
+     */
+    totalPages() {
+      return Math.ceil(this.filteredTeachers.length / this.pageSize);
+    },
+    /**
+     * Returns the current page of teachers based on pagination.
+     * @returns {Array}
+     */
+    paginatedTeachers() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.filteredTeachers.slice(start, end);
+    }
+  },
+  async created() {
+    await this.loadTeachers();
+  },
+  methods: {
+    /**
+     * Called when the component is created. Loads teacher list.
+     */
+    async loadTeachers() {
+      try {
+        const response = await this.teacherService.getTeachers();
+        this.teachers = response.filter(teacher =>
+            teacher.role === 1 || teacher.role === 'TEACHER'
+        );
+        this.filteredTeachers = [...this.teachers];
+        this.sortTeachers();
+      } catch (error) {
+        console.error('Error loading teachers:', error);
+      }
+    },
+
+    /**
+     * Handles sorting when a column header is clicked.
+     * @param {string} field - Field to sort by.
+     */
+    sort(field) {
+      if (this.sortField === field) {
+        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        this.sortField = field;
+        this.sortDirection = 'asc';
+      }
+      this.sortTeachers();
+    },
+    /**
+     * Sorts the filtered teacher list by current field and direction.
+     */
+    sortTeachers() {
+      this.filteredTeachers.sort((a, b) => {
+        const valueA = a[this.sortField] || '';
+        const valueB = b[this.sortField] || '';
+
+        if (valueA < valueB) {
+          return this.sortDirection === 'asc' ? -1 : 1;
+        }
+        if (valueA > valueB) {
+          return this.sortDirection === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    },
+    resetPagination() {
+      this.currentPage = 1;
+    },
+    /** Opens the modal to create a new teacher. */
+    onNewTeacher() {
+      this.modalMode = 'add';
+      this.selectedTeacher = {
+        fullName: '',
+        email: '',
+        passwordHash: '',
+        role: 'TEACHER',
+        status: 'INACTIVE'
+      };
+      this.modalVisible = true;
+    },
+    /**
+     * Opens the modal to edit a selected teacher.
+     * @param {Object} teacher - The teacher to edit.
+     */
+    onEditItem(teacher) {
+      this.modalMode = 'edit';
+      this.selectedTeacher = { ...teacher };
+      this.modalVisible = true;
+    },
+    /**
+     * Opens the modal to confirm deletion of a teacher.
+     * @param {Object} teacher - The teacher to delete.
+     */
+    onDeleteItem(teacher) {
+      this.modalMode = 'delete';
+      this.selectedTeacher = { ...teacher };
+      this.modalVisible = true;
+    },
+    /**
+     * Handles submission from the modal (create or update).
+     * @param {Object} teacherData - The data submitted from the modal.
+     */
+    async handleModalSubmit(teacherData) {
+      if (this.isSubmitting) return;
+      this.isSubmitting = true;
+
+      try {
+        if (this.modalMode === 'add') {
+          const newTeacher = await this.teacherService.createTeacher(teacherData);
+          const exists = this.teachers.some(t => t.email === newTeacher.email);
+          if (!exists) {
+            this.teachers = [newTeacher, ...this.teachers];
+            this.filteredTeachers = [newTeacher, ...this.filteredTeachers];
+          }
+        } else if (this.modalMode === 'edit') {
+          if (!teacherData.id) {
+            throw new Error('Teacher ID not provided');
+          }
+
+          const updatedTeacher = await this.teacherService.updateTeacher(
+              teacherData.id,
+              teacherData
+          );
+
+          this.teachers = this.teachers.map(t =>
+              t.id === updatedTeacher.id ? updatedTeacher : t
+          );
+          this.filteredTeachers = this.filteredTeachers.map(t =>
+              t.id === updatedTeacher.id ? updatedTeacher : t
+          );
+        }
+
+        this.modalVisible = false;
+      } catch (error) {
+        console.error('Error saving teacher:', error);
+        alert(`Error saving: ${error.message}`);
+      } finally {
+        this.isSubmitting = false;
+      }
+    },
+    /**
+     * Confirms and deletes the selected teacher.
+     */
+    async handleConfirmDelete() {
+      try {
+        await this.teacherService.deleteTeacher(this.selectedTeacher.id);
+        this.teachers = this.teachers.filter(t => t.id !== this.selectedTeacher.id);
+        this.filteredTeachers = this.filteredTeachers.filter(t => t.id !== this.selectedTeacher.id);
+      } catch (error) {
+        console.error('Error deleting teacher:', error);
+      }
+    },
+    /** Closes the modal without saving. */
+    handleModalCancel() {
+      this.modalVisible = false;
+    }
+  }
+};
+</script>
+
 <template>
   <div class="teacher-container">
     <h1>{{ $t('teacher.title') }}</h1>
@@ -61,165 +258,6 @@
   </div>
 </template>
 
-<script>
-import TeacherModal from '../components/teacher-modal.component.vue';
-import { useTeacherService } from '../services/teacher.service.js';
-
-export default {
-  components: {
-    TeacherModal
-  },
-  data() {
-    return {
-      isSubmitting: false,
-      teachers: [],
-      filteredTeachers: [],
-      currentPage: 1,
-      pageSize: 5,
-      sortField: 'fullName',
-      sortDirection: 'asc',
-      modalVisible: false,
-      modalMode: 'add',
-      selectedTeacher: null,
-      teacherService: useTeacherService()
-    };
-  },
-  computed: {
-    totalPages() {
-      return Math.ceil(this.filteredTeachers.length / this.pageSize);
-    },
-    paginatedTeachers() {
-      const start = (this.currentPage - 1) * this.pageSize;
-      const end = start + this.pageSize;
-      return this.filteredTeachers.slice(start, end);
-    }
-  },
-  async created() {
-    await this.loadTeachers();
-  },
-  methods: {
-    async loadTeachers() {
-      try {
-        const response = await this.teacherService.getTeachers();
-        this.teachers = response.filter(teacher =>
-            teacher.role === 1 || teacher.role === 'TEACHER'
-        );
-        this.filteredTeachers = [...this.teachers];
-        this.sortTeachers();
-      } catch (error) {
-        console.error('Error loading teachers:', error);
-      }
-    },
-    sort(field) {
-      if (this.sortField === field) {
-        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-      } else {
-        this.sortField = field;
-        this.sortDirection = 'asc';
-      }
-      this.sortTeachers();
-    },
-    sortTeachers() {
-      this.filteredTeachers.sort((a, b) => {
-        const valueA = a[this.sortField] || '';
-        const valueB = b[this.sortField] || '';
-
-        if (valueA < valueB) {
-          return this.sortDirection === 'asc' ? -1 : 1;
-        }
-        if (valueA > valueB) {
-          return this.sortDirection === 'asc' ? 1 : -1;
-        }
-        return 0;
-      });
-    },
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
-    },
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
-    },
-    resetPagination() {
-      this.currentPage = 1;
-    },
-    onNewTeacher() {
-      this.modalMode = 'add';
-      this.selectedTeacher = {
-        fullName: '',
-        email: '',
-        passwordHash: '',
-        role: 'TEACHER',
-        status: 'INACTIVE'
-      };
-      this.modalVisible = true;
-    },
-    onEditItem(teacher) {
-      this.modalMode = 'edit';
-      this.selectedTeacher = { ...teacher };
-      this.modalVisible = true;
-    },
-    onDeleteItem(teacher) {
-      this.modalMode = 'delete';
-      this.selectedTeacher = { ...teacher };
-      this.modalVisible = true;
-    },
-    async handleModalSubmit(teacherData) {
-      if (this.isSubmitting) return;
-      this.isSubmitting = true;
-
-      try {
-        if (this.modalMode === 'add') {
-          const newTeacher = await this.teacherService.createTeacher(teacherData);
-          const exists = this.teachers.some(t => t.email === newTeacher.email);
-          if (!exists) {
-            this.teachers = [newTeacher, ...this.teachers];
-            this.filteredTeachers = [newTeacher, ...this.filteredTeachers];
-          }
-        } else if (this.modalMode === 'edit') {
-          if (!teacherData.id) {
-            throw new Error('Teacher ID not provided');
-          }
-
-          const updatedTeacher = await this.teacherService.updateTeacher(
-              teacherData.id,
-              teacherData
-          );
-
-          this.teachers = this.teachers.map(t =>
-              t.id === updatedTeacher.id ? updatedTeacher : t
-          );
-          this.filteredTeachers = this.filteredTeachers.map(t =>
-              t.id === updatedTeacher.id ? updatedTeacher : t
-          );
-        }
-
-        this.modalVisible = false;
-      } catch (error) {
-        console.error('Error saving teacher:', error);
-        alert(`Error saving: ${error.message}`);
-      } finally {
-        this.isSubmitting = false;
-      }
-    },
-    async handleConfirmDelete() {
-      try {
-        await this.teacherService.deleteTeacher(this.selectedTeacher.id);
-        this.teachers = this.teachers.filter(t => t.id !== this.selectedTeacher.id);
-        this.filteredTeachers = this.filteredTeachers.filter(t => t.id !== this.selectedTeacher.id);
-      } catch (error) {
-        console.error('Error deleting teacher:', error);
-      }
-    },
-    handleModalCancel() {
-      this.modalVisible = false;
-    }
-  }
-};
-</script>
 
 <style scoped>
 .teacher-container {

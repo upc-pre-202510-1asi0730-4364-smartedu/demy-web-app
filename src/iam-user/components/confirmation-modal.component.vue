@@ -1,6 +1,9 @@
 <script setup>
 
 
+import router from "../../../router/index.js";
+import {watch} from "vue";
+
 const props = defineProps({
   visible: Boolean,
   message: String
@@ -10,6 +13,17 @@ const emits = defineEmits(['close'])
 const emitClose = () => {
   emits('close')
 }
+watch(
+    () => props.visible,
+    (val) => {
+      if (val && props.message === 'Contraseña restablecida correctamente') {
+        setTimeout(() => {
+          emitClose()
+          router.push('/login')
+        }, 2000)
+      }
+    }
+)
 </script>
 
 <template>

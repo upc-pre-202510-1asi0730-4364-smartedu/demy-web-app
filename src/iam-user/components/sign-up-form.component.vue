@@ -19,7 +19,13 @@ const router = useRouter()
 const academyService = useAcademyService()
 const userAccountService = useUserAccountService()
 
-
+/**
+ * Handles form submission for both user and academy creation.
+ * - Validates acceptance of terms
+ * - Registers user
+ * - Registers academy with the new user ID
+ * - Redirects to plant selection page on success
+ */
 const onSubmit = async () => {
   if (!form.value.terms) {
     alert('You must accept the terms and conditions');
