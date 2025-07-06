@@ -6,7 +6,7 @@ export class TeacherService {
     resourceEndpoint = import.meta.env.VITE_USER_ACCOUNT_ENDPOINT_PATH;
 
     async getTeachers() {
-        const res = await httpInstance.get(this.resourceEndpoint);
+        const res = await httpInstance.get(`${this.resourceEndpoint}/teachers`);
         return res.data
             .filter(user => user.role === 'TEACHER' || user.role === 1)
             .map(teacherData => new UserAccount(teacherData));

@@ -7,7 +7,7 @@ export class ScheduleWeekly {
      * @param {Object} scheduleWeekly - The weekly schedule initialization object
      * @param {number} [scheduleWeekly.id=0] - The schedule ID
      * @param {string} [scheduleWeekly.name=''] - The name of the weekly schedule
-     * @param {Array} [scheduleWeekly.weekSchedule=[]] - The list of schedules for each day of the week
+     * @param {Array} [scheduleWeekly.schedules=[]] - The list of schedules for each day of the week
      */
     constructor(scheduleWeekly = {}) {
         /** Unique identifier for the weekly schedule */
@@ -17,8 +17,8 @@ export class ScheduleWeekly {
         /** Name of the weekly schedule */
         this.name = scheduleWeekly.name || '';
         /** A list of daily schedules for the entire week */
-        this.weekSchedule = Array.isArray(scheduleWeekly.weekSchedule)
-            ? scheduleWeekly.weekSchedule
+        this.schedules = Array.isArray(scheduleWeekly.schedules)
+            ? scheduleWeekly.schedules
             : [];
     }
 }

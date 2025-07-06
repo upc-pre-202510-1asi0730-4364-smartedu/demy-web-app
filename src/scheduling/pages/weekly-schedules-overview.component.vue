@@ -54,12 +54,12 @@ export default {
     };
 
     const getSchedulesCount = (schedule) => {
-      return schedule.weekSchedule?.length || 0;
+      return schedule.schedules?.length || 0;
     };
 
     const onNewWeeklySchedule = () => {
       modalMode.value = 'add';
-      selectedWeeklySchedule.value = new ScheduleWeekly({ weekSchedule: [] });
+      selectedWeeklySchedule.value = new ScheduleWeekly({ schedules: [] });
       showModal.value = true;
     };
 

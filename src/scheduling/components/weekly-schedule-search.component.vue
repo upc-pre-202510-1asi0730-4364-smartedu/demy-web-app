@@ -111,10 +111,10 @@ export default {
     const getSchedulesForDayAndTime = (day, timeSlot) => {
       if (!currentWeeklySchedule.value) return [];
 
-      return currentWeeklySchedule.value.weekSchedule.filter(schedule => {
+      return currentWeeklySchedule.value.schedules.filter(schedule => {
         const scheduleDayOfWeek = schedule.dayOfWeek.toLowerCase();
-        const [startHour, startMinute] = schedule.timeRange.start.split(':').map(Number);
-        const [endHour, endMinute] = schedule.timeRange.end.split(':').map(Number);
+        const [startHour, startMinute] = schedule.startTime.split(':').map(Number);
+        const [endHour, endMinute] = schedule.endTime.split(':').map(Number);
         const [slotHour, slotMinute] = timeSlot.split(':').map(Number);
         
         const startTimeInMinutes = startHour * 60 + startMinute;
@@ -226,18 +226,18 @@ export default {
                   class="schedule-block"
               >
                 <div class="course-info">
-                  <strong>{{ schedule.course.name }}</strong>
+                  <strong>Course ID: {{ schedule.courseId }}</strong>
                 </div>
                 <div class="classroom-info">
                   <i class="pi pi-map-marker"></i>
-                  {{ schedule.classroom.code }} - {{ schedule.classroom.campus }}
+                  Classroom ID: {{ schedule.classroomId }}
                 </div>
                 <div class="teacher-info">
                   <i class="pi pi-user"></i>
-                  {{ schedule.teacher.fullName }}
+                  Teacher ID: {{ schedule.teacherId }}
                 </div>
                 <div class="time-info">
-                  {{ schedule.timeRange.start }} - {{ schedule.timeRange.end }}
+                  {{ schedule.startTime }} - {{ schedule.endTime }}
                 </div>
               </div>
             </div>

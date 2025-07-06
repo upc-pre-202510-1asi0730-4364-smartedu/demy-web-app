@@ -2,7 +2,6 @@
 import { ref, computed, reactive, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ScheduleWeekly } from '../model/weekly-schedule.entity';
-import { Schedule } from '../model/schedule.entity';
 import { CourseService } from '../services/course.service';
 import { ClassroomService } from '../services/classroom.service';
 import { TeacherService } from '../../iam-user/services/teacher.service.js';
@@ -23,13 +22,13 @@ export default {
   setup(props, { emit }) {
     const { t } = useI18n();
     const weeklySchedule = reactive(new ScheduleWeekly(props.weeklyScheduleData));
-    const currentSchedule = reactive(new Schedule({
+    const currentSchedule = reactive({
       course: { id: null },
       teacher: { id: null },
       classroom: { id: null },
       timeRange: { start: '', end: '' },
       dayOfWeek: ''
-    }));
+    });
 
     const availableCourses = ref([]);
     const availableClassrooms = ref([]);
@@ -225,31 +224,17 @@ export default {
         const teacher = availableTeachers.value.find(t => t.id === currentSchedule.teacher.id);
 
         if (course && classroom && teacher) {
-          const scheduleToAdd = new Schedule({
+          const scheduleToAdd = {
             id: Date.now(),
             dayOfWeek: currentSchedule.dayOfWeek,
-            timeRange: {
-              start: currentSchedule.timeRange.start,
-              end: currentSchedule.timeRange.end
-            },
-            course: {
-              id: course.id,
-              name: course.name || course.courseName || course.title || 'Unknown Course',
-              code: course.code || course.courseCode || 'N/A'
-            },
-            classroom: {
-              id: classroom.id,
-              code: classroom.code || classroom.name || classroom.roomCode || classroom.number || 'Unknown Room',
-              capacity: classroom.capacity || 0,
-              campus: classroom.campus || classroom.location || 'Unknown Campus'
-            },
-            teacher: {
-              id: teacher.id,
-              fullName: teacher.fullName || teacher.name || `${teacher.firstName || ''} ${teacher.lastName || ''}`.trim() || 'Unknown Teacher'
-            }
-          });
+            startTime: currentSchedule.timeRange.start,
+            endTime: currentSchedule.timeRange.end,
+            courseId: course.id,
+            classroomId: classroom.id,
+            teacherId: teacher.id
+          };
 
-          weeklySchedule.weekSchedule.push(scheduleToAdd);
+          weeklySchedule.schedules.push(scheduleToAdd);
 
           // Reset current schedule
           Object.assign(currentSchedule, {
@@ -271,14 +256,14 @@ export default {
 
     // Remove a schedule
     const removeSchedule = (index) => {
-      weeklySchedule.weekSchedule.splice(index, 1);
+      weeklySchedule.schedules.splice(index, 1);
     };
 
     // Submit form
     const onSubmit = () => {
       nameError.value = !weeklySchedule.name?.trim();
 
-      if (!nameError.value && weeklySchedule.weekSchedule.length > 0) {
+      if (!nameError.value && weeklySchedule.schedules.length > 0) {
         emit('confirm', weeklySchedule);
       }
     };
@@ -446,21 +431,21 @@ export default {
           </div>
 
           <!-- Display created schedules -->
-          <div v-if="weeklySchedule.weekSchedule.length > 0" class="schedules-list">
+          <div v-if="weeklySchedule.schedules.length > 0" class="schedules-list">
             <h3>{{ $t('weekly-schedule.modal.scheduleList') }}</h3>
             <div
-                v-for="(schedule, index) in weeklySchedule.weekSchedule"
+                v-for="(schedule, index) in weeklySchedule.schedules"
                 :key="index"
                 class="schedule-item"
             >
               <div>
-                <strong>{{ schedule.dayOfWeek }}</strong>: {{ schedule.timeRange.start }} - {{ schedule.timeRange.end }}
+                <strong>{{ schedule.dayOfWeek }}</strong>: {{ schedule.startTime }} - {{ schedule.endTime }}
                 <br>
-                Course: {{ schedule.course.name }} ({{ schedule.course.code }})
+                Course ID: {{ schedule.courseId }}
                 <br>
-                Classroom: {{ schedule.classroom.code }} ({{ schedule.classroom.campus }})
+                Classroom ID: {{ schedule.classroomId }}
                 <br>
-                Teacher: {{ schedule.teacher.fullName }}
+                Teacher ID: {{ schedule.teacherId }}
               </div>
               <pv-button
                   icon="pi pi-trash"
@@ -496,7 +481,7 @@ export default {
             icon="pi pi-check"
             class="p-button-success"
             @click="onSubmit"
-            :disabled="weeklySchedule.weekSchedule.length === 0"
+            :disabled="weeklySchedule.schedules.length === 0"
         />
       </template>
 

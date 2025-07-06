@@ -185,9 +185,9 @@ export default {
         // Extract all individual schedules and filter by current teacher
         const allIndividualSchedules = [];
         weeklySchedules.forEach(weeklySchedule => {
-          if (weeklySchedule.weekSchedule && Array.isArray(weeklySchedule.weekSchedule)) {
-            weeklySchedule.weekSchedule.forEach(schedule => {
-              if (schedule.teacher) {
+          if (weeklySchedule.schedules && Array.isArray(weeklySchedule.schedules)) {
+            weeklySchedule.schedules.forEach(schedule => {
+              if (schedule.teacherId) {
                 allIndividualSchedules.push({
                   ...schedule,
                   weeklyScheduleId: weeklySchedule.id,
@@ -201,7 +201,7 @@ export default {
         // Filter schedules for current teacher
         const currentTeacherId = String(currentTeacher.value.id);
         teacherSchedules.value = allIndividualSchedules.filter(schedule => {
-          const teacherId = String(schedule.teacher?.id);
+          const teacherId = String(schedule.teacherId);
           return teacherId === currentTeacherId;
         });
 
@@ -229,8 +229,8 @@ export default {
 
       return teacherSchedules.value.find(schedule => {
         const scheduleDayOfWeek = schedule.dayOfWeek;
-        const scheduleStartTime = schedule.timeRange?.start;
-        const scheduleEndTime = schedule.timeRange?.end;
+        const scheduleStartTime = schedule.startTime;
+        const scheduleEndTime = schedule.endTime;
 
         // Verificar si el día coincide
         if (scheduleDayOfWeek !== mappedDay) {
@@ -267,13 +267,14 @@ export default {
         );
 
         // Update the schedule within the weekly schedule
-        const scheduleIndex = weeklySchedule.weekSchedule.findIndex(s => s.id === updatedSchedule.id);
+        const scheduleIndex = weeklySchedule.schedules.findIndex(s => s.id === updatedSchedule.id);
         if (scheduleIndex !== -1) {
-          weeklySchedule.weekSchedule[scheduleIndex] = {
-            ...weeklySchedule.weekSchedule[scheduleIndex],
+          weeklySchedule.schedules[scheduleIndex] = {
+            ...weeklySchedule.schedules[scheduleIndex],
             dayOfWeek: updatedSchedule.dayOfWeek,
-            timeRange: updatedSchedule.timeRange,
-            classroom: updatedSchedule.classroom
+            startTime: updatedSchedule.startTime,
+            endTime: updatedSchedule.endTime,
+            classroomId: updatedSchedule.classroomId
           };
 
           // Update the weekly schedule in the backend

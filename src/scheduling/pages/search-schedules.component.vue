@@ -15,8 +15,8 @@ export default {
     const getUniqueTimesCount = computed(() => {
       if (!selectedSchedule.value) return 0;
       const times = new Set();
-      selectedSchedule.value.weekSchedule.forEach(schedule => {
-        times.add(schedule.timeRange.start);
+      selectedSchedule.value.schedules.forEach(schedule => {
+        times.add(schedule.startTime);
       });
       return times.size;
     });
@@ -24,8 +24,8 @@ export default {
     const getUniqueClassroomsCount = computed(() => {
       if (!selectedSchedule.value) return 0;
       const classrooms = new Set();
-      selectedSchedule.value.weekSchedule.forEach(schedule => {
-        classrooms.add(schedule.classroom.id);
+      selectedSchedule.value.schedules.forEach(schedule => {
+        classrooms.add(schedule.classroomId);
       });
       return classrooms.size;
     });
@@ -33,8 +33,8 @@ export default {
     const getUniqueTeachersCount = computed(() => {
       if (!selectedSchedule.value) return 0;
       const teachers = new Set();
-      selectedSchedule.value.weekSchedule.forEach(schedule => {
-        teachers.add(schedule.teacher.id);
+      selectedSchedule.value.schedules.forEach(schedule => {
+        teachers.add(schedule.teacherId);
       });
       return teachers.size;
     });
