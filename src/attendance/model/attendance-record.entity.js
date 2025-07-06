@@ -1,14 +1,14 @@
 import { AttendanceStatus } from './attendance-status.js'
 
 export class AttendanceRecord {
-    constructor(studentId, status = AttendanceStatus.PRESENT) {
-        this.studentId = studentId
+    constructor(dni, status = AttendanceStatus.PRESENT) {
+        this.dni = dni
         this.status = status
     }
 
     toJSON() {
         return {
-            studentId: this.studentId,
+            dni: this.dni ,
             status: this.status
         }
     }
