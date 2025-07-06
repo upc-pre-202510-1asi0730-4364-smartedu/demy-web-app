@@ -47,7 +47,7 @@ export default {
     try {
       const students = await studentService.getAll();
       this.records = students.map(student => ({
-        studentId: student.id,
+        studentId: student.dni,
         studentName: `${student.firstName} ${student.lastName}`,
         status: AttendanceStatus.ABSENT // valor inicial por defecto
       }));

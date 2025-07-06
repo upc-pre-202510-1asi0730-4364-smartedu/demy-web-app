@@ -16,10 +16,18 @@
     <AttendanceStudentList ref="studentListComponent"
                            :records="attendanceRecords"
                            @update:records="attendanceRecords = $event"/>
+    <div class="container-buttons">
 
-    <div class="save-button-container">
-      <AttendanceSaveButton @saveClicked="saveAttendance" />
+      <div class="save-button-container">
+        <AttendanceSaveButton @saveClicked="saveAttendance" />
+      </div>
+
+      <div class="save-button-container">
+        <AttendanceViewReportButton @viewReportClicked="navigateToReport" />
+      </div>
+
     </div>
+
   </div>
 </template>
 
@@ -28,6 +36,7 @@ import AttendanceClassSelect from '../components/attendance-class-select.compone
 import AttendanceDate from '../components/attendance-date.component.vue'
 import AttendanceStudentList from '../components/attendance-student-list.component.vue'
 import AttendanceSaveButton from '../components/attendance-save-button.component.vue'
+import AttendanceViewReportButton from '../components/attendance-view-report-button.component.vue'
 import { AttendanceRecord } from '../model/attendance-record.entity.js'
 import { AttendanceStatus } from '../model/attendance-status.js'
 import { classSessionService } from '../services/class-sessions.service.js'
@@ -40,7 +49,8 @@ export default {
     AttendanceClassSelect,
     AttendanceDate,
     AttendanceStudentList,
-    AttendanceSaveButton
+    AttendanceSaveButton,
+    AttendanceViewReportButton
   },
   data() {
     return {
@@ -51,6 +61,9 @@ export default {
   },
 
   methods: {
+    async navigateToReport() {
+      await this.$router.push({ path: '/attendance-view-report' })
+    },
     async saveAttendance() {
 
       if (!this.selectedClass) {
@@ -115,5 +128,12 @@ export default {
   flex: 1;
   min-width: 200px;
 }
+.container-buttons {
+  display: flex;
+  gap: 50px;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
 
 </style>

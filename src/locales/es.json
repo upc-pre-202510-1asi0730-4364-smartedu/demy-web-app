@@ -174,13 +174,23 @@
     }
   },
   "attendance-title": "Registro de asistencia",
+  "attendance-report-title": "Reporte de asistencia",
+
   "attendance-subtitle1": "Mis Clases",
+  "attendance-report-subtitle1": "Reporte de asistencia por clase",
+
   "attendance-class": "Clase",
+  "attendance-student": "Estudiante",
+
   "attendance-date": "Fecha",
+  "attendance-date-range": "Rango de fechas",
+
   "attendance-subtitle2": "Lista de alumnos",
   "attendance-student": "Estudiante",
   "attendance-checkbox": "Asistió",
   "attendance-save": "Guardar asistencia",
+  "attendance-view-report": "Ver reporte de asistencia",
+
   "view-courses": {
     "title": "Cursos",
     "table": {

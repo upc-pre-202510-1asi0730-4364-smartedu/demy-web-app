@@ -17,6 +17,8 @@ import ExpensesPage from "../billing/pages/expenses-page.component.vue";
 import TeacherPage from "../iam-user/pages/teacher.component.vue";
 import PlantSelect from "../iam-user/pages/plan-select.component.vue";
 import AttendancePageComponent from "../attendance/components/attendance-page.component.vue";
+import AttendanceViewReportPageComponent from "../attendance/components/attendance-report-page.component.vue";
+
 import Courses from "../scheduling/pages/courses-overview.component.vue";
 import AcademicPeriod from "../enrollments/pages/academic-period-management.component.vue";
 //import ExpensesPage from '../finance/pages/expenses-page.vue'
@@ -43,6 +45,7 @@ const routes = [
             { path: '', redirect: '/organization', component: Organization },
             { path: 'payments', component: Payment },
             { path: 'attendance', component: AttendancePageComponent },
+            { path: 'attendance-view-report', component: AttendanceViewReportPageComponent },
             { path: 'finance', component: ExpensesPage },
             { path: 'enrollment', component: Enrollment},
             { path: 'students', component: Student}
