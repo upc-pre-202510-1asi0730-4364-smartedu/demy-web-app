@@ -1,5 +1,5 @@
 <script>
-import { StudentService } from '../../enrollments/services/student.service.js';
+import { StudentService } from '../../enrollments/services/student.service';
 
 const studentService = new StudentService()
 
@@ -18,7 +18,7 @@ export default {
         { label: 'Todos los alumnos', value: '' }, // ✅ opción para ver todos
         ...response.map(student => ({
           label: `${student.firstName} ${student.lastName}`,
-          value: student.dni
+          value: student.id
         }))
       ]
     } catch (error) {
