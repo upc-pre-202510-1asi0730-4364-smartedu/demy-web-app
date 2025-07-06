@@ -61,11 +61,11 @@ export default defineComponent({
 
 <template>
   <form ref="form" class="academic-period-form" @submit.prevent="submit">
-    <h4>{{ t(editMode ? 'academic-period.regist.title-edit' : 'academic-period.regist.save') }}</h4>
+    <h3>{{ t(editMode ? 'academic-period.regist.title-edit' : 'academic-period.regist.save') }}</h3>
 
     <div class="form-row">
       <pv-input-text
-          v-model="localAcademicPeriod.name"
+          v-model="localAcademicPeriod.periodName"
           :placeholder="t('academic-period.regist.period')"
           required
           class="form-field"
@@ -120,6 +120,12 @@ export default defineComponent({
   background-color: #fff;
   border-radius: 0.75rem;
 }
+
+h3 {
+  color: var(--color-secondary-dark-1);
+  text-align: center;
+}
+
 .academic-period-form h4 {
   text-align: center;
   margin-bottom: 0.5rem;
