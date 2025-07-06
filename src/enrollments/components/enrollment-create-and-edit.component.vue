@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { Enrollment, EnrollmentStatus, PaymentStatus } from "../model/enrollment.entity.js";
 import { StudentService } from "../services/student.service.js";
 import { AcademicPeriodService } from "../services/academic-period.service.js";
+import {WeeklyScheduleService} from "../../scheduling/services/weekly-schedule.service.js";
 
 export default defineComponent({
   name: 'enrollment-create-and-edit',
@@ -27,19 +28,24 @@ export default defineComponent({
       localEnrollment: new Enrollment(this.modelValue),
       studentOptions: [],
       periodOptions: [],
-      enrollmentStatusOptions: [
-        { value: EnrollmentStatus.ACTIVE, label: this.$t('enrollment.status.active') },
-        { value: EnrollmentStatus.CANCELLED, label: this.$t('enrollment.status.cancelled') },
-        { value: EnrollmentStatus.COMPLETED, label: this.$t('enrollment.status.completed') },
-        { value: EnrollmentStatus.DELETED, label: this.$t('enrollment.status.deleted') }
-      ],
-      paymentStatusOptions: [
-        { value: PaymentStatus.PENDING, label: this.$t('enrollment.payment.pending') },
-        { value: PaymentStatus.PAID, label: this.$t('enrollment.payment.paid') },
-        { value: PaymentStatus.REFUNDED, label: this.$t('enrollment.payment.refunded') },
-        { value: PaymentStatus.PARTIAL, label: this.$t('enrollment.payment.partial') }
-      ]
+      weeklyScheduleOptions: [],
     };
+  },
+  computed: {
+    enrollmentStatusOptions() {
+      return [
+        { value: EnrollmentStatus.ACTIVE, label: this.t('enrollment.status.active') },
+        { value: EnrollmentStatus.CANCELLED, label: this.t('enrollment.status.cancelled') },
+        { value: EnrollmentStatus.COMPLETED, label: this.t('enrollment.status.completed') },
+      ];
+    },
+    paymentStatusOptions() {
+      return [
+        { value: PaymentStatus.PENDING, label: this.t('enrollment.payment.pending') },
+        { value: PaymentStatus.PAID, label: this.t('enrollment.payment.paid') },
+        { value: PaymentStatus.REFUNDED, label: this.t('enrollment.payment.refunded') },
+      ];
+    }
   },
   watch: {
     modelValue: {
@@ -53,8 +59,10 @@ export default defineComponent({
   async mounted() {
     const studentService = new StudentService();
     const periodService = new AcademicPeriodService();
+    const weeklyScheduleService = new WeeklyScheduleService();
     this.studentOptions = await studentService.getAll();
     this.periodOptions = await periodService.getAll();
+    this.weeklyScheduleOptions = await weeklyScheduleService.getAll();
   },
   methods: {
     isValid() {
@@ -75,6 +83,9 @@ export default defineComponent({
     reset() {
       this.localEnrollment = new Enrollment();
       this.$refs.form.reset();
+    },
+    getStudentFullName(student) {
+      return `${student.firstName} ${student.lastName}`;
     }
   }
 });
@@ -82,27 +93,27 @@ export default defineComponent({
 
 <template>
   <form ref="form" class="enrollment-form" @submit.prevent="submit">
-    <h2>{{ t(editMode ? 'enrollment.form.title-edit' : 'enrollment.form.title-new') }}</h2>
+    <h3>{{ t(editMode ? 'enrollment.form.title-edit' : 'enrollment.form.title-new') }}</h3>
 
+    <!-- Estudiante -->
     <!-- Estudiante -->
     <div class="form-row">
       <pv-dropdown
           v-model="localEnrollment.studentId"
           :options="studentOptions"
-          optionLabel="firstName"
+          :optionLabel="getStudentFullName"
           optionValue="id"
           :placeholder="t('enrollment.form.student')"
           required
           class="form-field"
       />
     </div>
-
-    <!-- Periodo Académico -->
+    <!-- AcademicPeriod -->
     <div class="form-row">
       <pv-dropdown
-          v-model="localEnrollment.periodId"
+          v-model="localEnrollment.academicPeriodId"
           :options="periodOptions"
-          optionLabel="name"
+          optionLabel="periodName"
           optionValue="id"
           :placeholder="t('enrollment.form.period')"
           required
@@ -110,12 +121,14 @@ export default defineComponent({
       />
     </div>
 
-    <!-- Fecha -->
+    <!-- WeeklySchedules -->
     <div class="form-row">
-      <pv-input-text
-          v-model="localEnrollment.createdAt"
-          type="date"
-          :placeholder="t('enrollment.form.date')"
+      <pv-dropdown
+          v-model="localEnrollment.weeklyScheduleName"
+          :options="weeklyScheduleOptions"
+          optionLabel="name"
+          optionValue="name"
+          :placeholder="t('enrollment.form.weekly-schedule')"
           required
           class="form-field"
       />
@@ -188,6 +201,13 @@ export default defineComponent({
   color: #333;
 }
 
+h3 {
+  color: var(--color-secondary-dark-1);
+  text-align: center;
+  grid-column: 1 / -1;
+  margin-bottom: 1rem;
+}
+
 .form-row {
   display: flex;
   justify-content: center;
@@ -241,8 +261,6 @@ export default defineComponent({
       column-gap: 2rem;
     }
 
-    .form-row:nth-child(2), /* Estudiante */
-    .form-row:nth-child(3), /* Periodo Académico */
     .form-actions {
       grid-column: 1 / -1;
     }
