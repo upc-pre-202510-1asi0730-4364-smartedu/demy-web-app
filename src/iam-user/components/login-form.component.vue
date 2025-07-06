@@ -9,18 +9,26 @@ const userService = useUserAccountService()
 
 const router = useRouter()
 
+/**
+ * Reactive form model bound to login inputs.
+ */
 const form = reactive({
   email: '',
   password: '',
   remember: false
 })
 
+/**
+ * Handles the login form submission.
+ * - Authenticates user using the backend
+ * - Redirects to the /organization route upon success
+ * - Logs error if authentication fails
+ */
 async function handleSubmit() {
   try {
+    console.log(' handleSubmit called')
     const user = await userService.login(form)
     console.log('Authenticated user:', user)
-    // Store user data in localStorage
-    localStorage.setItem('currentUser', JSON.stringify(user))
     await router.push('/organization')
   } catch (error) {
     console.error('Login failed:', error)
@@ -72,7 +80,7 @@ async function handleSubmit() {
         </form>
 
         <p class="register-text">
-          <RouterLink to="/forgot-password">{{ $t('login.forgot-password') }}</RouterLink>
+          <RouterLink to="/reset-password">{{ $t('login.forgot-password') }}</RouterLink>
         </p>
       </div>
     </div>
