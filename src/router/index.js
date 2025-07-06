@@ -7,7 +7,6 @@ import MainLayout from "../shared/components/main-layout.component.vue";
 // Pages
 //import LoginPage from '../public/pages/login-page.vue'
 //import DashboardPage from '../workspace/pages/dashboard-page.vue'
-import Enrollment from "../enrollments/pages/enrollment-management.component.vue";
 import Student from "../enrollments/pages/student-management.component.vue"
 import Payment from "../billing/pages/payment.component.vue";
 import Login from "../iam-user/pages/login.component.vue" ;
