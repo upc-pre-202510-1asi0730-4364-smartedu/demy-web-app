@@ -22,10 +22,6 @@
         <AttendanceSaveButton @saveClicked="saveAttendance" />
       </div>
 
-      <div class="save-button-container">
-        <AttendanceViewReportButton @viewReportClicked="navigateToReport" />
-      </div>
-
     </div>
 
   </div>
@@ -41,8 +37,9 @@ import { AttendanceRecord } from '../model/attendance-record.entity.js'
 import { AttendanceStatus } from '../model/attendance-status.js'
 import { classSessionService } from '../services/class-sessions.service.js'
 import { ClassSession } from '../model/class-session.entity.js'
-import { AttendanceRecordService } from '../services/attendance-record.service.js'
-const attendanceRecordService = new AttendanceRecordService()
+/* import { AttendanceRecordService } from '../services/attendanc */
+
+
 export default {
   name: 'AttendancePage',
   components: {
@@ -61,52 +58,36 @@ export default {
   },
 
   methods: {
+    formatDate(date) {
+      if (!date) return null;
+      return date.toISOString().split('T')[0];
+    },
+
     async navigateToReport() {
       await this.$router.push({ path: '/attendance-view-report' })
     },
-    async saveAttendance() {
 
+    async saveAttendance() {
       if (!this.selectedClass) {
         alert('Por favor, seleccione un curso antes de guardar la asistencia.')
         return
       }
       try {
         const session = new ClassSession(
-            this.selectedClass,
-            this.attendanceRecords.map(r => new AttendanceRecord(r.studentId, r.status)),
-            this.selectedDate
+            Number(this.selectedClass),
+            this.formatDate(this.selectedDate),
+            this.attendanceRecords.map(r => new AttendanceRecord(r.dni, r.status))
         )
+        console.log('Payload a enviar:', session.toJSON())
+
         const response = await classSessionService.save(session)
         alert('Asistencia guardada con éxito')
       } catch (err) {
         console.error('Error al guardar asistencia:', err)
         alert('Error al guardar la asistencia')
       }
-    },
-    async onSave() {
-      const seen = new Set()
-      const recordsToSave = []
-      for (const record of this.attendanceRecords) {
-        if (!seen.has(record.studentId)) {
-          seen.add(record.studentId)
-          recordsToSave.push({
-            studentId: record.studentId,
-            status: record.status
-          })
-        }
-      }
-
-      try {
-        await attendanceRecordService.saveMany(recordsToSave)
-        console.log('Asistencia guardada con éxito')
-        this.$refs.studentListComponent.resetAttendance()
-      } catch (error) {
-        console.error('Error al guardar asistencia:', error)
-      }
-      this.$refs.studentListComponent.resetAttendance()
     }
-  },
-
+  }
 }
 </script>
 
