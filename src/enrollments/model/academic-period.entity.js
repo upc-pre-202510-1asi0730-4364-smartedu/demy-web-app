@@ -1,15 +1,13 @@
 export class AcademicPeriod {
     constructor({
-                    id = '',
-                    name = '',
-                    academyId = '',
+                    id = 0,
+                    periodName = '',
                     startDate = new Date(),
                     endDate = new Date(),
                     isActive = true
                 } = {}) {
         this.id = id;
-        this.name = name;
-        this.academyId = academyId;
+        this.periodName = periodName;
         this.startDate = startDate instanceof Date ? startDate : new Date(startDate);
         this.endDate = endDate instanceof Date ? endDate : new Date(endDate);
         this.isActive = isActive;
