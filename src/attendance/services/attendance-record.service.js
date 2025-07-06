@@ -1,4 +1,4 @@
-import httpInstance from '../../shared/services/http.instance.js'
+/** import httpInstance from '../../shared/services/http.instance.js'
 
 export class AttendanceRecordService {
     constructor() {
@@ -14,4 +14,4 @@ export class AttendanceRecordService {
             await this.save(record) // 👈 espera uno por uno
         }
     }
-}
+} **/
