@@ -19,6 +19,10 @@ export class UserAccountService {
         return new UserAccount(matchedUser);
     }
 
+    async getAllUsers() {
+        const res = await httpInstance.get(this.resourceEndpoint)
+        return res.data
+    }
 
     async getById(id) {
         const res = await httpInstance.get(`${this.resourceEndpoint}/${id}`)

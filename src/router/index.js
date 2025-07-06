@@ -23,6 +23,8 @@ import AcademicPeriod from "../enrollments/pages/academic-period-management.comp
 //import ReportsPage from '../finance/pages/reports-page.vue'
 import Classrooms from "../scheduling/pages/classrooms-overview.component.vue";
 import WeeklySchedules from "../scheduling/pages/weekly-schedules-overview.component.vue";
+import Schedules from "../scheduling/pages/search-schedules.component.vue";
+import TeacherSchedules from "../scheduling/pages/teacher-schedule.component.vue";
 
 const routes = [
     {
@@ -44,8 +46,10 @@ const routes = [
             { path: 'payments', component: Payment },
             { path: 'attendance', component: AttendancePageComponent },
             { path: 'finance', component: ExpensesPage },
+            { path: 'schedules', component: Schedules },
             { path: 'enrollment', component: Enrollment},
-            { path: 'students', component: Student}
+            { path: 'students', component: Student},
+            { path: 'my-schedule', component: TeacherSchedules }
         ]
     },
     {
