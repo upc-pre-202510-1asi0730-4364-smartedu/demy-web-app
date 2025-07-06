@@ -1,59 +1,63 @@
 import httpInstance from '../../shared/services/http.instance.js'
 import { FinancialTransaction } from '../model/financial-transaction.entity.js'
+import { FinancialTransactionAssembler } from "./financial-transaction.assembler.js";
 
 /**
  * @class FinancialTransactionService
  * @description Service for managing financial transaction operations
  */
 export class FinancialTransactionService {
-    resourceEndpoint = import.meta.env.VITE_FINANCIAL_TRANSACTIONS_ENDPOINT_PATH
+    resourceEndpoint = '/financial-transactions'
+    invoicePaymentEndpoint = '/invoices'
+    expenseEndpoint = '/expenses'
 
     /**
-     * Retrieves all financial transactions
+     * Get all financial transactions
      * @returns {Promise<FinancialTransaction[]>}
      */
     async getAll() {
-        const res = await httpInstance.get(this.resourceEndpoint)
-        return res.data.map(tx => new FinancialTransaction(tx))
+        const res = await httpInstance.get(`/api/v1${this.resourceEndpoint}`)
+        return res.data.map(item => new FinancialTransaction(item))
     }
 
     /**
-     * Retrieves a transaction by ID
-     * @param {string} id
+     * Get a financial transaction by ID
+     * @param {number} id
      * @returns {Promise<FinancialTransaction>}
      */
     async getById(id) {
-        const res = await httpInstance.get(`${this.resourceEndpoint}/${id}`)
-        return new FinancialTransaction(res.data)
+        const res = await httpInstance.get(`/api/v1${this.resourceEndpoint}/${id}`)
+        return FinancialTransactionAssembler.fromResource(res.data)
     }
 
     /**
-     * Creates a new financial transaction
-     * @param {FinancialTransaction} transaction
+     * Create a general income or expense transaction
+     * @param {object} dto - Must include: type, category, concept, date, amount, currency, method, paidAt, (optional) invoiceId
      * @returns {Promise<FinancialTransaction>}
      */
-    async create(transaction) {
-        const res = await httpInstance.post(this.resourceEndpoint, transaction)
-        return new FinancialTransaction(res.data)
+    async create(dto) {
+        const res = await httpInstance.post(`/api/v1${this.resourceEndpoint}`, dto)
+        return FinancialTransactionAssembler.fromResource(res.data)
     }
 
     /**
-     * Updates a financial transaction by ID
-     * @param {string} id
-     * @param {FinancialTransaction} transaction
+     * Register payment for a specific invoice
+     * @param {number} invoiceId
+     * @param {object} dto - Must include: method (string)
      * @returns {Promise<FinancialTransaction>}
      */
-    async update(id, transaction) {
-        const res = await httpInstance.put(`${this.resourceEndpoint}/${id}`, transaction)
-        return new FinancialTransaction(res.data)
+    async registerPayment(invoiceId, dto) {
+        const res = await httpInstance.post(`/api/v1${this.invoicePaymentEndpoint}/${invoiceId}/payment`, dto)
+        return FinancialTransactionAssembler.fromResource(res.data)
     }
 
     /**
-     * Deletes a transaction by ID
-     * @param {string} id
-     * @returns {Promise<void>}
+     * Register an expense
+     * @param {object} dto - Must include: category, concept, amount, currency, method, paidAt
+     * @returns {Promise<FinancialTransaction>}
      */
-    async delete(id) {
-        await httpInstance.delete(`${this.resourceEndpoint}/${id}`)
+    async registerExpense(dto) {
+        const res = await httpInstance.post(`/api/v1${this.expenseEndpoint}`, dto)
+        return FinancialTransactionAssembler.fromResource(res.data)
     }
 }
