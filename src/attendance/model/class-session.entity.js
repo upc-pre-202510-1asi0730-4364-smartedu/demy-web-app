@@ -1,10 +1,10 @@
 import { AttendanceRecord } from './attendance-record.entity.js'
 
 export class ClassSession {
-    constructor(id, attendance = [], createdAt = new Date()) {
-        this.id = id
+    constructor(courseId, date, attendance = []) {
+        this.courseId = courseId
+        this.date = date  // YYYY-MM-DD
         this.attendance = attendance
-        this.createdAt = createdAt
     }
 
     setAttendance(records) {
@@ -17,9 +17,10 @@ export class ClassSession {
 
     toJSON() {
         return {
-            id: this.id,
-            createdAt: this.createdAt.toISOString(),
+            courseId: this.courseId,
+            date: this.date,
             attendance: this.attendance.map(a => a.toJSON())
         }
     }
 }
+
