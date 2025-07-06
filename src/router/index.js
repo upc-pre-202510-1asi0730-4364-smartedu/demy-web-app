@@ -25,6 +25,8 @@ import Classrooms from "../scheduling/pages/classrooms-overview.component.vue";
 import WeeklySchedules from "../scheduling/pages/weekly-schedules-overview.component.vue";
 import Schedules from "../scheduling/pages/search-schedules.component.vue";
 import TeacherSchedules from "../scheduling/pages/teacher-schedule.component.vue";
+import EnrollmentPageComponent from "../enrollments/pages/enrollment-page.component.vue";
+
 
 const routes = [
     {
@@ -47,7 +49,7 @@ const routes = [
             { path: 'attendance', component: AttendancePageComponent },
             { path: 'finance', component: ExpensesPage },
             { path: 'schedules', component: Schedules },
-            { path: 'enrollment', component: Enrollment},
+            { path: 'enrollment', component: EnrollmentPageComponent},
             { path: 'students', component: Student},
             { path: 'my-schedule', component: TeacherSchedules }
         ]
