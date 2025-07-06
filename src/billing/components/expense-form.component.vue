@@ -14,41 +14,62 @@ export default {
     Dropdown,
     Button
   },
-  props: {
-    // Si necesitas recibir props, las defines aquí
-  },
+  emits: ['confirm'],
   data() {
     return {
       form: {
+        amount: null,
+        category: '',
         concept: '',
-        amount: 0,
         date: new Date(),
-        category: ''
+        method: '',
+        currency: 'PEN'
       },
       categories: [
-        { label: 'Servicios', value: 'SERVICES' },
-        { label: 'Mantenimiento', value: 'MAINTENANCE' },
-        { label: 'Compras', value: 'PURCHASES' },
-        { label: 'Otros', value: 'OTHERS' }
+        { value: 'PERSONAL', labelKey: 'finance.category.personals' },
+        { value: 'MATERIALS', labelKey: 'finance.category.materials' },
+        { value: 'SERVICES', labelKey: 'finance.category.services' },
+        { value: 'TAXES', labelKey: 'finance.category.taxes' },
+        { value: 'MAINTENANCE', labelKey: 'finance.category.maintenance' },
+        { value: 'TECHNOLOGY', labelKey: 'finance.category.technology' },
+        { value: 'OTHER', labelKey: 'finance.category.others' }
+      ],
+      methods: [
+        { value: 'CASH', labelKey: 'finance.method.cash' },
+        { value: 'CARD', labelKey: 'finance.method.card' },
+        { value: 'TRANSFER', labelKey: 'finance.method.transfer' },
+        { value: 'WALLET', labelKey: 'finance.method.wallet' },
+        { value: 'OTHER', labelKey: 'finance.method.others' }
+      ],
+      currencies: [
+        { value: 'PEN', labelKey: 'finance.currency.pen' },
+        { value: 'USD', labelKey: 'finance.currency.usd' }
       ]
     }
   },
-  emits: ['expenseSubmitted'],
   methods: {
     onSubmit() {
-      if (!this.form.concept || !this.form.amount || !this.form.category) {
+      if (
+          !this.form.amount || this.form.amount <= 0 ||
+          !this.form.category || !this.form.concept ||
+          !this.form.date || !this.form.method || !this.form.currency
+      ) {
         console.warn('Formulario inválido')
         return
       }
 
-      this.$emit('expenseSubmitted', { ...this.form })
+      this.$emit('confirm', { ...this.form })
 
-      // Reset
+      this.resetForm()
+    },
+    resetForm() {
       this.form = {
+        amount: null,
+        category: '',
         concept: '',
-        amount: 0,
         date: new Date(),
-        category: ''
+        method: '',
+        currency: 'PEN'
       }
     }
   }
@@ -56,50 +77,94 @@ export default {
 </script>
 
 <template>
-  <form @submit.prevent="onSubmit" class="form-grid">
-    <div class="form-field">
-      <label for="concept">Concepto</label>
-      <InputText id="concept" v-model="form.concept" required />
+  <form @submit.prevent="onSubmit" class="expense-form">
+    <div class="form-grid">
+      <!-- CATEGORÍA -->
+      <div class="form-field">
+        <label for="category">{{ $t('finance.fields.category') }}</label>
+        <Dropdown
+            id="category"
+            v-model="form.category"
+            :options="categories"
+            optionLabel="labelKey"
+            optionValue="value"
+            :placeholder="$t('finance.fields.category')"
+            required
+        />
+      </div>
+
+      <!-- MONTO -->
+      <div class="form-field">
+        <label for="amount">{{ $t('finance.fields.amount') }}</label>
+        <InputNumber
+            id="amount"
+            v-model="form.amount"
+            :min="0.01"
+            :useGrouping="true"
+            mode="currency"
+            :currency="form.currency"
+            locale="es-PE"
+            required
+        />
+      </div>
+
+      <!-- CONCEPTO -->
+      <div class="form-field">
+        <label for="concept">{{ $t('finance.fields.concept') }}</label>
+        <InputText
+            id="concept"
+            v-model="form.concept"
+            required
+        />
+      </div>
+
+      <!-- FECHA -->
+      <div class="form-field">
+        <label for="date">{{ $t('finance.fields.date') }}</label>
+        <Calendar
+            id="date"
+            v-model="form.date"
+            showIcon
+            dateFormat="dd/mm/yy"
+            required
+        />
+      </div>
+
+      <!-- MÉTODO -->
+      <div class="form-field">
+        <label for="method">{{ $t('finance.fields.method') }}</label>
+        <Dropdown
+            id="method"
+            v-model="form.method"
+            :options="methods"
+            optionLabel="labelKey"
+            optionValue="value"
+            :placeholder="$t('finance.fields.method')"
+            required
+        />
+      </div>
+
+      <!-- MONEDA -->
+      <div class="form-field">
+        <label for="currency">{{ $t('finance.fields.currency') }}</label>
+        <Dropdown
+            id="currency"
+            v-model="form.currency"
+            :options="currencies"
+            optionLabel="labelKey"
+            optionValue="value"
+            :placeholder="$t('finance.fields.currency')"
+            required
+        />
+      </div>
     </div>
 
-    <div class="form-field">
-      <label for="amount">Monto</label>
-      <InputNumber
-          id="amount"
-          v-model="form.amount"
-          mode="currency"
-          currency="PEN"
-          locale="es-PE"
-          required
+    <div class="submit-button">
+      <Button
+          type="submit"
+          :label="$t('finance.actions.confirm')"
+          severity="primary"
       />
-    </div>
-
-    <div class="form-field">
-      <label for="category">Categoría</label>
-      <Dropdown
-          id="category"
-          v-model="form.category"
-          :options="categories"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Seleccione una categoría"
-          required
-      />
-    </div>
-
-    <div class="form-field">
-      <label for="date">Fecha</label>
-      <Calendar
-          id="date"
-          v-model="form.date"
-          showIcon
-          dateFormat="dd/mm/yy"
-          required
-      />
-    </div>
-
-    <div class="form-actions">
-      <Button type="submit" label="Registrar gasto" severity="primary" />
     </div>
   </form>
 </template>
