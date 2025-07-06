@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { ClassSession } from '../model/class-session.entity.js'
 
-const BASE_URL = 'https://6820406072e59f922ef8198b.mockapi.io/api/v1/class-sessions'
+const BASE_URL = import.meta.env.VITE_CLASSSESSION_ENDPOINT_PATH
+
 
 export const classSessionService = {
     /**
