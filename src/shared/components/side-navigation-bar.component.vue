@@ -18,6 +18,7 @@ export default {
         { icon: 'credit-card', label: 'Pagos', route: '/payments' },
         //{ icon: 'calendar', label: 'Horarios', route: '/schedules' },
         { icon: 'check-circle', label: 'Asistencia', route: '/attendance' },
+        { icon: 'book', label: 'Reporte de Asistencias', route: '/attendance-view-report' },
         { icon: 'wallet', label: 'Finanzas', route: '/finance' }
       ]
     }
