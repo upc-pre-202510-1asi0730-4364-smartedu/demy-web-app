@@ -4,12 +4,12 @@
     <pv-data-table
         class="attendance-table"
         :value="records"
-        dataKey="studentId"
+        dataKey="dni"
         :rows="5"
         :paginator="true"
         :rowsPerPageOptions="[5, 10, 20]"
     >
-      <pv-column field="studentId" header="DNI" headerClass="header-style" />
+      <pv-column field="dni" header="DNI" headerClass="header-style" />
       <pv-column field="studentName" :header="$t('attendance-class')" headerClass="header-style" />
       <pv-column :header="$t('attendance-checkbox')" headerClass="header-style">
         <template #body="slotProps">
@@ -47,7 +47,7 @@ export default {
     try {
       const students = await studentService.getAll();
       this.records = students.map(student => ({
-        studentId: student.dni,
+        dni: student.dni,
         studentName: `${student.firstName} ${student.lastName}`,
         status: AttendanceStatus.ABSENT // valor inicial por defecto
       }));
