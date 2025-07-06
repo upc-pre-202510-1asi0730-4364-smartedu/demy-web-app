@@ -21,7 +21,7 @@ export default defineComponent({
       editMode: false,
       loading: false,
       columnsToDisplay: [
-        { field: 'name', header: 'academic-period.table.name' },
+        { field: 'periodName', header: 'academic-period.table.name' },
         { field: 'startDate', header: 'academic-period.table.start-date' },
         { field: 'endDate', header: 'academic-period.table.end-date' },
         { field: 'actions', header: 'academic-period.table.actions' }
@@ -80,7 +80,6 @@ export default defineComponent({
 <template>
   <div class="container">
     <div class="header">
-      <h4>{{ t('academic-period.management.title') }}</h4>
     </div>
 
     <div class="academic-period-form-container">
@@ -141,6 +140,11 @@ export default defineComponent({
   max-width: 1200px;
   margin: 0 auto;
 }
+
+h3 {
+  color: var(--color-secondary-dark-1);
+}
+
 .header h4 {
   text-align: center;
   margin-bottom: 1rem;

@@ -82,7 +82,6 @@ export default defineComponent({
 <template>
   <div class="container">
     <div class="header">
-      <h4>{{ t('student.management.title') }}</h4>
     </div>
 
     <div class="student-form-container">
@@ -129,7 +128,10 @@ export default defineComponent({
           </template>
 
           <template v-else-if="col.field === 'sex'" #body="slotProps">
-            {{ slotProps.data.sex === 'MALE' ? t('student.sex.male') : t('student.sex.female') }}
+            {{ slotProps.data.sex && slotProps.data.sex.toUpperCase() === 'MALE'
+              ? t('student.sex.male')
+              : t('student.sex.female')
+            }}
           </template>
 
           <template v-else-if="col.field === 'birthDate'" #body="slotProps">

@@ -286,6 +286,8 @@
       "student-required": "Student is required",
       "period": "Academic Period",
       "period-required": "Academic period is required",
+      "weekly-schedule": "Weekly Schedule",
+      "weekly-schedule-required": "Weekly schedule is required",
       "date": "Enrollment Date",
       "date-required": "Enrollment date is required",
       "amount": "Amount",
@@ -305,7 +307,7 @@
       "id": "Enrollment No.",
       "student": "Student",
       "period": "Period",
-      "date": "Enrollment Date",
+      "date": "Date",
       "amount": "Amount",
       "status": "Status",
       "payment-status": "Payment Status",
@@ -314,21 +316,24 @@
       "delete": "Delete enrollment"
     },
     "status": {
-      "active": "Activo",
-      "inactive": "Inactivo",
-      "cancelled": "Cancelado",
-      "completed": "Completado",
-      "deleted": "Eliminado"
+      "active": "Active",
+      "cancelled": "Cancelled",
+      "completed": "Completed"
     },
     "payment": {
       "paid": "Paid",
-      "unpaid": "Unpaid",
       "pending": "Pending",
-      "refunded": "Refunded",
-      "partial": "Partial"
+      "refunded": "Refunded"
     },
     "paginator": {
       "label": "Select enrollment page"
+    },
+    "search": {
+      "title": "Search Enrollment",
+      "input": "Enter student DNI",
+      "button": "Search",
+      "no-results": "No enrollment found for the provided DNI",
+      "loading": "Loading..."
     }
   },
   "student": {

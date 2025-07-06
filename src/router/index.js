@@ -7,7 +7,6 @@ import MainLayout from "../shared/components/main-layout.component.vue";
 // Pages
 //import LoginPage from '../public/pages/login-page.vue'
 //import DashboardPage from '../workspace/pages/dashboard-page.vue'
-import Enrollment from "../enrollments/pages/enrollment-management.component.vue";
 import Student from "../enrollments/pages/student-management.component.vue"
 import PaymentsLayout from '../billing/pages/payments-layout.component.vue'
 import Payment from "../billing/pages/payment.component.vue";
@@ -25,6 +24,8 @@ import Classrooms from "../scheduling/pages/classrooms-overview.component.vue";
 import WeeklySchedules from "../scheduling/pages/weekly-schedules-overview.component.vue";
 import Schedules from "../scheduling/pages/search-schedules.component.vue";
 import TeacherSchedules from "../scheduling/pages/teacher-schedule.component.vue";
+import EnrollmentPageComponent from "../enrollments/pages/enrollment-page.component.vue";
+
 
 const routes = [
     {
@@ -55,7 +56,7 @@ const routes = [
             { path: 'attendance', component: AttendancePageComponent },
             { path: 'finance', component: ExpensesPage },
             { path: 'schedules', component: Schedules },
-            { path: 'enrollment', component: Enrollment},
+            { path: 'enrollment', component: EnrollmentPageComponent},
             { path: 'students', component: Student},
             { path: 'my-schedule', component: TeacherSchedules }
         ]
