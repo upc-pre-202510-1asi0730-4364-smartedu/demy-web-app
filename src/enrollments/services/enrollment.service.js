@@ -65,7 +65,7 @@ export class EnrollmentService {
     }
 
     async getByStudentId(studentId) {
-        const res = await httpInstance.get(`${this.resourceEndpoint}?studentId=${studentId}`);
+        const res = await httpInstance.get(`${this.resourceEndpoint}/student/${studentId}`);
         return res.data.map(e => new Enrollment(e));
     }
 }

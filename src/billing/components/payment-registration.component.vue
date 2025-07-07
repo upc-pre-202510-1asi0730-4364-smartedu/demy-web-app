@@ -2,13 +2,15 @@
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Calendar from 'primevue/calendar'
+import Dropdown from 'primevue/dropdown'
 
 export default {
   name: 'payment-registration',
   components: {
     InputText,
     Button,
-    Calendar
+    Calendar,
+    Dropdown
   },
   props: {
     student: {
@@ -23,7 +25,19 @@ export default {
   emits: ['paymentRegistered'],
   data() {
     return {
-      paidAt: new Date()
+      paidAt: new Date(),
+      methods: ['CASH', 'CARD', 'TRANSFER', 'WALLET', 'OTHER'],
+      selectedMethod: 'CASH'
+    }
+  },
+  computed: {
+    formattedAmount() {
+      if (typeof this.invoice.amount !== 'number') return ''
+      const currencyCode = this.invoice.currency || 'PEN'
+      return new Intl.NumberFormat('es-PE', {
+        style: 'currency',
+        currency: currencyCode
+      }).format(this.invoice.amount)
     }
   },
   methods: {
@@ -32,14 +46,20 @@ export default {
         console.warn('Formulario inválido: falta fecha')
         return
       }
+      if (!this.selectedMethod) {
+        console.warn('Formulario inválido: falta método de pago')
+        return
+      }
 
       this.$emit('paymentRegistered', {
         amount: this.invoice.amount,
-        paidAt: this.paidAt
+        paidAt: this.paidAt,
+        method: this.selectedMethod
       })
 
       // Resetear el formulario
       this.paidAt = new Date()
+      this.selectedMethod = 'CASH'
     }
   }
 }
@@ -67,7 +87,24 @@ export default {
 
       <div class="form-field">
         <label>{{ $t('payments.amount') }}</label>
-        <InputText :modelValue="invoice.amount" disabled />
+        <InputText :modelValue="formattedAmount" disabled />
+      </div>
+
+      <div class="form-field">
+        <label>{{ $t('payments.method') }}</label>
+        <Dropdown
+            v-model="selectedMethod"
+            :options="methods"
+            placeholder="Seleccione método"
+            required
+        >
+          <template #option="slotProps">
+            {{ $t('payments.methods.' + slotProps.option) }}
+          </template>
+          <template #value="slotProps">
+            {{ $t('payments.methods.' + slotProps.value) }}
+          </template>
+        </Dropdown>
       </div>
 
       <div class="form-field">

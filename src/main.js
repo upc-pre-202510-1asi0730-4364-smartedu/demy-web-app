@@ -13,7 +13,8 @@ import 'primeflex/primeflex.css'
 import {
     Avatar, Button, Card, Drawer, Image,
     InputText, Menu, Menubar, Select, SelectButton,
-    Toolbar, Tooltip, Dropdown, DataTable, Column, Checkbox
+    Toolbar, Tooltip, Dropdown, DataTable, Column, Checkbox,
+    Toast, ToastService
 } from 'primevue'
 
 import Dialog from "primevue/dialog";
@@ -100,6 +101,8 @@ app
     .component('DataTable', DataTable)
     .component('Column', Column)
     .component('Button', Button)
+    .component('pv-toast', Toast)
     .use(i18n)
     .use(router)
+    .use(ToastService)
     .mount('#app')

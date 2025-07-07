@@ -27,10 +27,21 @@ export default {
       const d = new Date(date)
       return new Intl.DateTimeFormat('es-PE').format(d)
     },
+    formatCurrency(amount, currencyCode = 'PEN') {
+      if (typeof amount !== 'number') return amount
+      return new Intl.NumberFormat('es-PE', {
+        style: 'currency',
+        currency: currencyCode
+      }).format(amount)
+    },
     emitRegister(invoice) {
       this.$emit('registerPaymentRequested', invoice)
     }
+  },
+  mounted() {
+    console.log('Student prop:', this.student)
   }
+
 }
 </script>
 
@@ -41,31 +52,31 @@ export default {
         :scrollable="true"
         class="p-datatable-gridlines"
     >
-      <Column field="dni" :header="$t('payments.dni')">
-        <template #body>
-          {{ student.dni }}
-        </template>
-      </Column>
-
-      <Column field="name" :header="$t('payments.student')">
-        <template #body>
-          {{ student.firstName }} {{ student.lastName }}
-        </template>
-      </Column>
-
-      <Column field="amount" :header="$t('payments.amount')">
+      <Column :header="$t('payments.dni')">
         <template #body="slotProps">
-          S/ {{ slotProps.data.amount }}
+          {{ slotProps.data.dni }}
         </template>
       </Column>
 
-      <Column field="status" :header="$t('payments.status')">
+      <Column :header="$t('payments.student')">
+        <template #body="slotProps">
+          {{ slotProps.data.name }}
+        </template>
+      </Column>
+
+      <Column :header="$t('payments.amount')">
+        <template #body="slotProps">
+          {{ formatCurrency(slotProps.data.amount, slotProps.data.currency?.code) }}
+        </template>
+      </Column>
+
+      <Column :header="$t('payments.status')">
         <template #body="slotProps">
           {{ $t('payments.payment-status.' + slotProps.data.status) }}
         </template>
       </Column>
 
-      <Column field="dueDate" :header="$t('payments.due-date')">
+      <Column :header="$t('payments.due-date')">
         <template #body="slotProps">
           {{ formatDate(slotProps.data.dueDate) }}
         </template>
@@ -74,7 +85,7 @@ export default {
       <Column :header="$t('payments.action')">
         <template #body="slotProps">
           <Button
-              v-if="slotProps.data.status !== 'PAID'"
+              v-if="slotProps.data.status !== 'Paid'"
               :label="$t('payments.register-action')"
               severity="primary"
               @click="emitRegister(slotProps.data)"

@@ -7,9 +7,10 @@ import MainLayout from "../shared/components/main-layout.component.vue";
 // Pages
 //import LoginPage from '../public/pages/login-page.vue'
 //import DashboardPage from '../workspace/pages/dashboard-page.vue'
-import Enrollment from "../enrollments/pages/enrollment-management.component.vue";
 import Student from "../enrollments/pages/student-management.component.vue"
+import PaymentsLayout from '../billing/pages/payments-layout.component.vue'
 import Payment from "../billing/pages/payment.component.vue";
+import InvoiceAssign from "../billing/components/invoice-assign.component.vue";
 import Login from "../iam-user/pages/login.component.vue" ;
 import SignUp from "../iam-user/pages/sign-up.component.vue";
 import Organization from "../../workspace/pages/organization.component.vue";
@@ -19,12 +20,12 @@ import PlantSelect from "../iam-user/pages/plan-select.component.vue";
 import AttendancePageComponent from "../attendance/components/attendance-page.component.vue";
 import Courses from "../scheduling/pages/courses-overview.component.vue";
 import AcademicPeriod from "../enrollments/pages/academic-period-management.component.vue";
-//import ExpensesPage from '../finance/pages/expenses-page.vue'
-//import ReportsPage from '../finance/pages/reports-page.vue'
 import Classrooms from "../scheduling/pages/classrooms-overview.component.vue";
 import WeeklySchedules from "../scheduling/pages/weekly-schedules-overview.component.vue";
 import Schedules from "../scheduling/pages/search-schedules.component.vue";
 import TeacherSchedules from "../scheduling/pages/teacher-schedule.component.vue";
+import EnrollmentPageComponent from "../enrollments/pages/enrollment-page.component.vue";
+
 
 const routes = [
     {
@@ -43,11 +44,19 @@ const routes = [
                 ]
             },
             { path: '', redirect: '/organization', component: Organization },
-            { path: 'payments', component: Payment },
+            {
+                path: 'payments',
+                component: PaymentsLayout,
+                children: [
+                    { path: '', redirect: '/payments/list' },
+                    { path: 'list', name: 'list', component: Payment },
+                    { path: 'assign', name: 'assign', component: InvoiceAssign }
+                ]
+            },
             { path: 'attendance', component: AttendancePageComponent },
             { path: 'finance', component: ExpensesPage },
             { path: 'schedules', component: Schedules },
-            { path: 'enrollment', component: Enrollment},
+            { path: 'enrollment', component: EnrollmentPageComponent},
             { path: 'students', component: Student},
             { path: 'my-schedule', component: TeacherSchedules }
         ]

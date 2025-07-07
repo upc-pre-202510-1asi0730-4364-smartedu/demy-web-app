@@ -3,41 +3,47 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 
 export default {
-  name: 'StudentSearch',
-  components: { InputText, Button },
+  name: 'enrollment-search',
+  components: {
+    InputText,
+    Button
+  },
   data() {
     return {
-      value: ''
+      dni: ''
     }
   },
   emits: ['search'],
   methods: {
     onSearchClick() {
-      console.log('🔍 Búsqueda ejecutada desde Enter o botón')
-      this.$emit('search', this.value.trim())
+      const trimmed = this.dni.trim();
+      if (!trimmed) return;
+      this.dni = trimmed;
+      this.$emit('search', trimmed);
     }
   }
 }
 </script>
 
 <template>
-  <div class="student-search">
-    <form class="student-search-form" @submit.prevent="onSearchClick">
-      <div class="p-inputgroup student-form-field">
+  <div class="enrollment-search">
+    <form class="enrollment-search-form" @submit.prevent="onSearchClick">
+      <div class="p-inputgroup enrollment-form-field">
         <InputText
-            v-model="value"
-            :placeholder="$t('payments.dni-input')"
+            v-model="dni"
+            :placeholder="$t('enrollment.search.input')"
             class="dni-input"
+            :maxlength="8"
+            pattern="[0-9]{8}"
             aria-label="DNI"
             required
         />
         <Button
-            v-if="value"
+            v-if="dni"
             icon="pi pi-times"
             severity="secondary"
-            @click="value = ''"
+            @click="dni = ''"
             type="button"
-            aria-label="Clear"
         />
       </div>
 
@@ -45,32 +51,31 @@ export default {
           class="search-button"
           type="submit"
           severity="primary"
-          :label="$t('payments.search-button')"
+          :label="$t('enrollment.search.button')"
       />
     </form>
   </div>
 </template>
 
-
 <style scoped>
-.student-search-form {
+.enrollment-search-form {
   display: flex;
   align-items: flex-end;
   gap: 1rem;
   margin-bottom: 1rem;
 }
 
-.student-form-field {
+.enrollment-form-field {
   min-width: 200px;
 }
 
 @media (max-width: 600px) {
-  .student-search-form {
+  .enrollment-search-form {
     flex-wrap: nowrap;
     align-items: center;
   }
 
-  .student-form-field {
+  .enrollment-form-field {
     flex: 1;
     min-width: 0;
   }
