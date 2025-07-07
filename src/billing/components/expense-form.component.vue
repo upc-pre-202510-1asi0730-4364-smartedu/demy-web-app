@@ -56,13 +56,13 @@ export default {
           !this.form.category || !this.form.concept ||
           !this.form.date || !this.form.method || !this.form.currency
       ) {
-        this.notification.showError(this.$t('financial-transactions.form.invalid'))
+        this.notification.showError(this.$t('finance.notifications.errorRegistering'))
         return
       }
 
       this.$emit('confirm', { ...this.form })
 
-      this.notification.showSuccess(this.$t('financial-transactions.form.success'))
+      this.notification.showSuccess(this.$t('finance.notifications.expenseRegistered'))
 
       this.resetForm()
     },
@@ -76,7 +76,28 @@ export default {
         currency: 'PEN'
       }
     }
+  },
+  computed: {
+    localizedCategories() {
+      return this.categories.map(item => ({
+        ...item,
+        label: this.$t(item.labelKey)
+      }))
+    },
+    localizedMethods() {
+      return this.methods.map(item => ({
+        ...item,
+        label: this.$t(item.labelKey)
+      }))
+    },
+    localizedCurrencies() {
+      return this.currencies.map(item => ({
+        ...item,
+        label: this.$t(item.labelKey)
+      }))
+    }
   }
+
 }
 </script>
 
@@ -89,8 +110,8 @@ export default {
         <Dropdown
             id="category"
             v-model="form.category"
-            :options="categories"
-            optionLabel="labelKey"
+            :options="localizedCategories"
+            optionLabel="label"
             optionValue="value"
             :placeholder="$t('finance.fields.category')"
             required
@@ -140,8 +161,8 @@ export default {
         <Dropdown
             id="method"
             v-model="form.method"
-            :options="methods"
-            optionLabel="labelKey"
+            :options="localizedMethods"
+            optionLabel="label"
             optionValue="value"
             :placeholder="$t('finance.fields.method')"
             required
@@ -154,8 +175,8 @@ export default {
         <Dropdown
             id="currency"
             v-model="form.currency"
-            :options="currencies"
-            optionLabel="labelKey"
+            :options="localizedCurrencies"
+            optionLabel="label"
             optionValue="value"
             :placeholder="$t('finance.fields.currency')"
             required

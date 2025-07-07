@@ -34,6 +34,11 @@
     "categories": "Categories"
   },
   "payments": {
+    "section-title": "Payments Management",
+    "nav": {
+      "list": "View Payments",
+      "assign": "Assign Invoice"
+    },
     "title": "Payments",
     "subtitle": "Check a student's payment status",
     "dni-input": "Enter DNI",
@@ -50,6 +55,14 @@
       "Paid": "Paid",
       "Overdue": "Overdue"
     },
+    "method": "Method",
+    "methods": {
+      "CASH": "Cash",
+      "CARD": "Card",
+      "TRANSFER": "Transfer",
+      "WALLET": "Wallet",
+      "OTHER": "Other"
+    },
     "register-title": "Register payment",
     "register-action": "Register payment",
     "first-name": "First name",
@@ -61,7 +74,17 @@
     "status": "Status",
     "due-date": "Due date",
     "action": "Action",
-    "register-button": "Save payment"
+    "register-button": "Save payment",
+    "assign-title": "Assign new invoice",
+    "dni-label": "Student DNI",
+    "amount-label": "Amount",
+    "currency-label": "Currency",
+    "due-date-label": "Due Date",
+    "create-button": "Create Invoice",
+    "assign": {
+      "success": "Invoice successfully created!",
+      "error": "Error creating invoice."
+    }
   },
   "login": {
     "sign-up": "Sign Up",
@@ -167,6 +190,41 @@
     "summary": {
       "empty": "No expenses have been registered this month"
     },
+    "fields": {
+      "category": "Category",
+      "amount": "Amount",
+      "concept": "Concept",
+      "date": "Date",
+      "method": "Payment Method",
+      "currency": "Currency"
+    },
+    "method": {
+      "cash": "Cash",
+      "card": "Card",
+      "transfer": "Transfer",
+      "wallet": "Wallet",
+      "others": "Other",
+      "other": "Other"
+    },
+    "currency": {
+      "PEN": "Peruvian Sol (PEN)",
+      "USD": "US Dollar (USD)"
+    },
+    "category": {
+      "students": "Students",
+      "personals": "Payment to personal",
+      "personal": "Personal",
+      "materials": "Materials",
+      "services": "Services",
+      "taxes": "Taxes",
+      "maintenance": "Maintenance",
+      "technology": "Technology",
+      "others": "Other",
+      "other": "Other"
+    },
+    "concept": {
+      "paidStudentInvoice": "Payment from a student"
+    },
     "form": {
       "concept": "Concept",
       "amount": "Amount",
@@ -180,15 +238,27 @@
       "PURCHASES": "Purchases",
       "OTHERS": "Others"
     },
-    "concept": {
-      "paid-student-invoice": "Paid student invoice {name} with DNI {dni}"
+    "actions": {
+      "confirm": "Confirm"
     },
     "table": {
       "date": "Date",
       "category": "Category",
       "concept": "Concept",
       "amount": "Amount",
-      "total": "Monthly total"
+      "total": "Monthly total",
+      "type": "Type",
+      "paymentMethod": "Payment Method",
+      "totalIncome": "Total Income",
+      "totalExpense": "Total Expense"
+    },
+    "type": {
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "notifications": {
+      "expenseRegistered": "Expense recorded correctly.",
+      "errorRegistering": "An error occurred while recording the expense."
     }
   },
   "attendance-title": "Attendance Record",
