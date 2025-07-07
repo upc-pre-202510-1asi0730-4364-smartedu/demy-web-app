@@ -4,6 +4,7 @@ import InputNumber from 'primevue/inputnumber'
 import Calendar from 'primevue/calendar'
 import Dropdown from 'primevue/dropdown'
 import Button from 'primevue/button'
+import { NotificationService } from "../../shared/services/notification.service.js";
 
 export default {
   name: 'expense-form',
@@ -17,6 +18,7 @@ export default {
   emits: ['confirm'],
   data() {
     return {
+      notification: new NotificationService(),
       form: {
         amount: null,
         category: '',
@@ -54,11 +56,13 @@ export default {
           !this.form.category || !this.form.concept ||
           !this.form.date || !this.form.method || !this.form.currency
       ) {
-        console.warn('Formulario inválido')
+        this.notification.showError(this.$t('financial-transactions.form.invalid'))
         return
       }
 
       this.$emit('confirm', { ...this.form })
+
+      this.notification.showSuccess(this.$t('financial-transactions.form.success'))
 
       this.resetForm()
     },
@@ -188,4 +192,9 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
+
+.submit-button {
+  margin-top: 1.5rem;
+}
+
 </style>
