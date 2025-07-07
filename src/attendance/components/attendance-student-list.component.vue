@@ -48,8 +48,8 @@ export default {
       const students = await studentService.getAll();
       this.records = students.map(student => ({
         dni: student.dni,
-        studentName: `${student.firstName} ${student.lastName}`,
-        status: AttendanceStatus.ABSENT // valor inicial por defecto
+        studentName: student.name,
+        status: AttendanceStatus.ABSENT
       }));
     } catch (err) {
       console.error('Error al obtener estudiantes:', err);
@@ -58,16 +58,15 @@ export default {
   methods: {
     onStatusChange(index, newStatus) {
       const updatedRecord = { ...this.records[index], status: newStatus };
-      this.records.splice(index, 1, updatedRecord); // reemplaza el objeto en su posición
-      this.$emit('update:records', [...this.records]); // comunica al padre
+      this.records.splice(index, 1, updatedRecord);
+      this.$emit('update:records', [...this.records]);
     },
     resetAttendance() {
       this.records.forEach((record,i) => {
         const updatedRecord = { ...this.records[i], status:  'ABSENT' };
-        this.records.splice(i, 1, updatedRecord); // reemplaza el objeto en su posición
+        this.records.splice(i, 1, updatedRecord);
       })
-      this.$emit('update:records', [...this.records]); // también aquí
-    }
+      this.$emit('update:records', [...this.records]);
   }
 };
 </script>
