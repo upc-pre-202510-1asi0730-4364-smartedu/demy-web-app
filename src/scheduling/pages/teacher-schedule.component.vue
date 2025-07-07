@@ -9,7 +9,6 @@ export default {
     TeacherScheduleSearch
   },
   setup() {
-    // State variables
     const selectedSchedule = ref(null);
     const currentTeacher = ref(null);
     const error = ref(null);
@@ -34,16 +33,13 @@ export default {
             currentTeacher.value = new UserAccount(parsedUser);
             console.log('Teacher loaded successfully:', currentTeacher.value); // Debug log
           } else {
-            console.log('User role is not TEACHER:', parsedUser.role); // Debug log
-            error.value = 'El usuario actual no es un profesor';
+            console.log('User role is not TEACHER:', parsedUser.role);
           }
         } else {
-          console.log('No user data found in localStorage'); // Debug log
-          error.value = 'No hay usuario autenticado';
+          console.log('No user data found in localStorage');
         }
       } catch (err) {
         console.error('Error loading current teacher:', err);
-        error.value = 'Error al cargar la información del profesor';
       }
     });
 
