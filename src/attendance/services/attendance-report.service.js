@@ -1,7 +1,7 @@
-import axios from 'axios'
+import httpInstance from "../../shared/services/http.instance.js";
 import { AttendanceReport } from '../model/attendance-report.entity.js'
 
-const BASE_URL = import.meta.env.VITE_CLASSSESSION_ENDPOINT_PATH
+const REPORT_URL = import.meta.env.VITE_REPORT_ATTENDANCE_ENDPOINT_PATH
 /**
  * Service for fetching attendance reports from the backend.
  */
@@ -18,9 +18,11 @@ export const attendanceReportService = {
      */
     async fetchReport({ courseId, dni, startDate, endDate }) {
         try {
-            const { data } = await axios.get(`${BASE_URL}/report`, {
+            const { data } = await httpInstance.get(REPORT_URL, {
                 params: { courseId, dni, startDate, endDate }
             })
+
+            console.log('[Backend response]', data)
 
             if (!data || !Array.isArray(data.attendance)) return []
 

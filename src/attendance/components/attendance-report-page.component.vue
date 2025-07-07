@@ -14,24 +14,24 @@
 
     <div v-if="reportResults.length" class="datatable-wrapper">
       <DataTable
-        :value="reportResults"
-        class="p-datatable-sm custom-datatable"
-        scrollable scrollHeight="400px" scrollDirection="horizontal" responsiveLayout="scroll"
-        paginator :rows="pageSize" :rowsPerPageOptions="[5, 10, 20]"
-        paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink | RowsPerPageDropdown"
-        currentPageReportTemplate="{currentPage}"
+          :value="reportResults"
+          class="p-datatable-sm custom-datatable"
+          scrollable scrollHeight="400px" scrollDirection="horizontal" responsiveLayout="scroll"
+          paginator :rows="pageSize" :rowsPerPageOptions="[5, 10, 20]"
+          paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink | RowsPerPageDropdown"
+          currentPageReportTemplate="{currentPage}"
       >
         <Column field="student" :header="$t('attendance-student')" frozen style="min-width:150px" />
         <Column field="class" :header="$t('attendance-class')" frozen style="min-width:120px" />
 
         <Column
-          v-for="day in dateHeaders"
-          :key="day"
-          :field="day"
-          :header="day"
-          style="min-width:90px"
-          bodyClass="attendance-column"
-          headerClass="attendance-column"
+            v-for="day in dateHeaders"
+            :key="day"
+            :field="day"
+            :header="day"
+            style="min-width:90px"
+            bodyClass="attendance-column"
+            headerClass="attendance-column"
         >
           <template #body="slotProps">
             <i v-if="slotProps.data[day] === 'P'" class="pi pi-check icon-present" />
@@ -41,10 +41,10 @@
         </Column>
 
         <Column
-          :header="$t('attendance-total-report')"
-          style="min-width:100px"
-          bodyClass="attendance-column"
-          headerClass="attendance-column"
+            :header="$t('attendance-total-report')"
+            style="min-width:100px"
+            bodyClass="attendance-column"
+            headerClass="attendance-column"
         >
           <template #body="slotProps">
             {{ countPresence(slotProps.data) }}
@@ -113,7 +113,7 @@ export default {
       }
     },
 
-     async loadCourses() {
+    async loadCourses() {
       try {
         const res = await httpInstance.get(COURSES_API)
         console.log('[Cursos]', res.data)
@@ -174,14 +174,17 @@ export default {
         }
 
 
+
         this.dateHeaders.forEach(d => {
           row[d] = '-'
         })
 
 
         attendanceRecords.forEach(record => {
-          const key = record.date
-          row[key] = record.status === 'Present' ? 'P' : 'A'
+          const dateOnly = new Date(record.date).toISOString().split('T')[0]
+          if (this.dateHeaders.includes(dateOnly)) {
+            row[dateOnly] = record.status === 'Present' ? 'P' : 'A'
+          }
         })
 
         results.push(row)
@@ -190,8 +193,8 @@ export default {
         console.error('Error al obtener el reporte:', e)
       }
     }
-,
-countPresence(row) {
+    ,
+    countPresence(row) {
       return this.dateHeaders.filter(d => row[d] === 'P').length
     }
   },
@@ -305,10 +308,10 @@ countPresence(row) {
   margin-left: auto;
 
   /* Estilos para encabezados y celdas centradas de columnas dinámicas y totales */
-::v-deep(.custom-datatable .attendance-column) {
-  text-align: left !important;
-  vertical-align: middle !important;
-}
+  ::v-deep(.custom-datatable .attendance-column) {
+    text-align: left !important;
+    vertical-align: middle !important;
+  }
 
 }
 </style>
