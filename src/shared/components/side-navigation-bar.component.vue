@@ -12,14 +12,14 @@ export default {
   data() {
     return {
       navOptions: [
-        { icon: 'building', label: 'Mi organización', route: '/organization' },
-        { icon: 'file', label: 'Matrícula', route: '/enrollment' },
-        { icon: 'users', label: 'Alumnos', route: '/students' },
-        { icon: 'credit-card', label: 'Pagos', route: '/payments' },
-        //{ icon: 'calendar', label: 'Horarios', route: '/schedules' },
-        { icon: 'check-circle', label: 'Asistencia', route: '/attendance' },
-        { icon: 'book', label: 'Reporte de Asistencias', route: '/attendance-view-report' },
-        { icon: 'wallet', label: 'Finanzas', route: '/finance' }
+        { icon: 'building', label: 'sidebar.organization', route: '/organization', roles: ['ADMIN'] },
+        { icon: 'file', label: 'sidebar.enrollment', route: '/enrollment', roles: ['ADMIN'] },
+        { icon: 'users', label: 'sidebar.students', route: '/students', roles: ['ADMIN'] },
+        { icon: 'credit-card', label: 'sidebar.payments', route: '/payments', roles: ['ADMIN'] },
+        { icon: 'calendar', label: 'sidebar.schedules', route: '/schedules', roles: ['ADMIN'] },
+        { icon: 'calendar', label: 'sidebar.my-schedule', route: '/my-schedule', roles: ['TEACHER'] },
+        { icon: 'check-circle', label: 'sidebar.attendance', route: '/attendance', roles: ['TEACHER'] },
+        { icon: 'wallet', label: 'sidebar.finance', route: '/finance', roles: ['ADMIN'] }
       ]
     }
   },
