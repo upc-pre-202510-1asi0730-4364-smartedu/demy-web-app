@@ -21,7 +21,8 @@ export default {
       currency: 'PEN',
       dueDate: new Date(),
       currencies: ['PEN', 'USD'],
-      invoiceService: new InvoiceService()
+      invoiceService: new InvoiceService(),
+      notification: new NotificationService()
     }
   },
   methods: {
@@ -34,7 +35,7 @@ export default {
       const payload = {
         amount: this.amount,
         currency: this.currency,
-        dueDate: this.dueDate.toISOString().split('T')[0]
+        dueDate: this.dueDate.toISOString()
       }
 
       try {
@@ -140,6 +141,13 @@ h3 {
   gap: 6px;
 }
 
+.form-field > * {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+
 .actions {
   grid-column: 1 / -1;
   display: flex;
@@ -159,6 +167,7 @@ p {
     grid-template-columns: 1fr;
     padding: 16px;
     gap: 16px;
+    margin-inline: 12px;
   }
 
   h3 {
