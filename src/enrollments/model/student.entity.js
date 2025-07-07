@@ -6,21 +6,20 @@ export const Sex = Object.freeze({
 export class Student {
     constructor({
                     id = '',
-                    firstName = '',
-                    lastName = '',
+                    name = '',
                     dni = '',
-                    sex = Sex.MALE,
+                    sex = 'MALE',
                     birthDate = null,
                     address = '',
                     phoneNumber = ''
                 } = {}) {
         this.id = id
-        this.firstName = firstName
-        this.lastName = lastName
+        this.name = name
         this.dni = dni
         this.sex = sex
         this.birthDate = birthDate ? new Date(birthDate) : null
         this.address = address
         this.phoneNumber = phoneNumber
     }
+
 }
