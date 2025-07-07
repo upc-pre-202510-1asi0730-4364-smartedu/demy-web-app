@@ -5,31 +5,35 @@ const studentService = new StudentService()
 
 export default {
   name: 'StudentSelectComponent',
+  props: {
+    modelValue: String
+  },
+  emits: ['update:modelValue', 'studentChanged'],
   data() {
     return {
-      students: [],
-      selectedStudentId: ''
+      students: []
     }
   },
   async mounted() {
     try {
       const response = await studentService.getAll()
-      this.students = [
-        { label: 'Todos los alumnos', value: '' }, // ✅ opción para ver todos
-        ...response.map(student => ({
-          label: `${student.firstName} ${student.lastName}`,
-          value: student.id
-        }))
-      ]
+      this.students = response.map(student => ({
+        label: student.name,
+        value: student.dni
+      }))
     } catch (error) {
       console.error('Error al cargar estudiantes:', error)
     }
   },
-  methods: {
-    onStudentChange() {
-      console.log('Estudiante seleccionado:', this.selectedStudentId)
-      this.$emit('update:modelValue', this.selectedStudentId) // emite si usas v-model desde el padre
-      this.$emit('studentChanged', this.selectedStudentId) // opcional: evento personalizado
+  computed: {
+    selectedStudent: {
+      get() {
+        return this.modelValue
+      },
+      set(val) {
+        this.$emit('update:modelValue', val)
+        this.$emit('studentChanged', val)
+      }
     }
   }
 }
@@ -37,19 +41,13 @@ export default {
 
 <template>
   <div class="field">
-    <label for="course" style="margin-right: 5px;">{{$t('attendance-student')}}</label>
+    <label for="student" style="margin-right: 5px;">{{$t('attendance-student')}}</label>
     <pv-dropdown
-        v-model="selectedStudentId"
+        v-model="selectedStudent"
         :options="students"
         optionLabel="label"
         optionValue="value"
         placeholder="Seleccione un estudiante"
-        @change="onStudentChange()"
-
     />
   </div>
 </template>
-
-<style scoped>
-
-</style>
