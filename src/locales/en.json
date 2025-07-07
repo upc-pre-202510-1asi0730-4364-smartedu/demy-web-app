@@ -189,11 +189,11 @@
   "attendance-date-range": "Date Range",
 
   "attendance-subtitle2": "List of students",
-  "attendance-student": "Student",
   "attendance-checkbox": "Attended",
   "attendance-save": "Save attendance",
   "attendance-view-report": "View attendance report",
-
+ "attendance-total-report": "Total assists",
+  "attendance-search": "Search",
   "view-courses": {
     "title": "Courses",
     "table": {

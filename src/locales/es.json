@@ -186,10 +186,11 @@
   "attendance-date-range": "Rango de fechas",
 
   "attendance-subtitle2": "Lista de alumnos",
-  "attendance-student": "Estudiante",
   "attendance-checkbox": "Asistió",
   "attendance-save": "Guardar asistencia",
   "attendance-view-report": "Ver reporte de asistencia",
+  "attendance-total-report": "Total de asistencias",
+  "attendance-search": "Buscar",
 
   "view-courses": {
     "title": "Cursos",
