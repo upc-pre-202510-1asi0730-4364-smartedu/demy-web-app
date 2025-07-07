@@ -1,4 +1,10 @@
+/**
+ * Enumeration for attendance statuses.
+ * @readonly
+ * @enum {string}
+ */
 export const AttendanceStatus = {
-    PRESENT: 'PRESENT',
-    ABSENT: 'ABSENT',
+    PRESENT: 'Present',
+    ABSENT: 'Absent',
 }
+

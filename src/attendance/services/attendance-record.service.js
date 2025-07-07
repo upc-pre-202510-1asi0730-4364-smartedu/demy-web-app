@@ -1,4 +1,4 @@
-import httpInstance from '../../shared/services/http.instance.js'
+/** import httpInstance from '../../shared/services/http.instance.js'
 
 export class AttendanceRecordService {
     constructor() {
@@ -11,7 +11,7 @@ export class AttendanceRecordService {
 
     async saveMany(records) {
         for (const record of records) {
-            await this.save(record) // 👈 espera uno por uno
+            await this.save(record) //
         }
     }
-}
+} **/

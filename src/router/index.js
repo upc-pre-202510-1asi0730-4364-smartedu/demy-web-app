@@ -21,6 +21,8 @@ import PlantSelect from "../iam-user/pages/plan-select.component.vue";
 import RecoverPassword from "../iam-user/pages/recover-password.component.vue";
 import ResetPassword from "../iam-user/pages/reset-password.component.vue";
 import AttendancePageComponent from "../attendance/components/attendance-page.component.vue";
+import AttendanceViewReportPageComponent from "../attendance/components/attendance-report-page.component.vue";
+
 import Courses from "../scheduling/pages/courses-overview.component.vue";
 import AcademicPeriod from "../enrollments/pages/academic-period-management.component.vue";
 import Classrooms from "../scheduling/pages/classrooms-overview.component.vue";
@@ -57,6 +59,7 @@ const routes = [
                 ]
             },
             { path: 'attendance', component: AttendancePageComponent },
+            { path: 'attendance-view-report', component: AttendanceViewReportPageComponent },
             { path: 'finance', component: ExpensesPage },
             { path: 'schedules', component: Schedules },
             { path: 'enrollment', component: Enrollment},
