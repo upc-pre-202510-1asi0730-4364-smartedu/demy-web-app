@@ -80,19 +80,15 @@ export default {
           life: 3000
         })
 
-        const updatedInvoice = {
-          ...invoice,
-          status: PaymentStatus.PAID
-        }
-
-        showPaymentForm.value = false
+        const updatedStudent = await studentService.getByDni(status.student.dni)
+        const updatedInvoices = await invoiceService.getByDni(status.student.dni)
 
         studentPaymentStatus.value = {
-          ...status,
-          invoices: status.invoices.map((inv) =>
-              inv.id === invoice.id ? updatedInvoice : inv
-          )
+          student: updatedStudent,
+          invoices: updatedInvoices
         }
+        showPaymentForm.value = false
+
       } catch (err) {
         console.error('Error al registrar el pago', err)
         toast.add({
