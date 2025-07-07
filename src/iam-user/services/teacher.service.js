@@ -20,7 +20,7 @@ export class TeacherService {
     }
 
     async getTeachersSchedule() {
-        const res = await httpInstance.get(`${this.resourceEndpoint}/teachers`);
+        const res = await httpInstance.get(`${this.resourceEndpoint}`);
 
         // Handle different response formats
         let teachersData;
