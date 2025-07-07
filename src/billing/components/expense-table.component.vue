@@ -64,15 +64,16 @@ export default {
       let expenseUSD = 0
 
       data.forEach(tx => {
+        const type = tx.type?.toUpperCase()
         const amount = tx.payment?.amount ?? 0
         const currency = tx.payment?.currency ?? 'PEN'
 
-        if (tx.type === 'INCOME') {
+        if (type === 'INCOME') {
           if (currency === 'USD') incomeUSD += amount
           else incomePEN += amount
         }
 
-        if (tx.type === 'EXPENSE') {
+        if (type === 'EXPENSE') {
           if (currency === 'USD') expenseUSD += amount
           else expensePEN += amount
         }
@@ -84,7 +85,7 @@ export default {
       this.totalExpenseUSD = expenseUSD
     },
     getTranslatedConcept(tx) {
-      if (tx.concept === 'Paid student invoice' && tx.category === 'STUDENTS') {
+      if (tx.concept === 'Paid student invoice' && tx.category.toUpperCase() === 'STUDENTS') {
         return this.$t('finance.concept.paidStudentInvoice')
       }
       return tx.concept

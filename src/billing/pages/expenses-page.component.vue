@@ -26,9 +26,10 @@ export default {
   },
   methods: {
     async loadAllTransactions() {
+      console.log("Transacciones:", this.allTransactions)
+
       try {
-        const transactions = await this.transactionService.getAll()
-        this.allTransactions = transactions
+        this.allTransactions = await this.transactionService.getAll()
         this.applyDateFilter()
       } catch (err) {
         console.error('Error al cargar transacciones', err)
@@ -37,11 +38,12 @@ export default {
     applyDateFilter() {
       this.expenses = this.allTransactions.filter(tx => {
         const txDate = new Date(tx.date)
-        return (
-            tx.type === 'EXPENSE' &&
-            txDate.getMonth() === this.selectedMonth &&
-            txDate.getFullYear() === this.selectedYear
-        )
+        const isSameMonth = txDate.getMonth() === this.selectedMonth
+        const isSameYear = txDate.getFullYear() === this.selectedYear
+        const type = tx.type?.toUpperCase()
+        const isValidType = type === 'INCOME' || type === 'EXPENSE'
+
+        return isSameMonth && isSameYear && isValidType
       })
     },
     setMonthAndYear(date) {
