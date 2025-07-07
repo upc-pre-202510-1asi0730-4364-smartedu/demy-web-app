@@ -46,9 +46,9 @@
       "FEMALE": "Femenino"
     },
     "payment-status": {
-      "PENDING": "Pendiente",
-      "PAID": "Pagado",
-      "OVERDUE": "Atrasado"
+      "Pending": "Pendiente",
+      "Paid": "Pagado",
+      "Overdue": "Atrasado"
     },
     "register-title": "Registrar pago",
     "register-action": "Registrar pago",
@@ -176,6 +176,9 @@
       "MAINTENANCE": "Mantenimiento",
       "PURCHASES": "Compras",
       "OTHERS": "Otros"
+    },
+    "concept": {
+      "paid-student-invoice": "Pago de factura de estudiante {name} con DNI {dni}"
     },
     "table": {
       "date": "Fecha",
