@@ -8,7 +8,7 @@
       <AttendanceStudentSelect v-model="selectedStudent" />
       <AttendanceDateRangePicker v-model="selectedDateRange" />
       <div class="form-button">
-        <Button label="Buscar" icon="pi pi-search" @click="searchReport" />
+        <Button :label="$t('attendance-search')" icon="pi pi-search" @click="searchReport" />
       </div>
     </div>
 
@@ -21,8 +21,8 @@
         paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink | RowsPerPageDropdown"
         currentPageReportTemplate="{currentPage}"
       >
-        <Column field="student" header="Alumno" frozen style="min-width:150px" />
-        <Column field="class" header="Clase" frozen style="min-width:120px" />
+        <Column field="student" :header="$t('attendance-student')" frozen style="min-width:150px" />
+        <Column field="class" :header="$t('attendance-class')" frozen style="min-width:120px" />
 
         <Column
           v-for="day in dateHeaders"
@@ -41,7 +41,7 @@
         </Column>
 
         <Column
-          header="Total asistencias"
+          :header="$t('attendance-total-report')"
           style="min-width:100px"
           bodyClass="attendance-column"
           headerClass="attendance-column"
@@ -60,13 +60,14 @@ import axios from 'axios'
 import AttendanceClassSelect from '../components/attendance-class-select.component.vue'
 import AttendanceStudentSelect from '../../attendance/components/attendance-student-select.component.vue'
 import AttendanceDateRangePicker from '../components/attendance-date-range-picker.component.vue'
+import { attendanceReportService } from '../services/attendance-report.service.js'
 import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 
-const SESSIONS_API = `${import.meta.env.VITE_API_BASE_URL}/class-sessions`
-const STUDENTS_API = `${import.meta.env.VITE_API_BASE_URL}/students2`
-const COURSES_API = `${import.meta.env.VITE_API_BASE_URL}/courses`
+const STUDENTS_API = import.meta.env.VITE_STUDENTS_ENDPOINT_PATH
+const COURSES_API = import.meta.env.VITE_COURSES_ENDPOINT_PATH
+
 
 export default {
   name: 'AttendanceViewReportPage',
@@ -123,93 +124,77 @@ export default {
         console.error('Error cargando alumnos:', e)
       }
     },
-   
-
-async searchReport() {
-  try {
-    const res = await axios.get(SESSIONS_API)
-    const sessions = res.data
-
-    if (
-      !this.selectedDateRange ||
-      this.selectedDateRange.length === 0 ||
-      !this.selectedClass
-    ) {
-      this.dateHeaders = []
-      this.reportResults = []
-      return
-    }
-
-    const start = new Date(this.selectedDateRange[0])
-    const end = new Date(
-      this.selectedDateRange.length > 1 && this.selectedDateRange[1]
-        ? this.selectedDateRange[1]
-        : this.selectedDateRange[0]
-    )
-    start.setHours(0, 0, 0, 0)
-    end.setHours(23, 59, 59, 999)
-
-    const dateHeaders = []
-    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-      const key = d.toLocaleDateString('es-PE', { day: 'numeric', month: 'numeric' })
-      dateHeaders.push(key)
-    }
-    this.dateHeaders = dateHeaders
-
-    // Filtrar sesiones por fecha y clase (ahora obligatoria)
-    const filteredSessions = sessions.filter(session => {
-      const sessionDate = new Date(session.createdAt)
-      const matchDate = sessionDate >= start && sessionDate <= end
-      const matchClass = session.classId === this.selectedClass
-      return matchDate && matchClass
-    })
-
-    const map = {}
-
-    filteredSessions.forEach(session => {
-      const key = new Date(session.createdAt).toLocaleDateString('es-PE', {
-        day: 'numeric',
-        month: 'numeric'
-      })
-
-      session.attendance.forEach(att => {
-        const id = att.studentId?.trim()
-        const name = this.studentNameMap[id]
-
-        // Ignorar si el alumno no está en el listado activo
-        if (!name) return
-
-        const status = att.status === 'PRESENT' ? 'P' : 'A'
-
-        if (!map[id]) {
-          const courseName = this.courseNameMap?.[this.selectedClass] || '—'
-          map[id] = { student: name, class: courseName }
-          dateHeaders.forEach(d => (map[id][d] = ''))
+    async searchReport() {
+      try {
+        // validations
+        if (
+            !this.selectedDateRange ||
+            this.selectedDateRange.length === 0 ||
+            !this.selectedClass ||
+            !this.selectedStudent
+        ) {
+          this.dateHeaders = []
+          this.reportResults = []
+          return
         }
 
-        map[id][key] = status
-      })
-    })
+        const start = new Date(this.selectedDateRange[0])
+        const end = new Date(
+            this.selectedDateRange.length > 1 && this.selectedDateRange[1]
+                ? this.selectedDateRange[1]
+                : this.selectedDateRange[0]
+        )
 
-    const results = Object.entries(map)
-      .filter(([id]) => !this.selectedStudent || id === this.selectedStudent)
-      .map(([_, value]) => value)
+        // date headers generator
+        const headers = []
+        const current = new Date(start)
+        while (current <= end) {
+          const key = current.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit' })
+          headers.push(key)
+          current.setDate(current.getDate() + 1)
+        }
+        this.dateHeaders = headers
 
-    this.reportResults = results
-  } catch (e) {
-    console.error('Error en reporte:', e)
-  }
-}
+        // obtain report from the backend
+        const attendanceRecords = await attendanceReportService.fetchReport({
+          courseId: this.selectedClass,
+          dni: this.selectedStudent,
+          startDate: start.toISOString().split('T')[0],
+          endDate: end.toISOString().split('T')[0]
+        })
+
+        // transform results to a table
+        const results = []
+
+        const row = {
+          student: attendanceRecords[0]?.studentName || '(sin nombre)',
+          class: this.courseNameMap?.[this.selectedClass] || '—'
+        }
+
+
+        this.dateHeaders.forEach(d => {
+          row[d] = '-'
+        })
+
+
+        attendanceRecords.forEach(record => {
+          const d = new Date(record.date)
+          const key = d.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit' })
+          row[key] = record.status === 'Present' ? 'P' : 'A'
+        })
+
+        results.push(row)
+        this.reportResults = results
+      } catch (e) {
+        console.error('Error al obtener el reporte:', e)
+      }
+    }
 ,
 countPresence(row) {
       return this.dateHeaders.filter(d => row[d] === 'P').length
     }
   },
   watch: {
-    selectedStudent(newVal, oldVal) {
-      console.log(`Estudiante cambió de ${oldVal} a ${newVal}`)
-      this.searchReport()
-    },
     selectedClass(newVal, oldVal) {
     console.log(`Clase cambió de ${oldVal} a ${newVal}`)
     this.searchReport()
