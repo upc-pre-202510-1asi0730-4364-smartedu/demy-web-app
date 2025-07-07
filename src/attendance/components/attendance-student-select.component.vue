@@ -18,7 +18,7 @@ export default {
     try {
       const response = await studentService.getAll()
       this.students = response.map(student => ({
-        label: student.name,
+        label: `${student.firstName} ${student.lastName}`.trim(),
         value: student.dni
       }))
     } catch (error) {

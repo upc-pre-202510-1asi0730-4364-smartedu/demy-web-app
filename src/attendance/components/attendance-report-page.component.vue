@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import httpInstance from "../../shared/services/http.instance.js";
 import AttendanceClassSelect from '../components/attendance-class-select.component.vue'
 import AttendanceStudentSelect from '../../attendance/components/attendance-student-select.component.vue'
 import AttendanceDateRangePicker from '../components/attendance-date-range-picker.component.vue'
@@ -65,8 +65,8 @@ import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 
-const STUDENTS_API = import.meta.env.VITE_STUDENTS_ENDPOINT_PATH
-const COURSES_API = import.meta.env.VITE_COURSES_ENDPOINT_PATH
+const STUDENTS_API = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_STUDENTS_ENDPOINT_PATH}`
+const COURSES_API = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_COURSES_ENDPOINT_PATH}`
 
 
 export default {
@@ -100,11 +100,12 @@ export default {
   methods: {
     async loadStudents() {
       try {
-        const res = await axios.get(STUDENTS_API)
+        const res = await httpInstance.get(STUDENTS_API)
+        console.log('[Students]', res.data)
         this.studentNameMap = {}
         this.studentOptions = res.data.map(s => {
           const fullName = `${s.firstName} ${s.lastName}`.trim()
-          this.studentNameMap[s.id] = fullName
+          this.studentNameMap[s.dni] = fullName
           return { label: fullName, value: s.dni }
         })
       } catch (e) {
@@ -114,7 +115,8 @@ export default {
 
      async loadCourses() {
       try {
-        const res = await axios.get(COURSES_API)
+        const res = await httpInstance.get(COURSES_API)
+        console.log('[Cursos]', res.data)
         this.courseNameMap = {}
         this.courseOptions = res.data.map(s => {
           this.courseNameMap[s.id] = s.name
@@ -149,7 +151,7 @@ export default {
         const headers = []
         const current = new Date(start)
         while (current <= end) {
-          const key = current.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit' })
+          const key = current.toISOString().split('T')[0]
           headers.push(key)
           current.setDate(current.getDate() + 1)
         }
@@ -167,7 +169,7 @@ export default {
         const results = []
 
         const row = {
-          student: attendanceRecords[0]?.studentName || '(sin nombre)',
+          student: this.studentNameMap?.[this.selectedStudent] || '(sin nombre)',
           class: this.courseNameMap?.[this.selectedClass] || '—'
         }
 
@@ -178,8 +180,7 @@ export default {
 
 
         attendanceRecords.forEach(record => {
-          const d = new Date(record.date)
-          const key = d.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit' })
+          const key = record.date
           row[key] = record.status === 'Present' ? 'P' : 'A'
         })
 
@@ -196,11 +197,10 @@ countPresence(row) {
   },
   watch: {
     selectedClass(newVal, oldVal) {
-    console.log(`Clase cambió de ${oldVal} a ${newVal}`)
-    this.searchReport()
+      console.log(`Clase cambió de ${oldVal} a ${newVal}`)
+      this.searchReport()
+    }
   }
-  }
-
 }
 </script>
 

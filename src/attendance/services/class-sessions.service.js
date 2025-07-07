@@ -1,7 +1,7 @@
-import axios from 'axios'
+import httpInstance from "../../shared/services/http.instance.js";
 import { ClassSession } from '../model/class-session.entity.js'
 
-const BASE_URL = import.meta.env.VITE_CLASSSESSION_ENDPOINT_PATH
+const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_CLASSSESSION_ENDPOINT_PATH}`
 
 
 /**
@@ -14,7 +14,7 @@ export const classSessionService = {
      */
     save(session) {
         const payload = session instanceof ClassSession ? session.toJSON() : session
-        return axios.post(BASE_URL, payload)
+        return httpInstance.post(BASE_URL, payload)
     },
 
     /**
@@ -22,7 +22,7 @@ export const classSessionService = {
      * @param {string|number} id - The ID of the class session.
      */
     getById(id) {
-        return axios.get(`${BASE_URL}/${id}`)
+        return httpInstance.get(`${BASE_URL}/${id}`)
     },
 
     /**
@@ -30,6 +30,6 @@ export const classSessionService = {
      * @returns {Promise}
      */
     getAll() {
-        return axios.get(BASE_URL)
+        return httpInstance.get(BASE_URL)
     }
 }
