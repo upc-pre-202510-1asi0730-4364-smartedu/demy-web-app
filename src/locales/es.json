@@ -34,6 +34,11 @@
     "categories": "Categorías"
   },
   "payments": {
+    "section-title": "Gestión de Pagos",
+    "nav": {
+      "list": "Ver Pagos",
+      "assign": "Asignar Factura"
+    },
     "title": "Pagos",
     "subtitle": "Buscar el estado de pago de un alumno",
     "dni-input": "Ingresar DNI",
@@ -50,6 +55,14 @@
       "Paid": "Pagado",
       "Overdue": "Atrasado"
     },
+    "method": "Método",
+    "methods": {
+      "CASH": "Efectivo",
+      "CARD": "Tarjeta",
+      "TRANSFER": "Transferencia",
+      "WALLET": "Billetera digital",
+      "OTHER": "Otro"
+    },
     "register-title": "Registrar pago",
     "register-action": "Registrar pago",
     "first-name": "Nombres",
@@ -61,7 +74,17 @@
     "status": "Estado",
     "due-date": "Vencimiento",
     "action": "Acción",
-    "register-button": "Guardar pago"
+    "register-button": "Guardar pago",
+    "assign-title": "Asignar nueva factura",
+    "dni-label": "DNI del Estudiante",
+    "amount-label": "Monto",
+    "currency-label": "Moneda",
+    "due-date-label": "Fecha de Vencimiento",
+    "create-button": "Crear Factura",
+    "assign": {
+      "success": "¡Factura creada exitosamente!",
+      "error": "Error al crear la factura."
+    }
   },
   "login": {
     "sign-up": "Crear Cuenta",
@@ -164,6 +187,41 @@
     "summary": {
       "empty": "No se han registrado gastos este mes"
     },
+    "fields": {
+      "category": "Categoría",
+      "amount": "Monto",
+      "concept": "Concepto",
+      "date": "Fecha",
+      "method": "Método de pago",
+      "currency": "Moneda"
+    },
+    "method": {
+      "cash": "Efectivo",
+      "card": "Tarjeta",
+      "transfer": "Transferencia",
+      "wallet": "Billetera digital",
+      "others": "Otro",
+      "other": "Otro"
+    },
+    "currency": {
+      "pen": "Soles (PEN)",
+      "usd": "Dólares (USD)"
+    },
+    "category": {
+      "students": "Estudiantes",
+      "personals": "Pago a personal",
+      "personal": "Personal",
+      "materials": "Materiales",
+      "services": "Servicios",
+      "taxes": "Impuestos",
+      "maintenance": "Mantenimiento",
+      "technology": "Tecnología",
+      "others": "Otros",
+      "other": "Otro"
+    },
+    "concept": {
+      "paidStudentInvoice": "Pago de estudiante"
+    },
     "form": {
       "concept": "Concepto",
       "amount": "Monto",
@@ -177,15 +235,27 @@
       "PURCHASES": "Compras",
       "OTHERS": "Otros"
     },
-    "concept": {
-      "paid-student-invoice": "Pago de factura de estudiante {name} con DNI {dni}"
+    "actions": {
+      "confirm": "Confirmar"
     },
     "table": {
       "date": "Fecha",
       "category": "Categoría",
       "concept": "Concepto",
       "amount": "Monto",
-      "total": "Total del mes"
+      "total": "Total mensual",
+      "type": "Tipo",
+      "paymentMethod": "Método de pago",
+      "totalIncome": "Total de ingresos",
+      "totalExpense": "Total de egresos"
+    },
+    "type": {
+      "income": "Ingreso",
+      "expense": "Gasto"
+    },
+    "notifications": {
+      "expenseRegistered": "Gasto registrado correctamente.",
+      "errorRegistering": "Ocurrió un error al registrar el gasto."
     }
   },
   "attendance-title": "Registro de asistencia",
