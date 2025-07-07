@@ -520,7 +520,7 @@
   "reset-password": {
     "title": "Restablecer Contraseña",
     "newPassword": "Nueva Contraseña",
-    "confirmPassword": "Confirmar Contraseña",
+    "email": "Ingrese su Email",
     "button": "Restablecer",
     "back": "Volver",
     "modal": {

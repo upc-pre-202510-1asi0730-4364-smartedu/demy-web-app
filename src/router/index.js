@@ -25,7 +25,9 @@ import WeeklySchedules from "../scheduling/pages/weekly-schedules-overview.compo
 import Schedules from "../scheduling/pages/search-schedules.component.vue";
 import TeacherSchedules from "../scheduling/pages/teacher-schedule.component.vue";
 import EnrollmentPageComponent from "../enrollments/pages/enrollment-page.component.vue";
-
+import RecoverPassword from "../iam-user/components/recover-password.component.vue";
+import ResetPassword from "../iam-user/pages/reset-password.component.vue";
+import {authenticationGuard} from "../iam-user/services/authentication.guard.js";
 
 const routes = [
     {
@@ -63,6 +65,7 @@ const routes = [
     },
     {
         path: '/login',
+        name: 'sign-in',
         component: Login
     },
     {
@@ -72,6 +75,10 @@ const routes = [
     {
         path: '/plantSelect',
         component: PlantSelect
+    },
+    {
+        path: '/reset-password',
+        component: ResetPassword
     }
 ]
 
@@ -79,5 +86,9 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 })
+
+router.beforeEach((to, from, next) => {
+    authenticationGuard(to, from, next);
+});
 
 export default router

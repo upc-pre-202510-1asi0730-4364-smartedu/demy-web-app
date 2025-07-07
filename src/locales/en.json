@@ -521,7 +521,7 @@
   "reset-password": {
     "title": "Reset Password",
     "newPassword": "New Password",
-    "confirmPassword": "Confirm Password",
+    "email": "Email",
     "button": "Reset",
     "back": "Back",
     "modal": {

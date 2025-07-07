@@ -5,31 +5,32 @@ import { useI18n } from 'vue-i18n'
 import PasswordInput from '../components/password-input.vue'
 import LanguageSwitcher from '../../shared/components/language-switcher.component.vue'
 import httpInstance from '../../shared/services/http.instance.js'
-import ConfirmationModalPassword from '../components/confirmation-modal-password.component.vue'
 
 const newPassword = ref('')
-const confirmPassword = ref('')
+
+const email = ref('')
 const router = useRouter()
 const showModal = ref(false)
 const modalMessage = ref('')
 const isConfirmModal = ref(false)
 
-const email = localStorage.getItem('recoveryEmail')
-const userId = localStorage.getItem('recoveryId')
 
 const { t } = useI18n()
 
+/**
+ * Confirms the password reset request using `passwordHash` (legacy version).
+ * Displays a success/failure modal based on the result.
+ */
 const confirmReset = async () => {
   showModal.value = false
   try {
-    await httpInstance.put(`${import.meta.env.VITE_USER_ACCOUNT_ENDPOINT_PATH}/${userId}`, {
+    await httpInstance.put(`${import.meta.env.VITE_USER_ACCOUNT_ENDPOINT_PATH}/reset-password`, {
+      email: email.value,
       passwordHash: newPassword.value
     })
     modalMessage.value = t('reset-password.modal.resetSuccess')
     isConfirmModal.value = false
     showModal.value = true
-    localStorage.removeItem('recoveryEmail')
-    localStorage.removeItem('recoveryId')
   } catch (error) {
     modalMessage.value = t('reset-password.modal.resetFail')
     isConfirmModal.value = false
@@ -38,34 +39,38 @@ const confirmReset = async () => {
   }
 }
 
-const resetPassword = () => {
-  if (!newPassword.value || !confirmPassword.value) {
+/**
+ * Resets the password by sending the email and new password to the backend.
+ * Validates that both fields are filled before submitting.
+ * On success, redirects the user to the login page.
+ */
+const resetPassword = async () => {
+  if (!email.value || !newPassword.value) {
     modalMessage.value = t('reset-password.errors.emptyFields')
-    isConfirmModal.value = false
     showModal.value = true
     return
   }
 
-  if (newPassword.value !== confirmPassword.value) {
-    modalMessage.value = t('reset-password.errors.passwordMismatch')
-    isConfirmModal.value = false
-    showModal.value = true
-    return
+  try {
+    await httpInstance.put(`${import.meta.env.VITE_USER_ACCOUNT_ENDPOINT_PATH}/reset-password`, {
+      email: email.value,
+      newPassword: newPassword.value
+    })
+    modalMessage.value = t('reset-password.modal.resetSuccess')
+    await router.push('/login')
+  } catch (error) {
+    modalMessage.value = t('reset-password.modal.resetFail')
+
+    console.error(error)
   }
 
-  modalMessage.value = t('reset-password.modal.confirmReset')
-  isConfirmModal.value = true
   showModal.value = true
 }
 
-const modalOk = () => {
-  showModal.value = false
 
-  if (modalMessage.value === t('reset-password.modal.resetSuccess')) {
-    router.push('/login')
-  }
-}
-
+/**
+ * Navigates back to the login page.
+ */
 const goBack = () => {
   router.push('/login')
 }
@@ -82,15 +87,14 @@ const goBack = () => {
 
       <h1 class="title">{{ $t('reset-password.title') }}</h1>
 
-      <p class="email-display">{{ email }}</p>
-
+      <PasswordInput
+          v-model="email"
+          type="email"
+          :placeholder="$t('reset-password.email')"
+      />
       <PasswordInput
           v-model="newPassword"
           :placeholder="$t('reset-password.newPassword')"
-      />
-      <PasswordInput
-          v-model="confirmPassword"
-          :placeholder="$t('reset-password.confirmPassword')"
       />
 
       <button class="reset-btn" @click="resetPassword">
@@ -101,16 +105,10 @@ const goBack = () => {
       </button>
     </div>
 
-    <ConfirmationModalPassword
-        :visible="showModal"
-        :message="modalMessage"
-        :isConfirm="isConfirmModal"
-        @accept="() => isConfirmModal ? confirmReset() : modalOk()"
-        @cancel="showModal = false"
-    />
 
   </div>
 </template>
+
 
 <style scoped>
 .reset-page {

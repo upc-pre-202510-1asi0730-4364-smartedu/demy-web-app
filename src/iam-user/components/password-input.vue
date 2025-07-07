@@ -1,7 +1,11 @@
 <script setup>
 const props = defineProps({
   modelValue: String,
-  placeholder: String
+  placeholder: String,
+  type: {
+    type: String,
+    default: 'password'
+  }
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -13,7 +17,7 @@ const updateValue = (e) => {
 
 <template>
   <input
-      type="password"
+      :type="type"
       :placeholder="placeholder"
       :value="modelValue"
       @input="updateValue"
