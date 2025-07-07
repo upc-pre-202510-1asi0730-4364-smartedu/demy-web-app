@@ -9,15 +9,16 @@ import { FinancialTransactionAssembler } from "./financial-transaction.assembler
 export class FinancialTransactionService {
     resourceEndpoint = '/financial-transactions'
     invoicePaymentEndpoint = '/invoices'
-    expenseEndpoint = '/expenses'
+    expenseEndpoint = '/financial-transactions/expenses'
 
     /**
      * Get all financial transactions
      * @returns {Promise<FinancialTransaction[]>}
      */
     async getAll() {
-        const res = await httpInstance.get(`/api/v1${this.resourceEndpoint}`)
-        return res.data.map(item => new FinancialTransaction(item))
+        const res = await httpInstance.get(`${this.resourceEndpoint}`)
+        console.log("Respuesta cruda de backend:", res.data)
+        return res.data.map(item => FinancialTransactionAssembler.fromResource(item))
     }
 
     /**
@@ -26,7 +27,7 @@ export class FinancialTransactionService {
      * @returns {Promise<FinancialTransaction>}
      */
     async getById(id) {
-        const res = await httpInstance.get(`/api/v1${this.resourceEndpoint}/${id}`)
+        const res = await httpInstance.get(`${this.resourceEndpoint}/${id}`)
         return FinancialTransactionAssembler.fromResource(res.data)
     }
 
@@ -36,7 +37,7 @@ export class FinancialTransactionService {
      * @returns {Promise<FinancialTransaction>}
      */
     async create(dto) {
-        const res = await httpInstance.post(`/api/v1${this.resourceEndpoint}`, dto)
+        const res = await httpInstance.post(`${this.resourceEndpoint}`, dto)
         return FinancialTransactionAssembler.fromResource(res.data)
     }
 
@@ -47,7 +48,7 @@ export class FinancialTransactionService {
      * @returns {Promise<FinancialTransaction>}
      */
     async registerPayment(invoiceId, dto) {
-        const res = await httpInstance.post(`/api/v1${this.invoicePaymentEndpoint}/${invoiceId}/payment`, dto)
+        const res = await httpInstance.post(`${this.invoicePaymentEndpoint}/${invoiceId}/payment`, dto)
         return FinancialTransactionAssembler.fromResource(res.data)
     }
 
@@ -57,7 +58,7 @@ export class FinancialTransactionService {
      * @returns {Promise<FinancialTransaction>}
      */
     async registerExpense(dto) {
-        const res = await httpInstance.post(`/api/v1${this.expenseEndpoint}`, dto)
+        const res = await httpInstance.post(`${this.expenseEndpoint}`, dto)
         return FinancialTransactionAssembler.fromResource(res.data)
     }
 }
