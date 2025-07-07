@@ -3,7 +3,6 @@ import ExpenseForm from '../components/expense-form.component.vue'
 import ExpenseTable from '../components/expense-table.component.vue'
 
 import { FinancialTransactionService } from '../services/financial-transaction.service.js'
-import { PartyType, FinancialTransaction } from '../model/financial-transaction.entity.js'
 
 export default {
   name: 'expense-page',
@@ -12,48 +11,60 @@ export default {
     ExpenseTable
   },
   data() {
+    const now = new Date()
     return {
+      allTransactions: [],
       expenses: [],
+      selectedMonth: now.getMonth(),
+      selectedYear: now.getFullYear(),
+      selectedDate: new Date(now.getFullYear(), now.getMonth(), 1),
       transactionService: new FinancialTransactionService()
     }
   },
   created() {
-    this.loadCurrentMonthExpenses()
+    this.loadAllTransactions()
   },
   methods: {
-    async loadCurrentMonthExpenses() {
-      try {
-        const transactions = await this.transactionService.getAll()
-        const currentDate = new Date()
-        const currentMonth = currentDate.getMonth()
-        const currentYear = currentDate.getFullYear()
+    async loadAllTransactions() {
+      console.log("Transacciones:", this.allTransactions)
 
-        this.expenses = transactions.filter(tx =>
-            tx.type === 'EXPENSE' &&
-            new Date(tx.date).getMonth() === currentMonth &&
-            new Date(tx.date).getFullYear() === currentYear
-        )
+      try {
+        this.allTransactions = await this.transactionService.getAll()
+        this.applyDateFilter()
       } catch (err) {
-        console.error('Error al cargar gastos', err)
+        console.error('Error al cargar transacciones', err)
       }
     },
+    applyDateFilter() {
+      this.expenses = this.allTransactions.filter(tx => {
+        const txDate = new Date(tx.date)
+        const isSameMonth = txDate.getMonth() === this.selectedMonth
+        const isSameYear = txDate.getFullYear() === this.selectedYear
+        const type = tx.type?.toUpperCase()
+        const isValidType = type === 'INCOME' || type === 'EXPENSE'
+
+        return isSameMonth && isSameYear && isValidType
+      })
+    },
+    setMonthAndYear(date) {
+      this.selectedMonth = date.getMonth()
+      this.selectedYear = date.getFullYear()
+      this.selectedDate = new Date(this.selectedYear, this.selectedMonth, 1)
+      this.applyDateFilter()
+    },
     async handleRegister(expenseData) {
-      const transaction = new FinancialTransaction({
-        id: '',
-        type: 'EXPENSE',
-        source: PartyType.ACADEMY,
-        target: PartyType.EXTERNAL,
+      const payload = {
         category: expenseData.category,
         concept: expenseData.concept,
-        date: expenseData.date,
-        reference: `TX-${Date.now()}`,
-        method: 'CASH',
-        amount: expenseData.amount
-      })
+        method: expenseData.method,
+        currency: expenseData.currency,
+        amount: expenseData.amount,
+        paidAt: expenseData.date
+      }
 
       try {
-        await this.transactionService.create(transaction)
-        await this.loadCurrentMonthExpenses()
+        await this.transactionService.registerExpense(payload)
+        await this.loadAllTransactions()
       } catch (err) {
         console.error('Error al registrar gasto', err)
       }
@@ -67,7 +78,7 @@ export default {
     <h2>{{ $t('finance.title') }}</h2>
     <h3>{{ $t('finance.subtitle.register') }}</h3>
 
-    <expense-form @expenseSubmitted="handleRegister" />
+    <expense-form @confirm="handleRegister" />
 
     <hr class="divider" />
 

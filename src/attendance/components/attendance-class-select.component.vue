@@ -25,8 +25,8 @@ export default {
   methods: {
     onCourseChange() {
       console.log('Curso seleccionado:', this.selectedCourseId)
-      this.$emit('update:modelValue', this.selectedCourseId) // emite si usas v-model desde el padre
-      this.$emit('courseChanged', this.selectedCourseId) // opcional: evento personalizado
+      this.$emit('update:modelValue', this.selectedCourseId)
+      this.$emit('courseChanged', this.selectedCourseId)
     }
   }
 }

@@ -46,9 +46,9 @@
       "FEMALE": "Female"
     },
     "payment-status": {
-      "PENDING": "Pending",
-      "PAID": "Paid",
-      "OVERDUE": "Overdue"
+      "Pending": "Pending",
+      "Paid": "Paid",
+      "Overdue": "Overdue"
     },
     "register-title": "Register payment",
     "register-action": "Register payment",
@@ -180,6 +180,9 @@
       "PURCHASES": "Purchases",
       "OTHERS": "Others"
     },
+    "concept": {
+      "paid-student-invoice": "Paid student invoice {name} with DNI {dni}"
+    },
     "table": {
       "date": "Date",
       "category": "Category",
@@ -189,13 +192,23 @@
     }
   },
   "attendance-title": "Attendance Record",
+  "attendance-report-title": "Attendance Report",
+
   "attendance-subtitle1": "My classes",
+  "attendance-report-subtitle1": "Attendance Report by class",
+
   "attendance-class": "Class",
-  "attendance-date": "Date",
-  "attendance-subtitle2": "List of students",
   "attendance-student": "Student",
+
+  "attendance-date": "Date",
+  "attendance-date-range": "Date Range",
+
+  "attendance-subtitle2": "List of students",
   "attendance-checkbox": "Attended",
   "attendance-save": "Save attendance",
+  "attendance-view-report": "View attendance report",
+ "attendance-total-report": "Total assists",
+  "attendance-search": "Search",
   "view-courses": {
     "title": "Courses",
     "table": {
@@ -286,6 +299,8 @@
       "student-required": "Student is required",
       "period": "Academic Period",
       "period-required": "Academic period is required",
+      "weekly-schedule": "Weekly Schedule",
+      "weekly-schedule-required": "Weekly schedule is required",
       "date": "Enrollment Date",
       "date-required": "Enrollment date is required",
       "amount": "Amount",
@@ -305,7 +320,7 @@
       "id": "Enrollment No.",
       "student": "Student",
       "period": "Period",
-      "date": "Enrollment Date",
+      "date": "Date",
       "amount": "Amount",
       "status": "Status",
       "payment-status": "Payment Status",
@@ -314,21 +329,24 @@
       "delete": "Delete enrollment"
     },
     "status": {
-      "active": "Activo",
-      "inactive": "Inactivo",
-      "cancelled": "Cancelado",
-      "completed": "Completado",
-      "deleted": "Eliminado"
+      "active": "Active",
+      "cancelled": "Cancelled",
+      "completed": "Completed"
     },
     "payment": {
       "paid": "Paid",
-      "unpaid": "Unpaid",
       "pending": "Pending",
-      "refunded": "Refunded",
-      "partial": "Partial"
+      "refunded": "Refunded"
     },
     "paginator": {
       "label": "Select enrollment page"
+    },
+    "search": {
+      "title": "Search Enrollment",
+      "input": "Enter student DNI",
+      "button": "Search",
+      "no-results": "No enrollment found for the provided DNI",
+      "loading": "Loading..."
     }
   },
   "student": {
@@ -513,7 +531,7 @@
   "reset-password": {
     "title": "Reset Password",
     "newPassword": "New Password",
-    "confirmPassword": "Confirm Password",
+    "email": "Email",
     "button": "Reset",
     "back": "Back",
     "modal": {

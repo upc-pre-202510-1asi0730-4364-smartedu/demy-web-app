@@ -33,6 +33,8 @@ export default {
       this.drawerVisible = !this.drawerVisible
     },
     logout() {
+      console.log('Cerrar sesión')
+      localStorage.removeItem('token')
       localStorage.removeItem('userData')
       localStorage.removeItem('currentUser')
       this.$router.push('/login')

@@ -2,7 +2,6 @@
 import { ref, computed, reactive, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ScheduleWeekly } from '../model/weekly-schedule.entity';
-import { Schedule } from '../model/schedule.entity';
 import { CourseService } from '../services/course.service';
 import { ClassroomService } from '../services/classroom.service';
 import { TeacherService } from '../../iam-user/services/teacher.service.js';
@@ -23,13 +22,15 @@ export default {
   setup(props, { emit }) {
     const { t } = useI18n();
     const weeklySchedule = reactive(new ScheduleWeekly(props.weeklyScheduleData));
-    const currentSchedule = reactive(new Schedule({
+    const currentSchedule = reactive({
       course: { id: null },
       teacher: { id: null },
       classroom: { id: null },
       timeRange: { start: '', end: '' },
       dayOfWeek: ''
-    }));
+    });
+
+    const deletedSchedules = ref([]);
 
     const availableCourses = ref([]);
     const availableClassrooms = ref([]);
@@ -37,6 +38,21 @@ export default {
     const loadingData = ref(false);
     const nameError = ref(false);
     const error = ref('');
+
+    const getCourseName = (courseId) => {
+      const course = availableCourses.value.find(c => c.id === courseId);
+      return course ? (course.name || course.courseName || course.title || `Course ${courseId}`) : `Course ${courseId}`;
+    };
+
+    const getClassroomName = (classroomId) => {
+      const classroom = availableClassrooms.value.find(c => c.id === classroomId);
+      return classroom ? (classroom.code || classroom.name || classroom.roomCode || classroom.number || `Room ${classroomId}`) : `Room ${classroomId}`;
+    };
+
+    const getTeacherName = (teacherId) => {
+      const teacher = availableTeachers.value.find(t => t.id === teacherId);
+      return teacher ? (teacher.fullName || teacher.name || `${teacher.firstName || ''} ${teacher.lastName || ''}`.trim() || `Teacher ${teacherId}`) : `Teacher ${teacherId}`;
+    };
 
     const dayOptions = [
       { label: t('teacher-schedule.days.monday'), value: 'Monday' },
@@ -48,7 +64,6 @@ export default {
       { label: t('teacher-schedule.days.sunday'), value: 'Sunday' }
     ];
 
-    // Time slots (from 7:00 AM to 9:00 PM in 30-minute intervals)
     const timeSlots = ref([
       '07:00', '07:30',
       '08:00', '08:30',
@@ -88,18 +103,15 @@ export default {
       
       const startTimeInMinutes = startHour * 60 + startMinute;
       const endTimeInMinutes = endHour * 60 + endMinute;
-      
-      // Verificar que la hora de inicio sea después de las 7:00 AM
+
       if (startTimeInMinutes < 7 * 60) {
         return false;
       }
-      
-      // Verificar que la hora de fin sea antes de las 9:00 PM
+
       if (endTimeInMinutes > 21 * 60) {
         return false;
       }
-      
-      // Verificar que la duración sea de al menos 30 minutos
+
       return endTimeInMinutes - startTimeInMinutes >= 30;
       
 
@@ -125,25 +137,20 @@ export default {
     // Load available courses
     const loadAvailableCourses = async () => {
       try {
-        // Intentar primero como singleton, luego como clase
-        let courses;
-        if (typeof CourseService.getAll === 'function') {
-          courses = await CourseService.getAll();
-        } else {
-          const courseService = new CourseService();
-          courses = await courseService.getAll();
-        }
-
-        console.log('Loaded courses:', courses);
-        console.log('Courses type:', typeof courses, 'Is array:', Array.isArray(courses));
-
+        const courseService = new CourseService();
+        const response = await courseService.getAll();
+        
+        console.log('Loaded courses response:', response);
+        
         // Verificar si es un array directamente o está en data
-        if (Array.isArray(courses)) {
-          availableCourses.value = courses;
-        } else if (courses && Array.isArray(courses.data)) {
-          availableCourses.value = courses.data;
+        if (Array.isArray(response)) {
+          availableCourses.value = response;
+        } else if (response && Array.isArray(response.data)) {
+          availableCourses.value = response.data;
+        } else if (response && Array.isArray(response.courses)) {
+          availableCourses.value = response.courses;
         } else {
-          console.warn('Courses response structure:', courses);
+          console.warn('Courses response structure:', response);
           availableCourses.value = [];
         }
       } catch (error) {
@@ -155,25 +162,20 @@ export default {
     // Load available classrooms
     const loadAvailableClassrooms = async () => {
       try {
-        // Intentar primero como singleton, luego como clase
-        let classrooms;
-        if (typeof ClassroomService.getAll === 'function') {
-          classrooms = await ClassroomService.getAll();
-        } else {
-          const classroomService = new ClassroomService();
-          classrooms = await classroomService.getAll();
-        }
-
-        console.log('Loaded classrooms:', classrooms);
-        console.log('Classrooms type:', typeof classrooms, 'Is array:', Array.isArray(classrooms));
-
+        const classroomService = new ClassroomService();
+        const response = await classroomService.getAll();
+        
+        console.log('Loaded classrooms response:', response);
+        
         // Verificar si es un array directamente o está en data
-        if (Array.isArray(classrooms)) {
-          availableClassrooms.value = classrooms;
-        } else if (classrooms && Array.isArray(classrooms.data)) {
-          availableClassrooms.value = classrooms.data;
+        if (Array.isArray(response)) {
+          availableClassrooms.value = response;
+        } else if (response && Array.isArray(response.data)) {
+          availableClassrooms.value = response.data;
+        } else if (response && Array.isArray(response.classrooms)) {
+          availableClassrooms.value = response.classrooms;
         } else {
-          console.warn('Classrooms response structure:', classrooms);
+          console.warn('Classrooms response structure:', response);
           availableClassrooms.value = [];
         }
       } catch (error) {
@@ -185,15 +187,9 @@ export default {
     // Load available teachers
     const loadAvailableTeachers = async () => {
       try {
-        // Intentar primero como singleton, luego como clase
-        let teachers;
-        if (typeof TeacherService.getTeachers === 'function') {
-          teachers = await TeacherService.getTeachers();
-        } else {
-          const teacherService = new TeacherService();
-          teachers = await teacherService.getTeachers();
-        }
-
+        const teacherService = new TeacherService();
+        const teachers = await teacherService.getTeachersSchedule();
+        
         console.log('Loaded teachers:', teachers);
         console.log('Teachers type:', typeof teachers, 'Is array:', Array.isArray(teachers));
 
@@ -202,6 +198,8 @@ export default {
           availableTeachers.value = teachers;
         } else if (teachers && Array.isArray(teachers.data)) {
           availableTeachers.value = teachers.data;
+        } else if (teachers && Array.isArray(teachers.teachers)) {
+          availableTeachers.value = teachers.teachers;
         } else {
           console.warn('Teachers response structure:', teachers);
           availableTeachers.value = [];
@@ -225,31 +223,18 @@ export default {
         const teacher = availableTeachers.value.find(t => t.id === currentSchedule.teacher.id);
 
         if (course && classroom && teacher) {
-          const scheduleToAdd = new Schedule({
-            id: Date.now(),
+          const scheduleToAdd = {
+            id: props.mode === 'edit' ? null : Date.now(), // Don't assign ID in edit mode, let backend assign it
             dayOfWeek: currentSchedule.dayOfWeek,
-            timeRange: {
-              start: currentSchedule.timeRange.start,
-              end: currentSchedule.timeRange.end
-            },
-            course: {
-              id: course.id,
-              name: course.name || course.courseName || course.title || 'Unknown Course',
-              code: course.code || course.courseCode || 'N/A'
-            },
-            classroom: {
-              id: classroom.id,
-              code: classroom.code || classroom.name || classroom.roomCode || classroom.number || 'Unknown Room',
-              capacity: classroom.capacity || 0,
-              campus: classroom.campus || classroom.location || 'Unknown Campus'
-            },
-            teacher: {
-              id: teacher.id,
-              fullName: teacher.fullName || teacher.name || `${teacher.firstName || ''} ${teacher.lastName || ''}`.trim() || 'Unknown Teacher'
-            }
-          });
+            startTime: currentSchedule.timeRange.start,
+            endTime: currentSchedule.timeRange.end,
+            courseId: course.id,
+            classroomId: classroom.id,
+            teacherId: teacher.id,
+            isNew: props.mode === 'edit' // Flag to identify new schedules in edit mode
+          };
 
-          weeklySchedule.weekSchedule.push(scheduleToAdd);
+          weeklySchedule.schedules.push(scheduleToAdd);
 
           // Reset current schedule
           Object.assign(currentSchedule, {
@@ -271,15 +256,25 @@ export default {
 
     // Remove a schedule
     const removeSchedule = (index) => {
-      weeklySchedule.weekSchedule.splice(index, 1);
+      const schedule = weeklySchedule.schedules[index];
+      
+      // Track deleted schedules for edit mode
+      if (props.mode === 'edit' && schedule.id && !schedule.isNew) {
+        console.log('Marking schedule for deletion:', schedule.id);
+        deletedSchedules.value.push(schedule.id);
+      }
+      
+      weeklySchedule.schedules.splice(index, 1);
+      console.log('Current deleted schedules:', deletedSchedules.value);
     };
 
     // Submit form
     const onSubmit = () => {
       nameError.value = !weeklySchedule.name?.trim();
 
-      if (!nameError.value && weeklySchedule.weekSchedule.length > 0) {
-        emit('confirm', weeklySchedule);
+      if (!nameError.value) {
+        // Allow saving even if no schedules remain (for edit mode where all schedules might be deleted)
+        emit('confirm', weeklySchedule, deletedSchedules.value);
       }
     };
 
@@ -306,6 +301,10 @@ export default {
       nameError,
       error,
       timeSlots,
+      deletedSchedules,
+      getCourseName,
+      getClassroomName,
+      getTeacherName,
       addSchedule,
       removeSchedule,
       onSubmit,
@@ -446,21 +445,21 @@ export default {
           </div>
 
           <!-- Display created schedules -->
-          <div v-if="weeklySchedule.weekSchedule.length > 0" class="schedules-list">
+          <div v-if="weeklySchedule.schedules.length > 0" class="schedules-list">
             <h3>{{ $t('weekly-schedule.modal.scheduleList') }}</h3>
             <div
-                v-for="(schedule, index) in weeklySchedule.weekSchedule"
+                v-for="(schedule, index) in weeklySchedule.schedules"
                 :key="index"
                 class="schedule-item"
             >
               <div>
-                <strong>{{ schedule.dayOfWeek }}</strong>: {{ schedule.timeRange.start }} - {{ schedule.timeRange.end }}
+                <strong>{{ schedule.dayOfWeek }}</strong>: {{ schedule.startTime }} - {{ schedule.endTime }}
                 <br>
-                Course: {{ schedule.course.name }} ({{ schedule.course.code }})
+                Course: {{ getCourseName(schedule.courseId) }}
                 <br>
-                Classroom: {{ schedule.classroom.code }} ({{ schedule.classroom.campus }})
+                Classroom: {{ getClassroomName(schedule.classroomId) }}
                 <br>
-                Teacher: {{ schedule.teacher.fullName }}
+                Teacher: {{ getTeacherName(schedule.teacherId) }}
               </div>
               <pv-button
                   icon="pi pi-trash"
@@ -496,7 +495,7 @@ export default {
             icon="pi pi-check"
             class="p-button-success"
             @click="onSubmit"
-            :disabled="weeklySchedule.weekSchedule.length === 0"
+            :disabled="mode === 'add' && weeklySchedule.schedules.length === 0"
         />
       </template>
 

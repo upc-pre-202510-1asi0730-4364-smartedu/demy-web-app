@@ -1,26 +1,28 @@
-import axios from 'axios'
+import httpInstance from "../../shared/services/http.instance.js";
 import { ClassSession } from '../model/class-session.entity.js'
 
-const BASE_URL = 'https://6820406072e59f922ef8198b.mockapi.io/api/v1/class-sessions'
+const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}${import.meta.env.VITE_CLASSSESSION_ENDPOINT_PATH}`
 
+
+/**
+ * Service for managing class sessions via HTTP requests.
+ */
 export const classSessionService = {
     /**
-     * Guarda una nueva sesión
-     * @param {ClassSession} session
-     * @returns {Promise}
+     * Saves a new class session to the backend.
+     * @param {ClassSession|Object} session - The class session to save. If an instance of ClassSession, it will be serialized.
      */
     save(session) {
         const payload = session instanceof ClassSession ? session.toJSON() : session
-        return axios.post(BASE_URL, payload)
+        return httpInstance.post(BASE_URL, payload)
     },
 
     /**
-     * Obtiene una sesión por ID
-     * @param {string} id
-     * @returns {Promise}
+     * Retrieves a class session by its ID.
+     * @param {string|number} id - The ID of the class session.
      */
     getById(id) {
-        return axios.get(`${BASE_URL}/${id}`)
+        return httpInstance.get(`${BASE_URL}/${id}`)
     },
 
     /**
@@ -28,6 +30,6 @@ export const classSessionService = {
      * @returns {Promise}
      */
     getAll() {
-        return axios.get(BASE_URL)
+        return httpInstance.get(BASE_URL)
     }
 }

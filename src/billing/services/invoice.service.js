@@ -1,69 +1,30 @@
 import httpInstance from '../../shared/services/http.instance.js'
 import { Invoice } from '../model/invoice.entity.js'
+import { InvoiceAssembler } from "./invoice.assembler.js";
 
-/**
- * @class InvoiceService
- * @description Service for managing invoice-related API operations
- */
 export class InvoiceService {
-    resourceEndpoint = import.meta.env.VITE_INVOICES_ENDPOINT_PATH
+    basePath = '/students'
 
     /**
-     * Retrieves all invoices
+     * Retrieves all invoices for a student by DNI
+     * @param {string} dni
      * @returns {Promise<Invoice[]>}
      */
-    async getAll() {
-        const res = await httpInstance.get(this.resourceEndpoint)
-        return res.data.map(invoice => new Invoice(invoice))
+    async getByDni(dni) {
+        const url = `${this.basePath}/${dni}/invoices`
+        const res = await httpInstance.get(url)
+        return InvoiceAssembler.fromResources(res.data)
     }
 
     /**
-     * Retrieves an invoice by ID
-     * @param {string} id
+     * Creates a new invoice for a student
+     * @param {string} dni
+     * @param {object} data - must include amount, currency, dueDate
      * @returns {Promise<Invoice>}
      */
-    async getById(id) {
-        const res = await httpInstance.get(`${this.resourceEndpoint}/${id}`)
-        return new Invoice(res.data)
-    }
-
-    /**
-     * Retrieves invoices by student ID
-     * @param {string} studentId
-     * @returns {Promise<Invoice[]>}
-     */
-    async getByStudentId(studentId) {
-        const res = await httpInstance.get(`${this.resourceEndpoint}?studentId=${studentId}`)
-        return res.data.map(invoice => new Invoice(invoice))
-    }
-
-    /**
-     * Creates a new invoice
-     * @param {Invoice} invoice
-     * @returns {Promise<Invoice>}
-     */
-    async create(invoice) {
-        const res = await httpInstance.post(this.resourceEndpoint, invoice)
-        return new Invoice(res.data)
-    }
-
-    /**
-     * Updates an invoice by ID
-     * @param {string} id
-     * @param {Invoice} invoice
-     * @returns {Promise<Invoice>}
-     */
-    async update(id, invoice) {
-        const res = await httpInstance.put(`${this.resourceEndpoint}/${id}`, invoice)
-        return new Invoice(res.data)
-    }
-
-    /**
-     * Deletes an invoice by ID
-     * @param {string} id
-     * @returns {Promise<void>}
-     */
-    async delete(id) {
-        await httpInstance.delete(`${this.resourceEndpoint}/${id}`)
+    async create(dni, data) {
+        const url = `${this.basePath}/${dni}/invoices`
+        const res = await httpInstance.post(url, data)
+        return InvoiceAssembler.fromResource(res.data)
     }
 }

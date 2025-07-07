@@ -1,59 +1,29 @@
 import httpInstance from '../../shared/services/http.instance.js'
 import { Payment } from '../model/payment.entity.js'
+import { PaymentAssembler } from "./payment.assembler.js";
 
 /**
  * @class PaymentService
  * @description Service for managing payment-related API operations
  */
 export class PaymentService {
-    resourceEndpoint = import.meta.env.VITE_PAYMENTS_ENDPOINT_PATH
+    basePath = '/api/v1'
+    financialTransactionsEndpoint = '/financial-transactions'
 
     /**
-     * Retrieves all payments
-     * @returns {Promise<Payment[]>}
-     */
-    async getAll() {
-        const res = await httpInstance.get(this.resourceEndpoint)
-        return res.data.map(payment => new Payment(payment))
-    }
-
-    /**
-     * Retrieves a payment by ID
-     * @param {number|string} id
+     * Registers a payment for a given invoice ID.
+     * @param {number} invoiceId
+     * @param {object} dto - Should include: method (string)
      * @returns {Promise<Payment>}
      */
-    async getById(id) {
-        const res = await httpInstance.get(`${this.resourceEndpoint}/${id}`)
-        return new Payment(res.data)
-    }
-
-    /**
-     * Creates a new payment
-     * @param {Payment} payment
-     * @returns {Promise<Payment>}
-     */
-    async create(payment) {
-        const res = await httpInstance.post(this.resourceEndpoint, payment)
-        return new Payment(res.data)
-    }
-
-    /**
-     * Updates a payment by ID
-         * @param {string} id
-     * @param {Payment} payment
-     * @returns {Promise<Payment>}
-     */
-    async update(id, payment) {
-        const res = await httpInstance.put(`${this.resourceEndpoint}/${id}`, payment)
-        return new Payment(res.data)
-    }
-
-    /**
-     * Deletes a payment by ID
-     * @param {string} id
-     * @returns {Promise<void>}
-     */
-    async delete(id) {
-        await httpInstance.delete(`${this.resourceEndpoint}/${id}`)
+    async registerPayment(invoiceId, dto) {
+        const res = await httpInstance.post(
+            `${this.financialTransactionsEndpoint}/invoices/${invoiceId}/payment`,
+            dto
+        )
+        if (!res.data || !res.data.payment) {
+            throw new Error('Payment data missing in response')
+        }
+        return PaymentAssembler.fromResource(res.data.payment)
     }
 }

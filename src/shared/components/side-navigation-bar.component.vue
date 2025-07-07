@@ -19,6 +19,7 @@ export default {
         { icon: 'calendar', label: 'sidebar.schedules', route: '/schedules', roles: ['ADMIN'] },
         { icon: 'calendar', label: 'sidebar.my-schedule', route: '/my-schedule', roles: ['TEACHER'] },
         { icon: 'check-circle', label: 'sidebar.attendance', route: '/attendance', roles: ['TEACHER'] },
+        { icon: 'book', label: 'sidebar.attendance-reports', route: '/attendance-view-report', roles: ['TEACHER'] },
         { icon: 'wallet', label: 'sidebar.finance', route: '/finance', roles: ['ADMIN'] }
       ]
     }

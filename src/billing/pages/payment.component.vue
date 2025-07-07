@@ -8,9 +8,10 @@ import PaymentRegistration from "../components/payment-registration.component.vu
 import { StudentService } from '../../enrollments/services/student.service.js'
 import { InvoiceService } from '../services/invoice.service.js'
 import { PaymentService } from '../services/payment.service.js'
-import { PaymentStatus } from '../model/invoice.entity.js'
 import { FinancialTransactionService } from '../services/financial-transaction.service.js'
-import { FinancialTransaction, PartyType } from '../model/financial-transaction.entity.js'
+import { FinancialTransaction } from '../model/financial-transaction.entity.js'
+import { PaymentStatus } from '../model/invoice.entity.js'
+import { useToast } from 'primevue/usetoast'
 
 const studentService = new StudentService()
 const invoiceService = new InvoiceService()
@@ -25,20 +26,37 @@ export default {
     PaymentRegistration
   },
   setup() {
+    const toast = useToast()
     const studentPaymentStatus = ref(null)
     const selectedInvoice = ref(null)
     const showPaymentForm = ref(false)
 
     const onSearch = async (dni) => {
       try {
+        console.log('Buscando por DNI:', dni)
         const students = await studentService.getByDni(dni)
-        if (students.length > 0) {
-          const student = students[0]
-          const invoices = await invoiceService.getByStudentId(student.id)
-          studentPaymentStatus.value = { student, invoices }
+        console.log('Respuesta del servicio:', students)
+        const student = students.find(s => s.dni === dni)
+        if (!student) {
+          toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Estudiante no encontrado',
+            life: 3000
+          })
+          return
         }
+
+        const invoices = await invoiceService.getByDni(student.dni)
+        studentPaymentStatus.value = { student, invoices }
       } catch (err) {
-        console.error('Error en búsqueda', err)
+        console.error('Error al buscar estudiante:', err.response?.data || err.message)
+        toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Ocurrió un error durante la búsqueda',
+          life: 3000
+        })
       }
     }
 
@@ -47,57 +65,38 @@ export default {
       showPaymentForm.value = true
     }
 
-    const onPaymentRegistered = async ({ amount, paidAt }) => {
+    const onPaymentRegistered = async (method) => {
       const invoice = selectedInvoice.value
       const status = studentPaymentStatus.value
       if (!status || !invoice) return
 
-      const payment = {
-        invoiceId: invoice.id,
-        amount,
-        paidAt,
-        method: 'CASH'
-      }
-
       try {
-        const createdPayment = await paymentService.create(payment)
+        await paymentService.registerPayment(invoice.id, method)
 
-        // 🧾 Registrar transacción financiera
-        const transaction = new FinancialTransaction({
-          source: PartyType.STUDENT,
-          target: PartyType.ACADEMY,
-          type: 'INCOME',
-          category: 'Pago de mensualidad',
-          concept: 'Pago de mensualidad',
-          date: new Date(),
-          reference: `TX-${Date.now()}`,
-          amount: createdPayment.amount,
-          method: createdPayment.method
+        toast.add({
+          severity: 'success',
+          summary: 'Pago registrado',
+          detail: 'El pago se registró correctamente',
+          life: 3000
         })
 
-        await transactionService.create(transaction)
-
-        const updatedInvoice = {
-          id: invoice.id,
-          subscriptionId: invoice.subscriptionId,
-          amount: invoice.amount,
-          dueDate: invoice.dueDate,
-          studentId: invoice.studentId,
-          status: PaymentStatus.PAID
-        }
-
-        await invoiceService.update(invoice.id, updatedInvoice)
+        const updatedStudent = await studentService.getByDni(status.student.dni)
+        const updatedInvoices = await invoiceService.getByDni(status.student.dni)
 
         studentPaymentStatus.value = {
-          ...status,
-          invoices: status.invoices.map((inv) =>
-              inv.id === invoice.id ? { ...inv, status: PaymentStatus.PAID } : inv
-          )
+          student: updatedStudent,
+          invoices: updatedInvoices
         }
-
         showPaymentForm.value = false
+
       } catch (err) {
-        console.error('Error al registrar el pago o la transacción', err)
+        console.error('Error al registrar el pago', err)
+        toast.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo registrar el pago',
+          life: 3000
+        })
       }
     }
 
