@@ -8,7 +8,7 @@ import { PaymentAssembler } from "./payment.assembler.js";
  */
 export class PaymentService {
     basePath = '/api/v1'
-    financialTransactionsEndpoint = '/financialTransactions'
+    financialTransactionsEndpoint = '/financial-transactions'
 
     /**
      * Registers a payment for a given invoice ID.
@@ -18,7 +18,7 @@ export class PaymentService {
      */
     async registerPayment(invoiceId, dto) {
         const res = await httpInstance.post(
-            `${this.basePath}${this.financialTransactionsEndpoint}/invoices/${invoiceId}/payment`,
+            `${this.financialTransactionsEndpoint}/invoices/${invoiceId}/payment`,
             dto
         )
         if (!res.data || !res.data.payment) {
