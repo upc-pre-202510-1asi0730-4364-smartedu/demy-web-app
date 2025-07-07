@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useAcademyService } from '../services/academy.service'
 import { useUserAccountService  } from '../services/user-account.service'
 import AppLanguageSwitcher from '../../shared/components/language-switcher.component.vue'
+import httpInstance from '../../shared/services/http.instance.js'
 
 const form = ref({
   name: '',
@@ -18,37 +19,53 @@ const router = useRouter()
 const academyService = useAcademyService()
 const userAccountService = useUserAccountService()
 
-
+/**
+ * Handles form submission for both user and academy creation.
+ * - Validates acceptance of terms
+ * - Registers user
+ * - Registers academy with the new user ID
+ * - Redirects to plant selection page on success
+ */
 const onSubmit = async () => {
   if (!form.value.terms) {
-    alert('You must accept the terms and conditions')
-    return
+    alert('You must accept the terms and conditions');
+    return;
   }
 
   try {
-    const newAcademy = {
-      name: form.value.name,
-      academy_name: form.value.academy_name,
-      ruc: form.value.ruc,
-      email: form.value.email,
-      password: form.value.password
-    }
-
-    await academyService.createAcademy(newAcademy)
-    alert('Successfully created academy')
-
-    await userAccountService.createUser({
+    const user = await userAccountService.createUser({
       fullName: form.value.name,
       email: form.value.email,
-      passwordHash: form.value.password
-    })
-    alert('User created successfully')
+      password: form.value.password
+    });
+    localStorage.setItem('user', JSON.stringify(user));
 
-    await router.push('/plantSelect')
+    console.log(" Enviando a /academies:", {
+      userId: user.id,
+      name: form.value.academy_name,
+      ruc: String(form.value.ruc)
+    });
+
+    console.log('Datos enviados a academies:', {
+      userId: user.id,
+      name: form.value.academy_name,
+      ruc: String(form.value.ruc)
+    });
+    await httpInstance.post('/academies', {
+      userId: user.id,
+      academyName: form.value.academy_name,
+      ruc: String(form.value.ruc)
+    });
+
+    alert('Usuario y academia registrados correctamente');
+    await router.push('/plantSelect');
   } catch (error) {
-    alert('There was an error registering the academy or user')
+    console.error("Axios error:", error);
+    console.error("Error response:", error.response?.data);
+    const msg = error.response?.data?.message || error.message || 'Error desconocido';
+    alert('Hubo un error al registrar: ' + msg);
   }
-}
+};
 </script>
 
 <template>

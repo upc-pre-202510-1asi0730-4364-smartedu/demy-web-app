@@ -103,6 +103,7 @@ app
     .component('Button', Button)
     .component('pv-toast', Toast)
     .use(i18n)
+    .use(pinia)
     .use(router)
     .use(ToastService)
     .mount('#app')

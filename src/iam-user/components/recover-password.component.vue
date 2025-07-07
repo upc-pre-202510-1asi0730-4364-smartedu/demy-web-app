@@ -15,6 +15,11 @@ const emailFound = ref(false)
 
 const { t } = useI18n()
 
+/**
+ * Handles email submission to check if the user exists.
+ * - Displays appropriate message based on result
+ * - Stores user ID and email in localStorage if matched
+ */
 const goToNext = async () => {
   if (!email.value) {
     modalMessageKey.value = t('recover.errorEmpty')
@@ -45,6 +50,10 @@ const goToNext = async () => {
   }
 }
 
+/**
+ * Handles modal closure.
+ * - If the email exists, redirects to reset-password screen.
+ */
 const handleModalClose = () => {
   showModal.value = false
   if (emailFound.value) {
@@ -52,6 +61,9 @@ const handleModalClose = () => {
   }
 }
 
+/**
+ * Navigates back to the login screen.
+ */
 const goToLogin = () => {
   router.push('/login')
 }
