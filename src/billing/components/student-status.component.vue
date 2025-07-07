@@ -85,7 +85,7 @@ export default {
       <Column :header="$t('payments.action')">
         <template #body="slotProps">
           <Button
-              v-if="slotProps.data.status !== 'PAID'"
+              v-if="slotProps.data.status !== 'Paid'"
               :label="$t('payments.register-action')"
               severity="primary"
               @click="emitRegister(slotProps.data)"
